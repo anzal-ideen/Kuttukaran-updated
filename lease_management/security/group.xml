@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="group_lease_mangement_user" model="res.groups">
+        <field name="name">Agreements Admin</field>
+    </record>
+
+
+    <record id="group_master_admin" model="res.groups">
+        <field name="name">Master Data Admin</field>
+    </record>
+
+     <record id="group_record_admin" model="res.groups">
+        <field name="name">Records Data Admin</field>
+    </record>
+
+
+
+
+
+
+
+</odoo>

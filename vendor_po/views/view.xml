@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="purchase_vendor_user_field_inherited" model="ir.ui.view">
+        <field name="name">purchase.order.inherited_new</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="vendor_user_id" invisible="1"/>
+                <field name="delivery_commitment" invisible="1"/>
+                <field name="asm_date" invisible="1"/>
+                <field name="menu_1" invisible="1"/>
+
+            </xpath>
+        </field>
+    </record>
+
+<!--    <record id="portal_user_hide_button_form_inherit" model="ir.ui.view">-->
+<!--        <field name="name">purchase.order.inherit.button.view</field>-->
+<!--        <field name="model">purchase.order</field>-->
+<!--        <field name="inherit_id" ref="purchase.purchase_order_form"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+    <record id="portal_user_create_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.inherit.view</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="groups_id" eval="[(4, ref('vendor_portal.group_vendor_portal_user'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="create">false</attribute>
+                <attribute name="delete">false</attribute>
+                <attribute name="edit">false</attribute>
+
+            </xpath>
+
+
+            <xpath expr="//button[@name='button_confirm']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_confirm'][2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_rfq_send']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_rfq_send'][2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_rfq_send'][3]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+             <xpath expr="//button[@name='print_quotation']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='print_quotation'][2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_cancel']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_create_invoice']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_create_invoice'][2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='confirm_reminder_mail']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_done']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_unlock']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_draft']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_approve']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//button[@name='action_view_picking']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+
+
+
+
+
+
+
+
+            <xpath expr="//header/button[@name='button_unlock']" position="after">
+                <button name="button_delivery_commit" string="Delivery Commitment Date" type="object"
+                        class="oe_highlight" groups="vendor_portal.group_vendor_portal_user"
+                        attrs="{'invisible': ['|',('delivery_commitment','=',True),('state','in',('draft','send','to approve','cancel'))]}"/>
+                <!--                        attrs="{'invisible': [('states','in',('draft','send','to approve','cancel'))]}"/>-->
+                <button name="button_adv_shipment_date" string="Advanced Shipment Date" type="object"
+                        class="oe_highlight" groups="vendor_portal.group_vendor_portal_user"
+                        attrs="{'invisible': [('state','in',('draft','send','to approve','cancel'))]}"/>
+
+                <!--                        attrs="{'invisible': [('states','in',('draft','send','to approve','cancel'))]}"/>-->
+            </xpath>
+
+
+        </field>
+    </record>
+
+    <record id="portal_user_create_tree_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.inherit.tree</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_tree"/>
+        <field name="groups_id" eval="[(4, ref('vendor_portal.group_vendor_portal_user'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">false</attribute>
+                <attribute name="delete">false</attribute>
+                <!--                <attribute name="edit">1</attribute>-->
+
+            </xpath>
+        </field>
+    </record>
+
+    <record id="portal_user_create_tree_inherit_main" model="ir.ui.view">
+        <field name="name">purchase.order.inherit.tree</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_kpis_tree"/>
+        <field name="groups_id" eval="[(4, ref('vendor_portal.group_vendor_portal_user'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">false</attribute>
+                <attribute name="delete">false</attribute>
+                <!--                <attribute name="edit">1</attribute>-->
+
+            </xpath>
+        </field>
+    </record>
+
+    <record id="portal_user_create_form_inherit_inv" model="ir.ui.view">
+        <field name="name">stock.picking.inherit.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="groups_id" eval="[(4, ref('vendor_portal.group_vendor_portal_user'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="create">false</attribute>
+                <attribute name="delete">false</attribute>
+                <attribute name="edit">false</attribute>
+            </xpath>
+
+
+             <xpath expr="//button[@name='button_validate']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+             <xpath expr="//button[@name='do_print_picking']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+             <xpath expr="//button[@name='action_cancel']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+             <xpath expr="//button[@name='action_open_label_layout']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+             <xpath expr="//button[@name='action_set_quantities_to_reservation']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="portal_user_create_tree_inherit_inv" model="ir.ui.view">
+        <field name="name">stock.picking.inherit.tree</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="groups_id" eval="[(4, ref('vendor_portal.group_vendor_portal_user'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">false</attribute>
+                <attribute name="delete">false</attribute>
+                <attribute name="edit">false</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="commitment_date_stock_inherited" model="ir.ui.view">
+        <field name="name">stock.picking.inherited_new</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_done']" position="before">
+                <field name="delivery_commitment"/>
+                <field name="asm_date"/>
+            </xpath>
+
+
+
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" type="object" name="view_asn"
+                    icon="fa-bars" >
+                    <div class="o_stat_info">
+                             <span class="o_stat_value">
+<!--                                <field name="compute_bug_or_damage_count"/>-->
+                            </span>
+                            <span class="o_stat_text">
+                                ASN
+                            </span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="action_view_vendors_po">
+        <field name="name">Purchase Order</field>
+        <field name="res_model">purchase.order</field>
+        <!--            <field name="view_type">form</field>-->
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('vendor_user_id','=',uid)]</field>
+        <field name="context">{'default_menu_1':True}</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Create new PO</p>
+        </field>
+
+
+    </record>
+
+    <menuitem id="root_vendor_po" name="Vendor PO" groups="vendor_portal.group_vendor_portal_user"  web_icon="vendor_po,static/icons/icon_1.png"/>
+
+    <menuitem id="menu_vendor_po" name="Purchase Orders" parent="root_vendor_po"
+              action="action_view_vendors_po"
+              sequence="10"/>
+
+
+</odoo>

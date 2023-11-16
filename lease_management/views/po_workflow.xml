@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="po_approval_flow" model="ir.ui.view">
+            <field name="name">purchase.order.workflow</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+
+
+                <xpath expr="//button[@name='button_confirm']" position="after">
+
+
+                    <button name="action_approval" id="btn_approved"
+                            string="Approve" class="btn-primary" type="object"
+                            attrs="{'invisible': ['|',('state', 'in', ('to_approve', 'cancel', 'done', 'purchase')),('is_an_approver','!=',True)]}"/>
+
+                    <button name="action_rejected" id="btn_decline"
+                            string="Reject" class="btn-danger" type="object"
+                            attrs="{'invisible': ['|',('state', 'in', ('to_approve', 'cancel', 'done', 'purchase')),('is_an_approver','!=',True)]}"/>
+
+                </xpath>
+
+
+                <xpath expr="//field[@name='currency_id']" position="after">
+
+
+                    <field name="approve_users" readonly="1" widget="many2many_tags" invisible="1"/>
+                    <field name="approved_users" readonly="1" widget="many2many_tags" invisible="1"/>
+                    <field name="next_approve_user" readonly="1" widget="many2many_tags" invisible="1"/>
+                    <field name="is_confirmed" invisible="1"/>
+                    <field name="is_an_approver" invisible="1"/>
+                    <field name="is_auto_po" invisible="1"/>
+                </xpath>
+
+
+                <xpath expr="//button[@name='button_confirm']" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('is_confirmed', '=', True)]}</attribute>
+                </xpath>
+
+                <xpath expr="//button[@name='button_confirm'][2]" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('is_confirmed', '=', True)]}</attribute>
+                </xpath>
+
+
+                <xpath expr="//page[@name='purchase_delivery_invoice']" position="after">
+                    <page string="Purchase Approvals" name="po_approvals"
+                          attrs="{'invisible': [('is_confirmed', '=', False)]}">
+                        <field name="approvers_line_ids">
+                            <tree editable="bottom">
+                                <field name="user_id"/>
+                                <field name="company_id"/>
+                                <field name="location"/>
+                                <field name="department_id"/>
+                                <field name="designation"/>
+                                <field name="approve_order"/>
+                                <field name="status" readonly="1" store="1" force_save="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

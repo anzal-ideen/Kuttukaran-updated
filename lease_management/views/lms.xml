@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record id="lease_view_search" model="ir.ui.view">
+            <field name="model">product.lease</field>
+            <field name="arch" type="xml">
+                <search string="Lease">
+                    <field name="name"/>
+                    <field name="bill_to"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="view_lease_tree" model="ir.ui.view">
+            <field name="name">Lease Agreements</field>
+            <field name="model">product.lease</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree>
+
+                    <field name="name"/>
+                    <field name="product_id"/>
+                    <field name="vendor_id"/>
+                    <!--                    <field name="bill_to"/>-->
+                    <!--                    <field name="expense_type"/>-->
+                    <field name="user_id" widget="many2one_avatar_user"/>
+                    <field name="company_id"/>
+                    <field name="state"
+                           decoration-success="state == 'approve'"
+                           decoration-info="state == 'draft'"
+                           decoration-danger="state == 'reject'"
+                           decoration-warning="state == 'request'"
+                           widget="badge"/>
+
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_lease_form" model="ir.ui.view">
+            <field name="name">Lease Agreement</field>
+            <field name="model">product.lease</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Product Lease">
+                    <header>
+
+                        <button name="action_request"
+                                string="Request" class="btn-primary" type="object"
+                                attrs="{'invisible': [('state', '!=', 'draft')]}"
+                        />
+                        <button name="action_approve" id="btn_approved"
+                                string="Approve" class="btn-primary" type="object"
+                                attrs="{'invisible': ['|' ,('state', 'in',( 'draft','reject')),('is_an_approver','!=',True)]}"/>
+
+                        <!--                                attrs="{'invisible': [('state', 'in',( 'draft','approve','reject')),('is_an_approver','=',True)]}"-->
+                        <!--                        />-->
+                        <button name="action_reject" id="btn_decline"
+                                string="Reject" class="btn-danger" type="object"
+                                attrs="{'invisible': ['|' ,('state', 'in',( 'draft','reject')),('is_an_approver','!=',True)]}"/>
+                        />
+
+                        <button name="action_draft"
+                                string="Move to Draft" type="object" invisible="1"/>
+
+                       <button name="action_generate_po"
+                                string="Create PO" class="btn-primary" type="object"
+                                attrs="{'invisible': [('state', '!=', 'approve')]}"
+                        />
+
+
+
+
+
+                        <widget name="attach_document" string="Attach Document" action="message_post"
+                                attrs="{'invisible': [('state', '!=', 'approve')]}"/>
+
+
+                        <field name="state" widget="statusbar" statusbar_visible="draft,request,approve"/>
+                    </header>
+
+                    <sheet>
+
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_open_attachments" type="object"
+                                    class="oe_stat_button" icon="fa-book"
+                                    attrs="{'invisible': [('attachment_number', '=', 0)]}">
+                                    <field name="attachment_number" widget="statinfo" string="Documents" options="{'reload_on_button': true}"/>
+                                    <span class="o_stat_text">Documents</span>
+                            </button>
+                        </div>
+
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+
+                        <group>
+                            <group col="2">
+                                <field name="requested_date"/>
+                                <field name="product_id" required="1"/>
+                                <field name="vendor_id" required="1"/>
+                                <field name="start_date" required="1"/>
+                                <field name="end_date" required="1"/>
+                                <field name="qty"/>
+                                <field name="product_uom"/>
+                                <field name="price"/>
+                                <field name="department_id"/>
+                                <field name="expense_type"/>
+                                <field name="is_an_approver" invisible="1"/>
+                                <field name="user_approved" invisible="1"/>
+                                <field name="product_request_id" invisible="0"/>
+                                <field name="compute_state" invisible="1"/>
+                                <field name="attachment_number" invisible="1"/>
+
+
+                            </group>
+                            <group col="2">
+                                <field name="user_id" readonly="1"/>
+                                <field name="company_id" readonly="1"/>
+                                <field name="approve_users" readonly="0" widget="many2many_tags" invisible="1"/>
+                                <field name="approved_users" readonly="0" widget="many2many_tags" invisible="1"/>
+                                <field name="next_approve_user" readonly="0" widget="many2many_tags" invisible="1"/>
+                                <!--                                <field name="total" widget="monetary" />-->
+
+
+                                <field name="auto_po"/>
+                                <field name="with_gst" attrs="{'invisible': [('auto_po', '=', False)]}"/>
+                                <field name="tax" attrs="{'invisible': [('with_gst', '=', False)]}"
+                                       options="{'no_create': True}"/>
+                                <field name="auto_invoice" attrs="{'invisible': [('auto_po', '=', False)]}"/>
+
+
+
+                            </group>
+                        </group>
+
+
+                        <notebook>
+                            <!--                            <page string="Products" name="product_lease_line">-->
+                            <!--                                <field name="product_lines">-->
+                            <!--                                    <tree editable="bottom">-->
+                            <!--                                        <field name="product_id"/>-->
+                            <!--                                        <field name="vendors" widget="many2many_tags"-->
+                            <!--                                               options='{"no_open": True, "no_create": True}'/>-->
+                            <!--                                        <field name="payment_terms"/>-->
+                            <!--                                        <field name="expected_date"/>-->
+                            <!--                                        <field name="qty"/>-->
+                            <!--                                        <field name="unit_price"/>-->
+                            <!--                                        &lt;!&ndash;                                        <field name="qty"/>&ndash;&gt;-->
+                            <!--                                        <field name="sub_total"/>-->
+                            <!--                                        <field name="contract_status"/>-->
+
+                            <!--                                    </tree>-->
+                            <!--                                </field>-->
+                            <!--                            </page>-->
+
+
+                            <page string="Approvers" name="pade_apprs">
+                                <field name="approve_line" readonly="0">
+                                    <tree editable="bottom" delete="0">
+                                        <field name="user_id"/>
+                                        <field name="company_id"/>
+                                        <field name="location"/>
+                                        <field name="department_id"/>
+                                        <field name="designation"/>
+                                        <field name="approve_order"/>
+                                        <field name="status" readonly="1" store="1" force_save="1"/>
+                                    </tree>
+                                    <form>
+                                        <field name="user_id"/>
+                                        <field name="company_id"/>
+                                        <field name="location"/>
+                                        <field name="department_id"/>
+                                        <field name="designation"/>
+                                        <field name="approve_order"/>
+                                        <field name="status"/>
+                                    </form>
+                                </field>
+                            </page>
+
+
+                            <page string="PO" name="page_recurring_po">
+                                <field name="reccuring_line" readonly="1">
+                                    <tree editable="bottom">
+                                        <field name="date"/>
+                                        <field name="po"/>
+                                        <field name="status"/>
+
+                                    </tree>
+                                    <form>
+                                        <!--                                        <field name="date"/>-->
+                                        <field name="po"/>
+                                        <!--                                        <field name="status"/>-->
+
+                                    </form>
+                                </field>
+                            </page>
+
+                        </notebook>
+
+
+                    </sheet>
+
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+                    </div>
+
+
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="action_product_lease">
+            <field name="name">Lease Agreements</field>
+            <field name="res_model">product.lease</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('approve_users.id','=',uid)]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create"></p>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="action_my_product_lease">
+            <field name="name">Lease Agreements</field>
+            <field name="res_model">product.lease</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('vendor_id.user_id.id','=',uid)]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create"></p>
+            </field>
+        </record>
+
+        <menuitem id="root_product_lease" name="Contracts"
+                  web_icon="lease_management,static/icons/agreement.png"/>
+
+
+        <menuitem id="menu_product_lease" name="Lease/Rent Agreements" parent="root_product_lease"
+                  action="action_product_lease" groups="lease_management.group_lease_mangement_user"
+                  sequence="10"/>
+
+        <!--        <menuitem id="menu_product_lease" name="Lease\Rent Agreementss" parent="product_purchase.menu_tenders"-->
+        <!--          action="action_product_lease" groups="lease_management.group_lease_mangement_user"-->
+        <!--          sequence="10" />-->
+
+        <!--          <menuitem id="menu_vendors_product_lease" name="My Lease\Rent Agreements" parent="product_purchase.menu_tenders"-->
+        <!--                  action="action_my_product_lease" groups="vendor_portal.group_vendor_portal_user"-->
+        <!--                  sequence="10"/>-->
+
+
+        <menuitem id="menu_vendors_product_lease" name="My Lease/Rent Agreements" parent="root_product_lease"
+                  action="action_my_product_lease" groups="vendor_portal.group_vendor_portal_user"
+                  sequence="10"/>
+
+
+        <record id="purchase.purchase_rfq" model="ir.actions.act_window">
+
+            <field name="context">{'search_default_draft': 1}</field>
+
+        </record>
+
+
+        <record id="request_button_inherit" model="ir.ui.view">
+            <field name="name">product.request.inherited_new</field>
+            <field name="model">product.request</field>
+            <field name="inherit_id" ref="product_purchase.view_product_purchase_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_log_message']" position="attributes">
+                    <attribute name="string">RFI</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <!--   ################# Master Module Action ##################    -->
+
+        <record model="ir.actions.act_window" id="action_master_product_lease">
+            <field name="name">Lease Agreements</field>
+            <field name="res_model">product.lease</field>
+            <field name="view_mode">tree,form</field>
+            <!--            <field name="domain">[]</field>-->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create"></p>
+            </field>
+        </record>
+
+
+        <!--   ######################################     -->
+
+
+    </data>
+</odoo>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+
+        <record id="pending_actions_view_search" model="ir.ui.view">
+            <field name="model">pending.actions</field>
+            <field name="arch" type="xml">
+                <search string="Pending Actions">
+                    <field name="name"/>
+                    <field name="model"/>
+                    <filter string="Open" name="status_open" domain="[('status', '=', 'open')]"/>
+                    <filter string="Close" name="status_close" domain="[('status', '=', 'closed')]"/>
+                </search>
+            </field>
+        </record>
+
+
+
+
+
+        <record id="view_dynamic_view" model="ir.ui.view">
+            <field name="name">Pending Actions</field>
+            <field name="model">pending.actions</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree editable="bottom" create="0" edit="0">
+
+
+                    <field name="date" />
+                    <field name="name" readonly="1"/>
+                    <field name="model" readonly="1"/>
+                    <field name="record" readonly="1"/>
+                    <field name="record_line" readonly="1" invisible="1"/>
+                    <field name="approve_users" widget="many2many_tags" readonly="1"/>
+                    <field name="status" readonly="1"/>
+                    <button name="open_record"  string="Open Document" type="object"
+                                class="oe_link"
+                                />
+
+
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_pending_form" model="ir.ui.view">
+            <field name="name">Pending Actions</field>
+            <field name="model">pending.actions</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Pending Actions">
+                    <header>
+                        <field name="status" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="date"/>
+
+
+<!--                            </group>-->
+<!--                            <group>-->
+                                <field name="model"/>
+                                <field name="record"/>
+                                 <button name="open_record"  string="Open Document" type="object"
+                                class="oe_link"
+                                />
+                            </group>
+                        </group>
+                    </sheet>
+
+
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="action_pending_actions">
+            <field name="name">Pending Actions</field>
+            <field name="res_model">pending.actions</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('approve_users.id','=',uid)]</field>
+            <field name="context">{
+
+                'search_default_status_open': 1
+                }
+            </field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create"></p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_all_pending_actions">
+            <field name="name">All Pending Actions</field>
+            <field name="res_model">pending.actions</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[]</field>
+            <field name="context">{
+
+                'search_default_status_open': 1
+                }
+            </field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create"></p>
+            </field>
+        </record>
+
+
+
+        <menuitem id="root_pending_actions" name="Pending Actions"  web_icon="pending_actions,static/icons/icon.png"/>
+
+
+        <menuitem id="menu_product_lease" name="Pending Actions" parent="root_pending_actions"
+                  action="action_pending_actions" groups="pending_actions.group_pending_action_user"
+                  sequence="10"/>
+        <menuitem id="menu_product_lease_all" name="Pending Actions" parent="lease_management.sub_root_workflow"
+                  action="action_all_pending_actions"
+                  sequence="16"/>
+
+    </data>
+</odoo>
