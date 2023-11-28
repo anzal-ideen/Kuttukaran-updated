@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <report
+            id="report_purchase_request"
+            string="Purchase Request"
+            model="product.request"
+            report_type="qweb-pdf"
+            name="reports.purchase_request_template"
+            file="reports.purchase_request_template"
+            print_report_name="('PR - %s' % (object.name))"/>
+
+
+    <report
+            id="report_lease_agreement"
+            string="Lease Agreement"
+            model="product.lease"
+            report_type="qweb-pdf"
+            name="reports.lease_agreement_template"
+            file="reports.lease_agreement_template"
+            print_report_name="('Lease Agreement - %s' % (object.name))"/>
+
+
+    <report
+            id="report_product_contract"
+            string="Product Contract"
+            model="product.tender.line"
+            report_type="qweb-pdf"
+            name="reports.product_contract_template"
+            file="reports.product_contract_template"
+            print_report_name="('Contract - %s' % (object.tender_number))"/>
+
+</odoo>

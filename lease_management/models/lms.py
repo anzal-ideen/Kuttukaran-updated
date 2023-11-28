@@ -77,6 +77,13 @@ class ProductLease(models.Model):
     attachment_number = fields.Integer('Number of Attachments', compute='_compute_attachment_number')
     department_id = fields.Many2one('hr.department', string="Department")
     expense_type = fields.Selection([('cap', 'CapEx'), ('op', 'OpEx')], string='Expense Type', tracking=True)
+    location = fields.Char(string='Location', tracking=True)
+    address1 = fields.Char(string='Address 1', tracking=True)
+    address2 = fields.Char(string='Address 2', tracking=True)
+    city = fields.Char(string='City', tracking=True)
+    state_name = fields.Char(string='State', tracking=True)
+    security = fields.Float(string='Security Deposit', tracking=True)
+    # total_rent = fields.Float(string='Total Rent', tracking=True , compute="compute_total_rent")
 
 
 
@@ -92,6 +99,8 @@ class ProductLease(models.Model):
                                     string='Product Lease Line',
                                     tracking=True)
     total = fields.Float(string="Total Amount", compute="compute_total_amount",tracking=True)
+
+
 
 
     def _compute_attachment_number(self):
@@ -273,12 +282,12 @@ class ProductLease(models.Model):
         # for rec in self:
             rec.is_an_approver = self.env.user.id in rec.next_approve_user.mapped('id')
 
-    @api.depends('product_lines')
+    @api.depends('total')
     def compute_total_amount(self):
         total_amount = 0
         for total in self:
-            for lines in total.product_lines:
-                total_amount += lines.qty * lines.unit_price
+            if total.qty and total.price:
+                total_amount += total.qty * total.price
         print("total_amount ", total_amount)
         self.total = total_amount
 

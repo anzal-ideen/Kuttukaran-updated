@@ -31,6 +31,11 @@
          <menuitem id="sub_menu_workflow" name="Workflows" parent="sub_root_workflow"
                   action="product_purchase.action_pr_company_approve_users" sequence="13"/>
 
+        <menuitem id="menu_vendor_workflows"
+                  name="Vendor Approve Workflow"
+                  parent="sub_root_workflow"
+                  action="product_purchase.action_vendor_workflow" sequence="14"/>
+
 
 
         <menuitem id="sub_menu_vendors" name="Vendor Master" parent="sub_root_admin"

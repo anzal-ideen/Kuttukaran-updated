@@ -12,9 +12,9 @@
                     <field name="city"/>
                     <!--                    <field name="state_id"/>-->
                     <field name="contactperson"/>
-                    <field name="vendor_approve_users" widget="many2many_tags"/>
-                    <field name="vendor_approved_users" widget="many2many_tags"/>
-                    <field name="next_approve_user_id" widget="many2many_tags"/>
+                    <field name="vendor_approve_users" widget="many2many_tags" invisible="1"/>
+                    <field name="vendor_approved_users" widget="many2many_tags" invisible="1"/>
+                    <field name="next_approve_user_id" widget="many2many_tags" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -31,9 +31,12 @@
 <!--                        <button name="action_approve" class="btn-primary" type="object" string="Approve"-->
 <!--                                groups="vendor_portal.group_admin_vendor_portal"-->
 <!--                                attrs="{'invisible': [('states','in',('approved','done') )]}"/>-->
+                         <button name="action_review" class="btn-primary" type="object" string="Review"
+                                attrs="{'invisible': [('states','in',('approved','review','cancelled','done') )]}"
+                                />
                         <button name="action_done" class="btn-primary" type="object" string="Generate User"
                                 groups="vendor_portal.group_admin_vendor_portal"
-                                attrs="{'invisible': [('states','in',('draft','done') )]}"/>
+                                attrs="{'invisible': [('states','in',('draft','done','review','cancelled') )]}"/>
                         <button name="action_draft" type="object" string="Reset to draft"
                                 confirm="Are you sure to Reset to draft"
                                 groups="vendor_portal.group_admin_vendor_portal"
@@ -41,15 +44,15 @@
                         <button name="action_approval" id="btn_approved"
                                 groups="product_purchase.group_initial_approval"
                                 string="Approve" class="btn-primary" type="object"
-                                attrs="{'invisible': ['|', ('states', '!=', 'draft'), ('approve_check', '=', True)]}"
+                                attrs="{'invisible': [('is_an_approver','=',False)]}"
                                 confirm="Accept request?"/>
                         <button name="action_decline" id="btn_decline"
                                 groups="product_purchase.group_initial_approval"
                                 string="Reject" class="btn-danger" type="object"
-                                attrs="{'invisible': ['|', ('states', '!=', 'draft'), ('approve_check', '=', True)]}"
+                                 attrs="{'invisible': [('is_an_approver','=',False)]}"
                                 confirm="Reject request?"/>
 
-                        <field name="states" widget="statusbar"/>
+                        <field name="states" widget="statusbar" statusbar_visible="draft,approved,done"/>
                     </header>
 
 
@@ -102,17 +105,25 @@
                                        attrs="{'readonly':  [('states','in',('approved','done') )]}"/>
                                 <field name="pan"/>
                                 <field name="tel"/>
+<!--                                <field name="user_approve_check" invisible="1"/>-->
                                 <field name="mob" attrs="{'readonly':  [('states','in',('approved','done') )]}"/>
                                 <field name="mail_id" attrs="{'readonly':  [('states','in',('done') )]}"/>
                                 <field name="contactperson2"/>
                                 <field name="msme_number"/>
                                 <field name="msme"/>
                                 <field name="website"/>
+                                <field name="user_approve_check" invisible="1"/>
                                 <field name="vendor_category"/>
                                 <field name="company_type"/>
                                 <!--                                    <field name="gst_file"/>-->
                                 <field name="gst_file" widget="binary" filename="file_name"/>
                                 <field name="pan_card" widget="binary" filename="file_name"/>
+
+                                <field name="approve_users" widget="many2many_tags" invisible="1"/>
+                                <field name="approved_users" widget="many2many_tags" invisible="1"/>
+                                <field name="next_approve_user" widget="many2many_tags" invisible="1"/>
+                                <field name="is_an_approver" invisible="1"/>
+
 
                             </group>
                         </group>
@@ -142,8 +153,8 @@
 
                             </page>
                             <page string="Approve Users" name="vendor_approve_line" readonly="1">
-                                <field name="vendor_approve_line">
-                                    <tree editable="bottom">
+                                <field name="vendor_approve_line" readonly="1">
+                                    <tree editable="bottom" delete="0">
                                         <field name="user_id" readonly="1"/>
                                         <field name="company_id" readonly="1"/>
                                         <field name="location" readonly="1"/>
@@ -162,6 +173,25 @@
                                         <field name="status" readonly="1"/>
                                     </form>
                                 </field>
+                            </page>
+
+
+                            <page name="office_use" string="Company Details">
+                                <group>
+                                    <group col="2">
+                                        <field name="company_id" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="location" options='{"no_open": True, "no_create": True}'/>
+                                    </group>
+                                    <group col="2">
+
+                                        <field name="department" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="vendor_representative" options='{"no_open": True, "no_create": True}'/>
+
+
+                                    </group>
+
+                                </group>
+
                             </page>
                         </notebook>
 

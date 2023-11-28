@@ -70,45 +70,45 @@ class VendorPortal(CustomerPortal):
                 }
             )
 
-            vendor_approval = request.env['vendor.approval'].sudo().search([], limit=1)
-            if vendor_approval:
-                vendor_approval_users = request.env['vendor.approve.users'].sudo().search(
-                    [('vendor_approval_id', '=', vendor_approval.id)])
+            # vendor_approval = request.env['vendor.approval'].sudo().search([], limit=1)
+            # if vendor_approval:
+            #     vendor_approval_users = request.env['vendor.approve.users'].sudo().search(
+            #         [('vendor_approval_id', '=', vendor_approval.id)])
+            #
+            #     if vendor_approval_users:
+            #         approve_user_ids = []
+            #         for users in vendor_approval_users:
+            #             vendor_intake.write({'vendor_approve_users': [(4, users.user_id.id)]})
+            #             vendor_approve_users = request.env['vendor.approve.line'].sudo().create(
+            #             {
+            #                 'user_id': users.user_id.id,
+            #                 'company_id': users.company_id.id,
+            #                 'location': users.location.id,
+            #                 'department_id': users.department_id.id,
+            #                 'designation': users.designation.id,
+            #                 'approve_order': users.approve_order,
+            #                 'vendor_intake_id': vendor_intake.id
+            #             }
+            #             )
+            #             # print(values)
+            #             approve_user_ids.append({'user_id': users.user_id.id,
+            #                                      'approve_order': users.approve_order})
+            #         print("approve_user_ids : ", approve_user_ids)
+            #         if approve_user_ids:
+            #             mylist = sorted(approve_user_ids, key=lambda k: (k['approve_order']))
+            #             order = mylist[0]['approve_order']
+            #             print("mylist : ", mylist)
+            #             print("order : ", order)
+            #             for users in mylist:
+            #                 if users['approve_order'] == order:
+            #                     print("Inside ", order)
+            #                     vendor_intake.write({'next_approve_user_id': [(4, users['user_id'])]})
 
-                if vendor_approval_users:
-                    approve_user_ids = []
-                    for users in vendor_approval_users:
-                        vendor_intake.write({'vendor_approve_users': [(4, users.user_id.id)]})
-                        vendor_approve_users = request.env['vendor.approve.line'].sudo().create(
-                        {
-                            'user_id': users.user_id.id,
-                            'company_id': users.company_id.id,
-                            'location': users.location.id,
-                            'department_id': users.department_id.id,
-                            'designation': users.designation.id,
-                            'approve_order': users.approve_order,
-                            'vendor_intake_id': vendor_intake.id
-                        }
-                        )
-                        # print(values)
-                        approve_user_ids.append({'user_id': users.user_id.id,
-                                                 'approve_order': users.approve_order})
-                    print("approve_user_ids : ", approve_user_ids)
-                    if approve_user_ids:
-                        mylist = sorted(approve_user_ids, key=lambda k: (k['approve_order']))
-                        order = mylist[0]['approve_order']
-                        print("mylist : ", mylist)
-                        print("order : ", order)
-                        for users in mylist:
-                            if users['approve_order'] == order:
-                                print("Inside ", order)
-                                vendor_intake.write({'next_approve_user_id': [(4, users['user_id'])]})
-
-                success = "Registration Succesfull"
-                vals['success_msg'] = success
-                return request.render("vendor_portal.submit_return")
-                # else:
-                #     vals['error_list'] =error_list
+            success = "Registration Succesfull"
+            vals['success_msg'] = success
+            return request.render("vendor_portal.submit_return")
+            # else:
+            #     vals['error_list'] =error_list
         else:
             print("GET METHOD")
 

@@ -32,7 +32,7 @@ class VendorIntake(models.Model):
     msme = fields.Char("MSME Category")
     remarks = fields.Text("Remarks")
     states = fields.Selection(
-        [("draft", "Draft"), ("approved", "Approved"), ("done", "User Generated"), ("cancelled", "Cancel")],
+        [("draft", "Draft"), ("review","Review"),("approved", "Approved"), ("done", "User Generated"), ("cancelled", "Cancel")],
         string="Status", default="draft", tracking=True)
 
     bank = fields.Char(string='Bank Name')
@@ -88,6 +88,66 @@ class VendorIntake(models.Model):
                                           'vendor_intake_id',
                                           string='Vendor Approve Line',
                                           tracking=True)
+    company_id = fields.Many2one("res.company","Company")
+    location = fields.Many2one("res.company","Location")
+    department = fields.Many2one("hr.department", "Department", domain="[('company_id', '=', company_id)]")
+    vendor_representative = fields.Many2one("res.users","Representative")
+    approve_users = fields.Many2many(
+        'res.users',
+        'rel_vd_apprvers',
+        'vd_id',
+        'users_v',
+        string='Approve Users',
+    )
+    approved_users = fields.Many2many(
+        'res.users',
+        'approved_vd_relation',
+        'vd_apprved',
+        'user_id_vd',
+        string='Approved Users',
+    )
+
+    next_approve_user = fields.Many2many(
+        'res.users',
+        'next_aprved_vd',
+        'next_vd',
+        'users_id_vd',
+        string='Next Approver', )
+    is_an_approver = fields.Boolean("Approver",compute='compute_is_an_approver')
+
+    @api.depends('next_approve_user')
+    def compute_is_an_approver(self):
+        for rec in self:
+            rec.is_an_approver = self.env.user.id in rec.next_approve_user.mapped('id')
+
+
+    def action_review(self):
+        if not self.company_id or not self.department or not self.location:
+            raise UserError("Please fill in all Company Details: Company, Department, and Location")
+        vendor_approval = request.env['vendor.approval'].sudo().search([('company_id', '=', self.company_id.id),
+                                     ('department_id', '=', self.department.id),('location', '=', self.location.id)], limit=1)
+        if vendor_approval:
+            line = []
+            for approvers in vendor_approval.vendor_approve_users_id:
+                self.write({'approve_users': [(4, approvers.user_id.id)]})
+                vals = {
+                    'user_id': approvers.user_id.id,
+                    'company_id': approvers.company_id.id,
+                    'location': approvers.location.id,
+                    'department_id': approvers.department_id.id,
+                    'designation': approvers.designation.id,
+                    'approve_order': approvers.approve_order,
+                }
+                line.append((0, 0, vals))
+            self.vendor_approve_line = line
+            next_approver_user_ids = [next_approver.user_id.id for next_approver in self.vendor_approve_line if
+                                      next_approver.approve_order == 1]
+            print(next_approver_user_ids, "This print")
+            if all(item is not False for item in next_approver_user_ids):
+                self.write({'next_approve_user': [(6, 0, next_approver_user_ids)]})
+                self.states = 'review'
+        else:
+            raise UserError("No vendor workflow found for this company")
 
     @api.depends("user_approve_check")
     def _compute_total(self):
@@ -145,9 +205,9 @@ class VendorIntake(models.Model):
                         'login': self.mail_id,
                         'password': password,
                         'partner_id': vendor_generated.id,
-                        'sel_groups_1_9_10': "1",  # Assign group 1
-                        'sel_groups_58_59': "58",  # Assign group 58
-                        'in_group_76': True,
+                        # 'sel_groups_1_9_10': "1",  # Assign group 1
+                        # 'sel_groups_58_59': "58",  # Assign group 58
+                        # 'in_group_76': True,
                     })
             body = (
                     "Dear Vendor,Your vendor registration has been successfully approved and your Login id is" + " " + self.mail_id + " "
@@ -177,71 +237,133 @@ class VendorIntake(models.Model):
 
         else:
             self.states = 'draft'
+            self.approve_users = [(5, 0, 0)]
+            self.next_approve_user = [(5, 0, 0)]
+            self.approved_users = [(5, 0, 0)]
+            self.vendor_approve_line.unlink()
 
     def action_approval(self):
-        self.write({'vendor_approved_users': [(4, self.env.user.id)]})
-        # print(self.approve_users)
-        # print(self.approved_users)
+        print("Hellooo users")
+        print(self.env.user.id)
+        self.write({'approved_users': [(4, self.env.user.id)]})
+        # self.is_an_approver = False
+        self.write({'next_approve_user': [(3, self.env.user.id)]})
+        approver = self.env['vendor.approve.line'].sudo().search(
+            [('vendor_intake_id', '=', self.id), ('user_id', '=', self.env.user.id)])
+        for record in approver:
+            record.write({'status': 'accept'})
+
         approve_users = self.env['vendor.approve.line'].sudo().search(
-            [('vendor_intake_id', '=', self.id), ('user_id', '=', self.env.user.id)], limit=1)
+            [('vendor_intake_id', '=', self.id)], order='approve_order asc')
 
-        approve_users.write({
-            'status': 'accept'
-        })
+        user_ids = [{'u_id': user.user_id.id, 'order': user.approve_order} for user in approve_users]
+        # user_ids = [{'u_id': user.user_id.id, 'order': user.approve_order} for user in approve_users]
+        current_order = None
+        next_user = None
 
-        if self.vendor_approved_users == self.vendor_approve_users:
-            self.states = 'approved'
-            self.action_done()
+        for user in user_ids:
+            if self.env.user.id == user['u_id']:
+                current_order = user['order']
+
+        if current_order is not None:
+            for user in user_ids:
+                if user['order'] == current_order + 1:
+                    next_user = user
+
+        if next_user:
+            next_user_id = next_user['u_id']
+            next_order = next_user['order']
+            self.write({'next_approve_user': [(4, next_user_id)]})
+
+            print("Next User ID:", next_user_id)
+            print("Next Order:", next_order)
         else:
-            approve_users = self.env['vendor.approve.line'].sudo().search([('vendor_intake_id', '=', self.id)],
-                                                                          order='approve_order asc')
+            all_approved = all(approver.status == 'accept' for approver in approve_users)
 
-            user_ids = [{'u_id': user.user_id.id, 'order': user.approve_order} for user in approve_users]
-            # print(user_ids)
+            if all_approved:
+                self.states = 'approved'
+                self.ref = self.env['ir.sequence'].next_by_code('vendor.intake')
 
-            order_list = list(set([order_id.approve_order for order_id in approve_users]))
-            order_list.sort()
-            approve_dict = {}
-            print("order_list ", order_list)
-            for order in order_list:
-                for user in user_ids:
-                    if user['order'] == order:
-                        if order in approve_dict:
-                            approve_dict[order].append({'u_id': user['u_id'], 'order': user['order']})
-                        else:
-                            approve_dict[order] = [{'u_id': user['u_id'], 'order': user['order']}]
 
-            print("approve_dict ", approve_dict)
+                # Change the state to the desired value when all statuses are 'approve'
+                # self.write({'state': 'approved_state'})
+            else:
+                # Handle the case when not all statuses are 'approve'
+                # self.write({'state': 'pending_state'})
+                print("not approved")
 
-            record_to_remove = self.env['res.users'].browse(self.env.user.id)
-            self.next_approve_user_id -= record_to_remove
+            # self.state = 'approve'
+            print("Current user is the last approver or not found.")
 
-            if not self.next_approve_user_id:
-                for order in order_list:
-                    for order_list_users in approve_dict[order]:
-                        if self.env.user.id == order_list_users['u_id']:
-                            try:
-                                if approve_dict[order + 1]:
-                                    for users in approve_dict[order + 1]:
-                                        self.write({'next_approve_user_id': [(4, users['u_id'])]})
-                            except:
-                                print("order+1 ", order + 1)
-                                print("order_list[-1] ", order_list[-1])
-                                flag = 0
-                                for i in range(order + 1, order_list[-1] + 1):
-                                    print("i: ", i)
-                                    print("len(order_list) : ", len(order_list))
-                                    try:
-                                        if approve_dict[i]:
-                                            for users in approve_dict[i]:
-                                                print("write")
-                                                self.write({'next_approve_user_id': [(4, users['u_id'])]})
-                                                flag = 1
-                                    except:
-                                        print("pass")
-                                        pass
-                                    if flag:
-                                        break
+
+
+
+
+
+
+        # self.write({'vendor_approved_users': [(4, self.env.user.id)]})
+        # # print(self.approve_users)
+        # # print(self.approved_users)
+        # approve_users = self.env['vendor.approve.line'].sudo().search(
+        #     [('vendor_intake_id', '=', self.id), ('user_id', '=', self.env.user.id)], limit=1)
+        #
+        # approve_users.write({
+        #     'status': 'accept'
+        # })
+        #
+        # if self.vendor_approved_users == self.vendor_approve_users:
+        #     self.states = 'approved'
+        #     self.action_done()
+        # else:
+        #     approve_users = self.env['vendor.approve.line'].sudo().search([('vendor_intake_id', '=', self.id)],
+        #                                                                   order='approve_order asc')
+        #
+        #     user_ids = [{'u_id': user.user_id.id, 'order': user.approve_order} for user in approve_users]
+        #     # print(user_ids)
+        #
+        #     order_list = list(set([order_id.approve_order for order_id in approve_users]))
+        #     order_list.sort()
+        #     approve_dict = {}
+        #     print("order_list ", order_list)
+        #     for order in order_list:
+        #         for user in user_ids:
+        #             if user['order'] == order:
+        #                 if order in approve_dict:
+        #                     approve_dict[order].append({'u_id': user['u_id'], 'order': user['order']})
+        #                 else:
+        #                     approve_dict[order] = [{'u_id': user['u_id'], 'order': user['order']}]
+        #
+        #     print("approve_dict ", approve_dict)
+        #
+        #     record_to_remove = self.env['res.users'].browse(self.env.user.id)
+        #     self.next_approve_user_id -= record_to_remove
+        #
+        #     if not self.next_approve_user_id:
+        #         for order in order_list:
+        #             for order_list_users in approve_dict[order]:
+        #                 if self.env.user.id == order_list_users['u_id']:
+        #                     try:
+        #                         if approve_dict[order + 1]:
+        #                             for users in approve_dict[order + 1]:
+        #                                 self.write({'next_approve_user_id': [(4, users['u_id'])]})
+        #                     except:
+        #                         print("order+1 ", order + 1)
+        #                         print("order_list[-1] ", order_list[-1])
+        #                         flag = 0
+        #                         for i in range(order + 1, order_list[-1] + 1):
+        #                             print("i: ", i)
+        #                             print("len(order_list) : ", len(order_list))
+        #                             try:
+        #                                 if approve_dict[i]:
+        #                                     for users in approve_dict[i]:
+        #                                         print("write")
+        #                                         self.write({'next_approve_user_id': [(4, users['u_id'])]})
+        #                                         flag = 1
+        #                             except:
+        #                                 print("pass")
+        #                                 pass
+        #                             if flag:
+        #                                 break
 
     def action_decline(self):
         self.states = 'cancelled'

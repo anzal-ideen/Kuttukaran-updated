@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_split_custom">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="o" t-value="o.with_context({'lang':o.user_id.lang})" />
+                    <div class="page">
+                        <div class="row">
+                            <div class="mt32 mb32">
+                                <table border="1" width="100%" cellpadding="2" cellspacing="0">
+                                    <tr>
+                                        <td colspan="5"><center><strong>EXPORT INVOICE</strong></center></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5"><center><strong>SUPPLY MEANT FOR EXPORT WITH PAYMENT OF IGST</strong></center></td>
+                                    </tr>
+                                    <tr>
+                                        <td  colspan="2" rowspan="3">
+                                            <center><strong>Exporter</strong></center>
+<!--                                            <img src="eastern-logo.png" alt="">-->
+                                            <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' %res_company.logo"/>
+                                            <strong><p>Eastern Condiments Pvt. Ltd <br/>
+                                                Branch Code:7 IV/1D,IV/1E<br/>
+                                                IRUMALAPADY,
+                                                PANIPRA P.O.,<br/>
+                                                KOTHAMANGALAM, ERNAKULAM,
+                                                India: 686691<br/>
+                                                TEL: 91 - 484 - 265 06 66<br/>
+                                                Registered Office At Adimali.
+                                                </p></strong>
+                                        </td>
+                                        <td><center>Invoice No <br/> <strong>2022900682</strong></center></td>
+                                        <td><center>Exporter's Ref/Invoice Date <br/> <strong>06-OCT-2020</strong></center></td>
+                                    </tr>
+                                    <tr>
+                                        <td><center>Buyer's  Order No &amp; Date <br/><strong>118/2020<br/>06-JUL-2020</strong></center></td>
+                                        <td><center>IRN<br/></center></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:none" colspan="2">Other Reference(s)</td>
+                                    </tr>
+                                    <tr style="border:none">
+                                        <td colspan="2">GSTIN NO: <strong>32AAACE5276F1ZX</strong></td>
+                                        <td style="border:none">I.E.CODE NO: <strong> 1092002979</strong></td>
+                                        <td style="border:none">CER NO: <strong> AAACE5276FXM003</strong></td>
+                                    </tr>
+                                    <tr style="border:none">
+                                        <td colspan="2">Tax is payable on Reverse charge: <strong>No</strong></td>
+                                        <td style="border:none">PAN NO: <strong> AAACE5276F</strong></td>
+                                        <td style="border:none">LUT NO: <strong> AD320320002708P</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">Consignee</td>
+                                        <td colspan="2">CIN NO: <strong> U15499KL1989PTC005449</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"> <strong>Branch Of Princess Nouf Bint Fahad, <br/>
+                                            Bin Saud Al Saud Est. For Trading,C.R NO: 2050068007, P. O <br/>
+                                            Box 13191,,Al Khalidiya Al Janubiyah,, <br/>
+                                            Dammam 31432 , KSA Mob: 00966562980172, <br/>
+                                            00966580740177 </strong></td>
+                                        <td>Buyer (if Other than Consignee) <br/><strong> </strong></td>
+                                        <td>Transport Mode: <br/><strong> BY SEA</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Vessel/Flight No.<br/><strong> </strong></td>
+                                        <td>Country of Origin of Goods<br/><strong> INDIA</strong></td>
+                                        <td>Port Of Loading<br/><strong> COCHIN</strong></td>
+                                        <td>Country of Final Destination<br/><strong> KSA</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Port of Discharge<br/><strong> DAMMAM</strong></td>
+                                        <td>Final Destination<br/><strong> RIYADH</strong></td>
+                                        <td colspan="2">Term Of Delivery  &amp; Payment<br/><strong> BL TO 120 DAYS CREDIT</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">Marks &amp; Nos /Container No<br/><strong>Branch Of Princess Nouf Bint Fahad <br/>
+                                            Bin Saud Al Saud Est. For Trading,C.R NO: 2050068007, P. O <br/>
+                                            Box 13191,,Al Khalidiya Al Janubiyah,,<br/>
+                                            Dammam 31432 , KSA Mob: 00966562980172,  00966580740177
+                                            </strong></td>
+                                        <td colspan="2">No &amp; Kind of Packages<br/><strong> LOT No. 674, 720 CARTONS OF EASTERN BRAND INDIAN FOOD STUFF ITEMS</strong></td>
+                                    </tr>
+                                </table>
+                                <table class="" border="1" width="100%" cellpadding="2" cellspacing="0">
+                                    <tr>
+                                        <th colspan="2">Description Of Goods</th>
+                                        <th>HSN Code</th>
+                                        <th>Qty in CTN</th>
+                                        <th>Qty in KG</th>
+                                        <th>Rate/KG</th>
+                                        <th>Amt in USD</th>
+                                        <th>Order D/C 0%</th>
+                                        <th>Net Amt in USD FOB</th>
+                                        <th>Taxable Value in INR</th>
+                                        <th>IGST Rate(%)</th>
+                                        <th>IGST Payable</th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">100g Other Of Genus Pimenta-Chilli Whole
+                                            (Packed In Plastic
+                                            Pouch)ITC (HS) Code
+                                            No. ' 09042110 </td>
+                                        <td>09042110</td>
+                                        <td>720</td>
+                                        <td>2,520.00</td>
+                                        <td>3.00</td>
+                                        <td>7560.00</td>
+                                        <td>0.00</td>
+                                        <td>7560.00</td>
+                                        <td>550368.00</td>
+                                        <td>5</td>
+                                        <td>27518.4</td>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="2">TOTAL</th>
+                                        <th></th>
+                                        <th>720</th>
+                                        <th>2,520.00</th>
+                                        <th></th>
+                                        <th>7,560.00</th>
+                                        <th></th>
+                                        <th>7,560.00</th>
+                                        <th>550,368.00</th>
+                                        <th></th>
+                                        <th>27,518.40</th>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td colspan="8">Amount in US Dollars: <strong> Seven Thousand Five Hundred Sixtyonly.</strong></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td colspan="8">Amount in INR: <strong> Five Lakh Fifty Thousand Three Hundred Sixty Eightonly.</strong></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>INVOICE SUMMARY</strong></td>
+                                        <td colspan="3"><strong>Amt in INR</strong></td>
+                                        <td colspan="3"><strong>IGST Amount</strong></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>IGST_EXPORT_NONRECO_5%</td>
+                                        <td colspan="3">550368</td>
+                                        <td colspan="3">27518.4</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>TOTAL</strong></td>
+                                        <td colspan="3"><strong>550,368.00</strong></td>
+                                        <td colspan="3"><strong>27,518.40</strong></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                                <table border="1" width="100%" cellpadding="2" cellspacing="0" style="margin-top: 20%; padding-left: 55%; ">
+                                    <tr>
+                                        <th>Export Item</th>
+                                        <th>Import Item</th>
+                                        <th>Export Qty in KG</th>
+                                        <th>Import Qty in KG</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Coconut Oil</td>
+                                        <td>Copra</td>
+                                        <td>450.00</td>
+                                        <td>800.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <th>Total</th>
+                                        <td>450.00</td>
+                                        <td>800.00</td>
+                                    </tr>
+                                </table>
+                                <table class="" width="100%" cellpadding="5" cellspacing="5" style="margin-top: 2%; border-collapse: collapse; border: 1px solid black;">
+                                    <tr>
+                                        <td><strong>Declaration:</strong></td>
+                                        <td><strong> FREIGHT PAYABLE AT DESTINATION</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">We declare that this invoice shows the actual price of goods described and that all particulars are true and correct.</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" style="text-align: right;">Signature &amp; Date</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <report
+            id="report_split_invoice"
+            model="account.move"
+            report_type="qweb-html"
+            string="Split Invoice"
+            name="invoice_split_custom.report_invoice_split_custom"
+            file="invoice_split_custom.report_invoice_split_custom"
+            menu="False"
+    />
+    <record id="report_invoice_split_qweb_paperform" model="report.paperformat">
+        <field name="name">Account financial report qweb paperformat</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_height">297</field>
+        <field name="page_width">210</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">167</field>
+        <field name="margin_bottom">18</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">162</field>
+        <field name="dpi">115</field>
+    </record>
+
+    <record id="report_invoice_paperformat_supporting_maufacturer" model="report.paperformat">
+        <field name="name">Account financial report qweb paperformat Supporitng Manufacturer</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_height">298</field>
+        <field name="page_width">211</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">173</field>
+        <field name="margin_bottom">18</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">168</field>
+        <field name="dpi">120</field>
+    </record>
+
+    <report id="print_report_invoice"
+        	string="Invoice Report"
+        	model="split.initial.invoice"
+        	report_type="qweb-pdf"
+        	name="invoice_split_custom.invoice_report"
+        	file="invoice_split_custom.invoice_report"
+            paperformat="invoice_split_custom.report_invoice_split_qweb_paperform"
+        	menu="True"
+            print_report_name="(object.documentnumber)"
+    />
+
+    <report id="print_report_invoice_supporting_manufacturer"
+        	string="Invoice Report Supporting Manufacturer"
+        	model="split.initial.invoice"
+        	report_type="qweb-pdf"
+        	name="invoice_split_custom.invoice_report_supporting_manufacturer"
+        	file="invoice_split_custom.invoice_report_supporting_manufacturer"
+            paperformat="invoice_split_custom.report_invoice_paperformat_supporting_maufacturer"
+        	menu="True"
+            print_report_name="(object.documentnumber)"
+    />
+</odoo>

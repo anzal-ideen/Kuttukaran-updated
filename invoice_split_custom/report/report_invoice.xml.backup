@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--  ******************* inherited default external_layout_standard header template and add the contents to repeat in every pages *******************888 -->
+
+<template id="template_internal_layout_header_inherited" inherit_id="web.external_layout_standard">
+    <xpath expr="//div[@class='row']" position="replace">
+         <t t-foreach="docs" t-as="o">
+         </t>
+    </xpath>
+    <xpath expr="//div[@class='row zero_min_height']" position="replace">
+        <div t-if="report_type == 'pdf'" class="text-muted" style="text-align: right;" >
+                    Page: <span class="page"/> / <span class="topage"/>
+                </div>
+    </xpath>
+    <xpath expr="//div[@name='company_address']" position="replace">
+        <table class="table" width="100%">
+            <tr>
+               <td style="border:1px solid black;" colspan="5"><center><strong>EXPORT INVOICE</strong></center></td>
+            </tr>
+            <tr>
+               <td style="border:1px solid black;" colspan="5"><center><strong>SUPPLY MEANT FOR EXPORT WITH PAYMENT OF IGST</strong></center></td>
+            </tr>
+            <tr>
+                <td style="border:1px solid black;width: 50%" colspan="2" rowspan="3">
+                    <center><strong>Exporter</strong></center>
+                    <table>
+                       <tr>
+                          <td><div class="col-xs-6">
+                                <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' % to_text(res_company.logo)" style="max-height: 75px;"/>
+                                </div></td>
+                                <td>
+                                     <strong><p>Eastern Condiments Pvt. Ltd <br/>
+                            Branch Code:7 IV/1D,IV/1E<br/>
+                            IRUMALAPADY,
+                            PANIPRA P.O.,<br/>
+                            KOTHAMANGALAM, ERNAKULAM,
+                            India: 686691<br/>
+                            TEL: 91 - 484 - 265 06 66<br/>
+                            Registered Office At Adimali.
+                            </p></strong>
+                            </td>
+                       </tr>
+<!--                        <tr>-->
+
+<!--                        </tr>-->
+                    </table>
+                     <br/>
+                            GSTIN NO: <strong><span t-field="o.gstinofsupplier"/></strong>
+<!--                        </tr>-->
+<!--                        <tr>-->
+                        <br/>
+                        <br/>
+                            Tax is payable on Reverse charge: <strong>No</strong>
+                </td>
+                <td style="border:1px solid black;"><center>Invoice No <br/> <strong><span t-field="o.documentnumber"/></strong></center></td>
+                <td style="border:1px solid black;"><center>Exporter's Ref/Invoice Date <br/> <strong><span t-field="o.documentdate"/></strong></center></td>
+            </tr>
+            <tr>
+                <td style="border:1px solid black;"><center>Buyer's  Order No &amp; Date <br/><strong><span t-field="o.poreferencenumber"/><br/><span t-field="o.poreferencedate"/></strong></center></td>
+                <td style="border:1px solid black;"><center><img t-attf-src="data:image/*;base64,{{o.qr_code}}" style="max-height: 100px;"/></center></td>
+            </tr>
+            <tr>
+                <td style="border:1px solid black;" colspan="2">Other Reference(s)<br/>
+                    <br/>
+                    <table>
+                        <tr>
+                            <td  style="white-space: nowrap;border:none;">
+                                I.E.CODE NO: <strong><span t-field="o.iecodeno"/></strong>
+                            </td>
+                            <td  style="white-space: nowrap;border:none;">
+                                CER NO: <strong><span t-field="o.cerno"/></strong><br/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="white-space: nowrap;border:none;;">
+                                PAN NO: <strong><span t-field="o.panno"/></strong>
+                            </td>
+                            <td style="white-space: nowrap;border:none;;">
+                                LUT NO: <strong><span t-field="o.lutno"/></strong>
+                            </td>
+                        </tr>
+
+
+
+
+                    </table>
+
+                </td>
+
+
+<!--                 <tr>-->
+<!--                <td style="border:1px solid black;" colspan="2">GSTIN NO: <strong><span t-field="o.gstinofsupplier"/></strong></td>-->
+
+                <br/>
+<!--                </tr>-->
+<!--                 <tr>-->
+<!--                <td style="border:1px solid black;" colspan="2">Tax is payable on Reverse charge: <strong>No</strong></td>-->
+
+<!--                </tr>-->
+
+
+            </tr>
+
+            <t t-if="o.manufacturer_line">
+                <tr>
+                    <td style="border:1px solid black;" colspan="4">Supporting Manufacturer: <br/><strong><span t-field="o.supportingmanuname"/></strong><br/><strong><span t-field="o.supportingmanuaddress"/></strong></td>
+                </tr>
+
+            </t>
+            <tr>
+                <td style="border:1px solid black;width: 50%" colspan="2">Consignee</td>
+                <td style="border:1px solid black;" colspan="2">CIN NO: <strong><span t-field="o.cinno"/></strong></td>
+            </tr>
+            <tr>
+                <td  style="border:1px solid black;width: 50%" colspan="2"> <strong><span t-field="o.recipientlegalname"/><br/>
+                                             <span t-field="o.recipientaddress1"/><br/>
+    <!--                                            <span t-field="o.cinno"/><br/>-->
+    <!--                                            <span t-field="o.cinno"/><br/>-->
+                    <span t-field="o.recipientaddress2"/></strong></td>
+                <td style="border:1px solid black;">Buyer (if Other than Consignee) <br/><strong> </strong></td>
+                <td style="border:1px solid black;">Transport Mode: <br/><strong><span t-field="o.transmode"/></strong></td>
+            </tr>
+            <tr>
+                <td style="border:1px solid black;width: 25%">Vessel/Flight No.<br/><strong><span t-field="o.vesselflightno"/></strong></td>
+                <td style="border:1px solid black;width: 25%">Country of Origin of Goods<br/><strong><span t-field="o.countryoforigin"/></strong></td>
+                <td style="border:1px solid black;">Port Of Loading<br/><strong><span t-field="o.portofloading"/></strong></td>
+                <td style="border:1px solid black;">Country of Final Destination<br/><strong><span t-field="o.countryoffdest"/></strong></td>
+            </tr>
+            <tr>
+                <td style="border:1px solid black;width: 25%">Port of Discharge<br/><strong><span t-field="o.portofdischarge"/></strong></td>
+                <td style="border:1px solid black;width: 25%">Final Destination<br/><strong><span t-field="o.findest"/></strong></td>
+                <td style="border:1px solid black;" colspan="2">Term Of Delivery  &amp; Payment<br/><strong><span t-field="o.termofdelpmnt"/></strong></td>
+            </tr>
+            <tr style="border:1px solid black;">
+                <td  style="border:1px solid black;width: 50%" colspan="2">Marks &amp; Nos /Container No<br/><strong><span t-field="o.recipientlegalname"/><br/>
+                                           <span t-field="o.recipientaddress1"/><br/>
+    <!--                                            <span t-field="o.cinno"/><br/>-->
+    <!--                                            <span t-field="o.cinno"/><br/>-->
+                    <span t-field="o.recipientaddress2"/></strong></td>
+                <td style="border:1px solid black;width: 50%" colspan="2">No &amp; Kind of Packages<br/><strong><span t-field="o.noofpkgs"/></strong></td>
+            </tr>
+        </table>
+
+
+    </xpath>
+
+<!--    <xpath expr="//div[2]" position="replace">-->
+<!--    </xpath>-->
+
+
+
+
+
+    <!-- ****************************  replacing original footer and adding custom footer **********************8 -->
+
+    <xpath expr="//div[@t-attf-class='footer o_standard_footer o_company_#{company.id}_layout']/div[1]//ul[@class='list-inline mb4']" position="replace">
+
+        <table class="" width="100%" cellpadding="5" cellspacing="5" style="margin-top: 0%; border-collapse: collapse; border: 1px solid black;">
+                                    <tr style="border:none;">
+                                        <td style="white-space: nowrap;border:none;"><strong>Declaration:</strong></td>
+                                        <td style="white-space: nowrap;border:none;"><strong> FREIGHT PAYABLE AT DESTINATION</strong></td>
+                                    </tr>
+                                    <tr style="white-space: nowrap;border:none;">
+                                        <td style="white-space: nowrap;border:none;" colspan="2">We declare that this invoice shows the actual price of goods described and that all particulars are true and correct.<br/></td>
+                                    </tr>
+                                    <tr style="white-space: nowrap;border:none;">
+                                        <td style="white-space: nowrap;border:none;text-align: right;" colspan="2">Signature &amp; Date</td>
+                                    </tr>
+        </table>
+
+    </xpath>
+        <xpath expr="//div[@t-attf-class='footer o_standard_footer o_company_#{company.id}_layout']/div[1]//div[@class='text-muted']" position="replace">
+        </xpath>
+
+            <!-- ****************************************************************8   -->
+
+</template>
+
+
+
+
+    <template id="invoice_report">
+         <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="o">
+
+<!--                    <t t-set="o" t-value="o.with_context({'lang':o.user_id.lang})" />-->
+                    <div class="page" style="font-size: 15px !important;">
+                        <div class="row">
+                            <div class="mt16 mb32">
+<!--                                <table class="table" width="100%">-->
+<!--                                    <tr>-->
+<!--                                        <td style="border:1px solid black;" colspan="5"><center><strong>EXPORT INVOICE</strong></center></td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td style="border:1px solid black;" colspan="5"><center><strong>SUPPLY MEANT FOR EXPORT WITH PAYMENT OF IGST</strong></center></td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td style="border:1px solid black;" colspan="2" rowspan="3">-->
+<!--                                            <center><strong>Exporter</strong></center>-->
+<!--                                            <table>-->
+<!--                                                <tr>-->
+<!--                                                    <td><div class="col-xs-6">-->
+<!--                        <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' % to_text(res_company.logo)" style="max-height: 75px;"/>-->
+<!--                                            </div></td>-->
+<!--                                                    <td>-->
+<!--                                                         <strong><p>Eastern Condiments Pvt. Ltd <br/>-->
+<!--                                                Branch Code:7 IV/1D,IV/1E<br/>-->
+<!--                                                IRUMALAPADY,-->
+<!--                                                PANIPRA P.O.,<br/>-->
+<!--                                                KOTHAMANGALAM, ERNAKULAM,-->
+<!--                                                India: 686691<br/>-->
+<!--                                                TEL: 91 - 484 - 265 06 66<br/>-->
+<!--                                                Registered Office At Adimali.-->
+<!--                                                </p></strong>-->
+<!--                                                    </td>-->
+<!--                                                </tr>-->
+<!--                                            </table>-->
+<!--                                        </td>-->
+<!--                                        <td style="border:1px solid black;"><center>Invoice No <br/> <strong><span t-field="o.documentnumber"/></strong></center></td>-->
+<!--                                        <td style="border:1px solid black;"><center>Exporter's Ref/Invoice Date <br/> <strong><span t-field="o.documentdate"/></strong></center></td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td style="border:1px solid black;"><center>Buyer's  Order No &amp; Date <br/><strong><span t-field="o.poreferencenumber"/><br/><span t-field="o.poreferencedate"/></strong></center></td>-->
+<!--                                        <td style="border:1px solid black;"><center>IRN<br/><img t-attf-src="data:image/*;base64,{{o.qr_code}}" style="max-height: 65px;"/></center></td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td style="border:1px solid black;" colspan="2">Other Reference(s)</td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td style="border:1px solid black;">GSTIN NO: <strong><span t-field="o.gstinofsupplier"/></strong></td>-->
+<!--                                        <td style="border:1px solid black;">I.E.CODE NO: <strong><span t-field="o.iecodeno"/></strong></td>-->
+<!--                                        <td style="border:1px solid black;" colspan="2">CER NO: <strong><span t-field="o.cerno"/></strong></td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td style="border:1px solid black;" colspan="2">Tax is payable on Reverse charge: <strong>No</strong></td>-->
+<!--                                        <td style="border:1px solid black;" >PAN NO: <strong><span t-field="o.panno"/></strong></td>-->
+<!--                                        <td  style="border:1px solid black;" >LUT NO: <strong><span t-field="o.lutno"/></strong></td>-->
+<!--                                    </tr>-->
+<!--                                    <t t-if="o.manufacturer_line">-->
+<!--                                        <tr>-->
+<!--                                            <td style="border:1px solid black;" colspan="4">Supporting Manufacturer</td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td style="border:1px solid black;" colspan="4"><strong><span t-field="o.supportingmanuname"/><br/>-->
+<!--                                            <span t-field="o.supportingmanuaddress"/></strong></td>-->
+<!--                                        </tr>-->
+<!--                                    </t>-->
+<!--                                    <tr>-->
+<!--                                        <td style="border:1px solid black;" colspan="2">Consignee</td>-->
+<!--                                        <td style="border:1px solid black;" colspan="2">CIN NO: <strong><span t-field="o.cinno"/></strong></td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td  style="border:1px solid black;" colspan="2"> <strong><span t-field="o.recipientlegalname"/><br/>-->
+<!--                                           <span t-field="o.recipientaddress1"/><br/>-->
+<!--&lt;!&ndash;                                            <span t-field="o.cinno"/><br/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <span t-field="o.cinno"/><br/>&ndash;&gt;-->
+<!--                                            <span t-field="o.recipientaddress1"/></strong></td>-->
+<!--                                        <td style="border:1px solid black;">Buyer (if Other than Consignee) <br/><strong> </strong></td>-->
+<!--                                        <td style="border:1px solid black;">Transport Mode: <br/><strong><span t-field="o.transmode"/></strong></td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td style="border:1px solid black;">Vessel/Flight No.<br/><strong><span t-field="o.vesselflightno"/></strong></td>-->
+<!--                                        <td style="border:1px solid black;">Country of Origin of Goods<br/><strong><span t-field="o.countryoforigin"/></strong></td>-->
+<!--                                        <td style="border:1px solid black;">Port Of Loading<br/><strong><span t-field="o.portofloading"/></strong></td>-->
+<!--                                        <td style="border:1px solid black;">Country of Final Destination<br/><strong><span t-field="o.countryoffdest"/></strong></td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td style="border:1px solid black;">Port of Discharge<br/><strong><span t-field="o.portofdischarge"/></strong></td>-->
+<!--                                        <td style="border:1px solid black;">Final Destination<br/><strong><span t-field="o.findest"/></strong></td>-->
+<!--                                        <td style="border:1px solid black;" colspan="2">Term Of Delivery  &amp; Payment<br/><strong><span t-field="o.termofdelpmnt"/></strong></td>-->
+<!--                                    </tr>-->
+<!--                                    <tr style="border:1px solid black;">-->
+<!--                                        <td  style="border:1px solid black;" colspan="2">Marks &amp; Nos /Container No<br/><strong><span t-field="o.recipientlegalname"/><br/>-->
+<!--&lt;!&ndash;                                            <span t-field="o.recipientaddress1"/><br/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <span t-field="o.cinno"/><br/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <span t-field="o.cinno"/><br/>&ndash;&gt;-->
+<!--                                            <span t-field="o.recipientaddress1"/></strong></td>-->
+<!--                                        <td style="border:1px solid black;" colspan="2">No &amp; Kind of Packages<br/><strong><span t-field="o.noofpkgs"/></strong></td>-->
+<!--                                    </tr>-->
+<!--                                </table>-->
+
+                                 <table class="table table-sm o_main_table" style="font-size:14px;tr:margin-bottom:30px;height:60mm;">
+                                    <thead>
+                                    <tr style="border:1px solid black;">
+                                        <th  style="border:1px solid black;width: 18%" colspan="2">Description Of Goods</th>
+                                        <th style="border:1px solid black;width: 11%">HSN Code</th>
+                                        <th style="border:1px solid black;width: 5%">Qty in CTN</th>
+                                        <th style="border:1px solid black;width: 11%">Qty in KG</th>
+                                        <th style="border:1px solid black;width: 5%">Rate/KG</th>
+                                        <th style="border:1px solid black;width: 12.5%">Amt in USD</th>
+                                        <th style="border:1px solid black;width: 12.5%">Order D/C %</th>
+                                        <th style="border:1px solid black;width: 12.5%">Net Amt in USD FOB</th>
+                                        <th style="border:1px solid black;width: 12.5%">Taxable Value in INR</th>
+                                        <th style="border:1px solid black;width: 5%">IGST Rate(%)</th>
+                                        <th style="border:1px solid black;width: 11%">IGST Payable</th>
+                                    </tr>
+                                    </thead>
+                                        <t t-set="totalctn" t-value="0" />
+                                        <t t-set="totalquantity" t-value="0" />
+                                        <t t-set="totalamtinusd" t-value="0" />
+                                        <t t-set="totalnetamtinusdfob" t-value="0" />
+                                    <tbody class="sale_tbody">
+                                    <t t-foreach="o.order_line" t-as="line">
+                                        <tr style="border-top: 1px solid black;border:1px solid black;height:70%;">
+                                            <td style="border-top: 2px solid black;border:1px solid black;" colspan="2"><center><span t-field="line.itemdescription"/><br/><br/><br/></center></td>
+                                            <td style="border-top: 2px solid black;border:1px solid black;"><center><span t-field="line.hsnorsaccode"/></center></td>
+                                            <td style="border-top: 2px solid black;border:1px solid black;"><center><span t-field="line.qtyinctn" t-options='{"widget": "float", "precision": 0}' /></center></td>
+                                            <td style="border-top: 2px solid black;border:1px solid black;"><center><span t-field="line.quantity" t-options='{"widget": "float", "precision": 3}' /></center></td>
+                                            <td style="border-top: 2px solid black;border:1px solid black;"><center><span t-field="line.rateperkgusd"/></center></td>
+                                            <td style="border-top: 2px solid black;border:1px solid black;"><center><span t-field="line.amtinusd"/></center></td>
+                                            <td style="border-top: 2px solid black;border:1px solid black;"><center><span t-field="line.dispercent"/></center></td>
+                                            <td style="border-top: 2px solid black;border:1px solid black;"><center><span t-field="line.netamtinusdfob"/></center></td>
+                                            <td style="border-top: 2px solid black;border:1px solid black;"><center><span t-field="line.itemtaxablevalue"/></center></td>
+                                            <td style="border-top: 2px solid black;border:1px solid black;"><center><span t-field="line.gstrate"/></center></td>
+                                            <td style="border-top: 2px solid black;border:1px solid black;"><center><span t-field="line.igstamount"/></center></td>
+                                        </tr>
+                                        <t t-set="totalctn" t-value="totalctn+line.qtyinctn" />
+                                        <t t-set="totalquantity" t-value="totalquantity+line.quantity" />
+                                        <t t-set="totalamtinusd" t-value="totalamtinusd+line.amtinusd" />
+                                        <t t-set="totalnetamtinusdfob" t-value="totalnetamtinusdfob+line.netamtinusdfob" />
+
+                                    </t>
+                                    </tbody>
+
+                                    <tr style="border:2px solid black;" border="1">
+                                        <th style="border:1px solid black;" colspan="2">TOTAL</th>
+                                        <th style="border:1px solid black;"></th>
+                                        <th style="border:1px solid black;"><strong><center><span t-esc="'%.0f'% totalctn"/></center></strong></th>
+                                        <th style="border:1px solid black;"><strong><center><span t-esc="'%.3f'% totalquantity"/></center></strong></th>
+                                        <th style="border:1px solid black;"></th>
+                                        <th style="border:1px solid black;"><strong><center><span t-esc="'%.2f'% totalamtinusd"/></center></strong></th>
+                                        <th style="border:1px solid black;"></th>
+                                        <th style="border:1px solid black;"><strong><center><span t-esc="'%.2f'% totalnetamtinusdfob"/></center></strong></th>
+                                        <th style="border:1px solid black;"><strong><center><span t-field="o.total_assesable_value"/></center></strong></th>
+                                        <th style="border:1px solid black;"></th>
+                                        <th style="border:1px solid black;"><strong><center><span t-field="o.total_igst_value"/></center></strong></th>
+                                    </tr>
+                                 </table>
+
+
+
+                                <span><br/><br/></span>
+
+
+
+
+                                    <table class="table table-sm o_main_table" border="1" width="100%" cellpadding="2" cellspacing="0" style="page-break-inside: avoid;">
+                                    <tr style="border:1px solid black;">
+<!--                                        <td style="border:1px solid black;"></td>-->
+                                        <td style="border:1px solid black;" colspan="12">Amount in US Dollars: <strong><span t-field="o.total_usd_words"/> Only</strong></td>
+<!--                                        <td style="border:1px solid black;"></td>-->
+<!--                                        <td style="border:1px solid black;"></td>-->
+<!--                                        <td style="border:1px solid black;"></td>-->
+                                    </tr>
+                                    <tr>
+<!--                                        <td style="border:1px solid black;"></td>-->
+                                        <td style="border:1px solid black;" colspan="12">Amount in INR: <strong><span t-field="o.total_inr_words"/> Only</strong></td>
+<!--                                        <td style="border:1px solid black;"></td>-->
+<!--                                        <td style="border:1px solid black;"></td>-->
+<!--                                        <td style="border:1px solid black;"></td>-->
+                                    </tr>
+                                    </table>
+
+
+                                <table border="1" width="100%" cellpadding="2" cellspacing="0" style="margin-top: 2%; padding-left: 55%;page-break-inside: avoid;">
+                                    <tr>
+                                        <td style="border:1px solid black;"><strong>INVOICE SUMMARY</strong></td>
+                                        <td style="border:1px solid black;" colspan="3"><strong>Amt in INR</strong></td>
+                                        <td style="border:1px solid black;" colspan="3"><strong>IGST Amount</strong></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <t t-foreach="o.invoice_summary_line" t-as="line">
+                                    <tr>
+                                        <td style="border:1px solid black;">IGST_EXPORT_NONRECO<br/><span t-field="line.summary_name"/></td>
+                                        <td style="border:1px solid black;" colspan="3"><span t-field="line.amt_in_inr"/></td>
+                                        <td style="border:1px solid black;" colspan="3"><span t-field="line.igst_amount"/></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    </t>
+                                    <tr>
+                                        <td style="border:1px solid black;"><strong>TOTAL</strong></td>
+                                        <td style="border:1px solid black;" colspan="3"><strong><span t-field="o.total_assesable_value"/></strong></td>
+                                        <td style="border:1px solid black;" colspan="3"><strong><span t-field="o.total_igst_value"/></strong></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </table>
+                                <t t-if="o.manufacturer_line">
+                                    <table border="1" width="100%" cellpadding="2" cellspacing="0" style="margin-top: 2%; padding-left: 55%;page-break-inside: avoid;">
+                                        <tr>
+                                            <th style="border:1px solid black;">Export Item</th>
+                                            <th style="border:1px solid black;">Import Item</th>
+                                            <th style="border:1px solid black;">Export Qty in KG</th>
+                                            <th style="border:1px solid black;">Import Qty in KG</th>
+                                        </tr>
+                                            <t t-set="totalexportqty" t-value="0" />
+                                            <t t-set="totalimportqty" t-value="0" />
+                                        <t t-foreach="o.manufacturer_line" t-as="line">
+                                            <tr>
+                                                <td style="border:1px solid black;"><span t-field="line.export_item"/></td>
+                                                <td style="border:1px solid black;"><span t-field="line.import_item"/></td>
+                                                <td style="border:1px solid black;"><span t-field="line.export_item_qty"/></td>
+                                                <td style="border:1px solid black;"><span t-field="line.import_item_qty"/></td>
+                                            </tr>
+                                            <t t-set="totalexportqty" t-value="totalexportqty+line.export_item_qty" />
+                                            <t t-set="totalimportqty" t-value="totalimportqty+line.import_item_qty" />
+                                        </t>
+                                        <tr>
+                                            <td style="border:1px solid black;"></td>
+                                            <th style="border:1px solid black;">Total</th>
+                                            <td style="border:1px solid black;"><span t-esc="'%.2f'% totalexportqty"/></td>
+                                            <td style="border:1px solid black;"><span t-esc="'%.2f'% totalimportqty"/></td>
+                                        </tr>
+                                    </table>
+                                    <table>
+                                        <tr>
+                                            <td><span t-esc="'%.2f'% totalimportqty"/>	KG <span t-field="o.importitem"/> IMPORTED BY <span t-field="o.supportingmanuname"/>, <span t-field="o.supportingmanuaddress"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>UNDER ADVANCE LICENCE No.<span t-field="o.licnumber"/> Dated <span t-field="o.licdate"/>  USED FOR THE EXPORT OF <span t-esc="'%.2f'% totalexportqty"/> KG <span t-field="o.exportitem"/></td>
+                                        </tr>
+                                    </table>
+                                </t>
+
+                                <div class="mt32 mb32">
+                                <div class="col-xs-6">
+                                </div>
+                                <div class="col-xs-6">
+
+                                    <br/><br/><br/>
+                                </div>
+                                    <table style="width:100%;border:none;">
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                <div class="col-xs-6">
+                                    <span class="float-right">
+                                    <img src='/invoice_split_custom/static/img/image001.png' style="max-height: 80px;"/>
+<!--                                <img t-if="res_company.signature" t-att-src="'data:image/png;base64,%s' % to_text(res_company.signature)" style="max-height: 75px;"/>-->
+                                    </span>
+                                </div>
+                                </div>
+<!--                                <table class="" width="100%" cellpadding="5" cellspacing="5" style="margin-top: 2%; border-collapse: collapse; border: 1px solid black;">-->
+<!--                                    <tr style="border:1px solid black;">-->
+<!--                                        <td style="border:1px solid black;"><strong>Declaration:</strong></td>-->
+<!--                                        <td style="border:1px solid black;"><strong> FREIGHT PAYABLE AT DESTINATION</strong></td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td style="border:1px solid black;" colspan="2">We declare that this invoice shows the actual price of goods described and that all particulars are true and correct.</td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td style="border:1px solid black;ext-align: right;" colspan="2">Signature &amp; Date</td>-->
+<!--                                    </tr>-->
+<!--                                </table>-->
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+         </t>
+    </template>
+
+</odoo>

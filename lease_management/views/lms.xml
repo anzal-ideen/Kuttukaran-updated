@@ -8,6 +8,10 @@
                 <search string="Lease">
                     <field name="name"/>
                     <field name="bill_to"/>
+                    <filter string="Accepted" name="status_approved" domain="[('state', '=', 'approve')]"/>
+                    <filter string="Draft" name="status_draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="Requested" name="status_cancel" domain="[('state', '=', 'request')]"/>
+                    <filter string="Expire" name="status_expired" domain="[('state', '=', 'expire')]"/>
                 </search>
             </field>
         </record>
@@ -65,13 +69,10 @@
                         <button name="action_draft"
                                 string="Move to Draft" type="object" invisible="1"/>
 
-                       <button name="action_generate_po"
+                        <button name="action_generate_po"
                                 string="Create PO" class="btn-primary" type="object"
                                 attrs="{'invisible': [('state', '!=', 'approve')]}"
                         />
-
-
-
 
 
                         <widget name="attach_document" string="Attach Document" action="message_post"
@@ -87,8 +88,9 @@
                             <button name="action_open_attachments" type="object"
                                     class="oe_stat_button" icon="fa-book"
                                     attrs="{'invisible': [('attachment_number', '=', 0)]}">
-                                    <field name="attachment_number" widget="statinfo" string="Documents" options="{'reload_on_button': true}"/>
-                                    <span class="o_stat_text">Documents</span>
+                                <field name="attachment_number" widget="statinfo" string="Documents"
+                                       options="{'reload_on_button': true}"/>
+                                <span class="o_stat_text">Documents</span>
                             </button>
                         </div>
 
@@ -132,29 +134,30 @@
                                 <field name="auto_invoice" attrs="{'invisible': [('auto_po', '=', False)]}"/>
 
 
-
                             </group>
                         </group>
 
 
                         <notebook>
-                            <!--                            <page string="Products" name="product_lease_line">-->
-                            <!--                                <field name="product_lines">-->
-                            <!--                                    <tree editable="bottom">-->
-                            <!--                                        <field name="product_id"/>-->
-                            <!--                                        <field name="vendors" widget="many2many_tags"-->
-                            <!--                                               options='{"no_open": True, "no_create": True}'/>-->
-                            <!--                                        <field name="payment_terms"/>-->
-                            <!--                                        <field name="expected_date"/>-->
-                            <!--                                        <field name="qty"/>-->
-                            <!--                                        <field name="unit_price"/>-->
-                            <!--                                        &lt;!&ndash;                                        <field name="qty"/>&ndash;&gt;-->
-                            <!--                                        <field name="sub_total"/>-->
-                            <!--                                        <field name="contract_status"/>-->
+                            <page string="Details" name="prdct_details">
+                                <group>
+                                    <group>
+                                        <field name="address1"/>
+                                        <field name="address2"/>
+                                        <field name="city"/>
+                                        <field name="state_name"/>
 
-                            <!--                                    </tree>-->
-                            <!--                                </field>-->
-                            <!--                            </page>-->
+
+                                    </group>
+
+                                    <group>
+                                        <field name="location"/>
+                                        <field name="security"/>
+                                    </group>
+
+                                </group>
+
+                            </page>
 
 
                             <page string="Approvers" name="pade_apprs">
@@ -232,6 +235,11 @@
             <field name="res_model">product.lease</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('vendor_id.user_id.id','=',uid)]</field>
+            <field name="context">{
+                'search_default_status_draft': 1
+                }
+            </field>
+
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create"></p>
             </field>

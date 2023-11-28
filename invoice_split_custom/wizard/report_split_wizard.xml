@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+
+        <record id="custom_invoice_view" model="ir.ui.view">
+            <field name="name">Custom Invoice Report</field>
+            <field name="model">invoice.split</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+<!--                            <group>-->
+<!--                                <field name="product_categ" widget="many2many_tags"-->
+<!--                                       options="{'no_create_edit' : True}" string="Product Category"/>-->
+<!--                            </group>-->
+                                <field name="order_line" widget="many2many_checkboxes" required="1" options="{'limit': 10}" >
+                                    <tree>
+                                        <field name="name" string="Product"/>
+                                        <field name="quantity"/>
+                                        <field name="price_unit"/>
+                                        <field name="discount"/>
+                                        <field name="move_name"/>
+                                    </tree>
+                                </field>
+                        </group>
+                    </sheet>
+                    <footer>
+<!--                        <button string="Print" name="compute_ageing" type="object" class="btn-primary"/>-->
+                        <button string="Split Invoice" name="split_invoice" type="object" class="btn-primary"/>
+                        <button string="Select All and Split" name="select_all_invoices" type="object" class="btn-primary"/>
+                        or
+                        <button string="Discard" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_custom_split_invoices" model="ir.actions.act_window">
+            <field name="name">Split And Print Invoice</field>
+            <field name="res_model">invoice.split</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="custom_invoice_view"/>
+            <field name="target">new</field>
+        </record>
+
+
+<record id="invoice_form_my" model="ir.ui.view">
+
+            <field name="name">account.move.form.my</field>
+
+            <field name="model">account.move</field>
+
+            <field name="inherit_id" ref="account.view_move_form"/>
+
+            <field name="arch" type="xml">
+
+
+
+            	<xpath expr="/form/header/button[2]" position="after">
+
+            <button name="%(invoice_split_custom.action_custom_split_invoices)d" type="action" string="Split Invoice"/>
+    		    </xpath>
+
+            </field>
+
+       </record>
+
+    </data>
+</odoo>
+
+
+

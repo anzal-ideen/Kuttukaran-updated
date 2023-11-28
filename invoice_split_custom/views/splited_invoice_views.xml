@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_move_line_invoice_views_inherit_move" model="ir.ui.view">
+        <field name="name">AccountMove</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"></field>
+        <field name="arch" type="xml">
+        <data>
+<!--                        <xpath expr = "//field[@name='invoice_line_ids']/tree/field[@name='quantity']" position = "before" >-->
+<!--                                                <field name="istheitemagood" string="              ddsdsdsssssssssssssitemdescription    "  force_save="1" style="width:260px !important;"/>-->
+<!--                        </xpath>-->
+
+
+            <xpath expr = "//field[@name='invoice_line_ids']" position ="attributes">
+            <attribute name="readonly">1</attribute>
+            </xpath>
+
+            <xpath expr = "//field[@name='invoice_date']" position ="attributes">
+            <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr = "//field[@name='partner_id']" position ="attributes">
+            <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr = "//field[@name='company_id']" position ="attributes">
+            <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr = "//field[@name='invoice_payment_term_id']" position ="attributes">
+            <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr = "//field[@name='ref']" position ="attributes">
+            <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr = "//field[@name='invoice_date_due']" position ="attributes">
+            <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr = "//div[@class='o_td_label']" position ="attributes">
+            <attribute name="invisible">1</attribute>
+            </xpath>
+
+
+
+
+
+
+            <xpath expr = "//field[@name='invoice_line_ids']/tree/field[@name='quantity']" position = "before" >
+                        <field name="linenumber" force_save="1"/>
+                        <field name="itemdescription" force_save="1" style="width:200px !important;"/>
+                        <field name="istheitemagood" force_save="1" style="width:260px !important;" />
+                        <field name="hsnorsaccode" force_save="1" style="width:260px !important;"/>
+<!--                        <field name="quantity_" force_save="1" style="width:260px !important;"/>-->
+                        <field name="unitofmeasurement" force_save="1" style="width:260px !important;"/>
+                        <field name="itemprice" force_save="1" style="width:260px !important;"/>
+                        <field name="grossamount" force_save="1" style="width:260px !important;"/>
+                        <field name="itemdiscountamount" force_save="1" style="width:260px !important;"/>
+                        <field name="itemtaxablevalue" force_save="1" style="width:260px !important;"/>
+                        <field name="gstrate" force_save="1" style="width:260px !important;"/>
+                        <field name="igstamount" force_save="1" style="width:260px !important;"/>
+<!--                         <field name="csgtamount" force_save="1" style="width:260px !important;"/>-->
+<!--                        <field name="sgst_utgstamount" force_save="1" style="width:260px !important;"/>-->
+<!--                        <field name="compcessamountadvalorem" force_save="1" style="width:260px !important;"/>-->
+<!--                        <field name="statecessamountadvalorem" force_save="1" style="width:260px !important;"/>-->
+<!--                        <field name="otherchargesitemlevel" force_save="1" style="width:260px !important;"/>-->
+                        <field name="itemtotalamount" force_save="1" style="width:260px !important;"/>
+<!--                        <field name="totaltaxablevalue" force_save="1" style="width:260px !important;"/>-->
+<!--                        <field name="igstamounttotal" force_save="1" style="width:260px !important;"/>-->
+<!--                        <field name="cgstamounttotal" force_save="1" style="width:260px !important;"/>-->
+<!--                        <field name="sgst_utgstamounttotal" force_save="1" style="width:260px !important;"/>-->
+<!--                        <field name="compcessamounttotal" force_save="1" style="width:260px !important;"/>-->
+<!--                        <field name="statecessamounttotal" force_save="1" style="width:260px !important;"/>-->
+
+                        <field name="categorylvl1" force_save="1" style="width:260px !important;"/>
+                        <field name="categorylvl2" force_save="1" style="width:260px !important;"/>
+                        <field name="category" force_save="1" style="width:260px !important;"/>
+                        <field name="categorygrp" force_save="1" style="width:260px !important;"/>
+                        <field name="subgrp" force_save="1" style="width:260px !important;"/>
+
+
+            </xpath>
+
+            <xpath expr ="//field[@name='line_ids']/tree/field[@name='account_id']" position = "before" >
+                        <field name="linenumber" force_save="1"/>
+                        <field name="itemdescription" force_save="1" style="width:200px !important;"/>
+                        <field name="istheitemagood" force_save="1" style="width:260px !important;"/>
+                        <field name="hsnorsaccode" force_save="1" style="width:260px !important;"/>
+                        <field name="quantity_" force_save="1" style="width:260px !important;"/>
+                        <field name="unitofmeasurement" force_save="1" style="width:260px !important;"/>
+                        <field name="itemprice" force_save="1" style="width:260px !important;"/>
+                        <field name="grossamount" force_save="1" style="width:260px !important;"/>
+                        <field name="itemdiscountamount" force_save="1" style="width:260px !important;"/>
+                        <field name="itemtaxablevalue" force_save="1" style="width:260px !important;"/>
+                        <field name="gstrate" force_save="1" style="width:260px !important;"/>
+                        <field name="igstamount" force_save="1" style="width:260px !important;"/>
+                         <field name="csgtamount" force_save="1" style="width:260px !important;"/>
+                        <field name="sgst_utgstamount" force_save="1" style="width:260px !important;"/>
+                        <field name="compcessamountadvalorem" force_save="1" style="width:260px !important;"/>
+                        <field name="statecessamountadvalorem" force_save="1" style="width:260px !important;"/>
+                        <field name="otherchargesitemlevel" force_save="1" style="width:260px !important;"/>
+                        <field name="itemtotalamount" force_save="1" style="width:260px !important;"/>
+                        <field name="totaltaxablevalue" force_save="1" style="width:260px !important;"/>
+                        <field name="igstamounttotal" force_save="1" style="width:260px !important;"/>
+                        <field name="cgstamounttotal" force_save="1" style="width:260px !important;"/>
+                        <field name="sgst_utgstamounttotal" force_save="1" style="width:260px !important;"/>
+                        <field name="compcessamounttotal" force_save="1" style="width:260px !important;"/>
+                        <field name="statecessamounttotal" force_save="1" style="width:260px !important;"/>
+
+            </xpath>
+
+            </data>
+        </field>
+    </record>
+
+
+
+        <record id="invoiceInheritance" model="ir.ui.view">
+        <field name="name">invoiceInheritance</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"></field>
+        <field name="arch" type="xml">
+        <data>
+<!--            <xpath expr="//field[@name='partner_id']" position="replace">-->
+<!--                <field name="exporterRef"/>-->
+<!--            </xpath>-->
+
+             <div name="button_box" position="inside">
+                 <div class="oe_button_box">
+                 </div>
+            <xpath expr="//button[@name='state']" position="before">
+                 <group>
+                            <div class="oe_button_box">
+                                <button type="object"
+                                        name="action_view_split_invoice_custom"
+                                        class="oe_stat_button"
+                                        attrs="{'invisible':[('splitted_invoice_count', '=', 0)]}"
+                                        icon="fa-truck">
+                                    <field name="splitted_invoice_count" widget="statinfo"
+                                           string="Invoice Split"/>
+                                </button>
+                            </div>
+                       </group>
+
+                 <field name ="splitted_invoices" readonly="1" invisible="1"/>
+
+            </xpath>
+             </div>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <group string="Import/Export India">
+                    <field name="documentdate" readonly="1"/>
+                    <field name="documentnumber" readonly="1"/>
+                    <field name="documenttypecode" readonly="1"/>
+                    <field name="supplierlegalname" readonly="1"/>
+                    <field name="gstinofsupplier" readonly="1"/>
+                    <field name="supplieraddress1" readonly="1"/>
+                    <field name="supplierplace" readonly="1"/>
+                    <field name="supplierstatecode" readonly="1"/>
+                    <field name="supplierpincode" readonly="1"/>
+                    <field name="typeofexport" readonly="1"/>
+                    <field name="shippingportcode" readonly="1"/>
+                    <field name="shippingbillnumber" readonly="1"/>
+                    <field name="shippingbilldate" readonly="1"/>
+                    <field name="payeename" readonly="1"/>
+                    <field name="payeebankaccountnumber" readonly="1"/>
+                    <field name="modeofpayment" readonly="1"/>
+                    <field name="bankbranchcode" readonly="1"/>
+                    <field name="paymentterms" readonly="1"/>
+                    <field name="paymentinstruction" readonly="1"/>
+                    <field name="credittransferterms" readonly="1"/>
+                    <field name="directdebitterms" readonly="1"/>
+                    <field name="creditdays" readonly="1"/>
+                    <field name="shiptolegalname" readonly="1"/>
+                    <field name="shiptogstin" readonly="1"/>
+                    <field name="shiptoaddress1" readonly="1"/>
+                    <field name="shiptoplace" readonly="1"/>
+                    <field name="shiptopincode" readonly="1"/>
+                    <field name="shiptostatecode" readonly="1"/>
+                    <field name="dispatchfromname" readonly="1"/>
+                    <field name="dispatchfromaddress1" readonly="1"/>
+                    <field name="dispatchfromplace" readonly="1"/>
+                    <field name="dispatchfromstatecode" readonly="1"/>
+
+                     <!--  #### New Fields Addition #####        -->
+                    <field name="old_currency_rate" readonly="1"/>
+                    <field name="current_currency_rate" readonly="0"/>
+
+<!--                     <button name="calc_currency_rate"  string="(Apply)" type="object"-->
+<!--                                class="oe_edit_only oe_link"-->
+<!--                                />-->
+
+                </group>
+
+
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="after">
+
+
+<!--                        <field name="supplytypecode" readonly="1"/>-->
+<!--                        <field name="buyerothcons"/>-->
+<!--                        <field name="recipientlegalname"/>-->
+<!--                        <field name="recipienttradename"/>-->
+<!--                        <field name="recipientgstin" readonly="1"/>-->
+<!--                        <field name="placeofsupply" readonly="1"/>-->
+<!--                        <field name="recipientaddress1"/>-->
+<!--                        <field name="recipientaddress2"/>-->
+<!--                        <field name="recipientplace"/>-->
+<!--                        <field name="recipientstatecode" readonly="1"/>-->
+<!--                        <field name="recipientpincode" readonly="1"/>-->
+<!--                        <field name="precedingdocumentnumber" readonly="1"/>-->
+<!--                        <field name="precedingdocumentdate" readonly="1"/>-->
+<!--                        <field name="cerno"/>-->
+<!--                        <field name="cinno"/>-->
+<!--                        <field name="panno"/>-->
+<!--                        <field name="iecodeno"/>-->
+<!--                        <field name="lutno"/>-->
+<!--                        <field name="vesselflightno"/>-->
+<!--                        <field name="portofloading"/>-->
+<!--                        <field name="countryoforigin"/>-->
+<!--                        <field name="countryoffdest"/>-->
+<!--                        <field name="termofdelpmnt"/>-->
+<!--                        <field name="findest"/>-->
+<!--                        <field name="noofpkgs"/>-->
+<!--                        <field name="transmode"/>-->
+<!--                        <field name="poreferencenumber"/>-->
+<!--                        <field name="poreferencedate"/>-->
+
+
+            </xpath>
+            </data>
+        </field>
+    </record>
+
+
+        <record id="splited_invoice_view_form" model="ir.ui.view">
+            <field name="name">Splitted Invoice View</field>
+            <field name="model">split.initial.invoice</field>
+            <field name="arch" type="xml">
+                <form string="Splitted Invoice View">
+                    <header>
+                        <button name="generate_irn" type="object" string="Generate IRN" class="oe_highlight"/>
+<!--                         <button name="generate_qr_code" type="object" string="Generate QR Code" class="oe_highlight"/>-->
+<!--                        <button string="Print" name="compute_ageing" type="object" class="btn-primary"/>-->
+
+                    </header>
+
+
+                            <field name="name"/>
+                        <field name="qr_code" widget="image" class="oe_avatar" options="{'image_preview': 'image_128'}"/>
+
+<!--                            <field name="splitted_date"/>-->
+<!--                            <field name="partner_id"/>-->
+
+                            <group string="Import/Export India">
+                                <group>
+                                    <field name="irn" readonly="1"/>
+                                    <field name="log" readonly="1"/>
+                                    <field name="govt_log" readonly="1"/>
+                                    <field name="documentdate"/>
+                                    <field name="documentnumber"/>
+                                    <field name="documenttypecode"/>
+                                    <field name="supplierlegalname"/>
+                                    <field name="gstinofsupplier"/>
+                                    <field name="supplieraddress1"/>
+                                    <field name="supplierplace"/>
+                                    <field name="supplierstatecode"/>
+                                    <field name="supplierpincode"/>
+                                    <field name="typeofexport"/>
+                                    <field name="shippingportcode"/>
+                                    <field name="shiptolegalname"/>
+                                    <field name="shiptogstin"/>
+                                    <field name="shiptoaddress1"/>
+                                    <field name="shiptoplace"/>
+                                    <field name="shiptopincode"/>
+                                    <field name="shiptostatecode"/>
+                                </group>
+
+                                <group>
+<!--                                    <field name="dispatchfromname"/>-->
+<!--                                    <field name="dispatchfromaddress1"/>-->
+<!--                                    <field name="dispatchfromplace"/>-->
+<!--                                    <field name="dispatchfromstatecode"/>-->
+<!--                                    <field name="supplytypecode"/>-->
+<!--                                    <field name="buyerothcons"/>-->
+<!--                                    <field name="recipientlegalname"/>-->
+<!--                                    <field name="recipienttradename"/>-->
+<!--                                    <field name="recipientgstin"/>-->
+<!--                                    <field name="placeofsupply"/>-->
+<!--                                    <field name="recipientaddress1"/>-->
+<!--                                    <field name="recipientaddress2"/>-->
+<!--                                    <field name="recipientplace"/>-->
+<!--                                    <field name="recipientstatecode"/>-->
+<!--                                    <field name="recipientpincode"/>-->
+<!--                                    <field name="precedingdocumentnumber"/>-->
+<!--                                    <field name="precedingdocumentdate"/>-->
+
+                                </group>
+                                <group>
+<!--                                    <field name="payeename"/>-->
+<!--                                    <field name="payeebankaccountnumber"/>-->
+<!--                                    <field name="modeofpayment"/>-->
+<!--                                    <field name="bankbranchcode"/>-->
+<!--                                    <field name="paymentterms"/>-->
+<!--                                    <field name="paymentinstruction"/>-->
+<!--                                    <field name="credittransferterms"/>-->
+<!--                                    <field name="directdebitterms"/>-->
+<!--                                    <field name="creditdays"/>-->
+                                         <field name="vesselflightno"/>
+                                        <field name="portofloading"/>
+                                        <field name="countryoforigin"/>
+                                        <field name="countryoffdest"/>
+                                        <field name="termofdelpmnt"/>
+                                        <field name="findest"/>
+                                        <field name="noofpkgs"/>
+                                        <field name="transmode"/>
+                                </group>
+                                <group>
+                                    <field name="shippingbillnumber"/>
+                                    <field name="shippingbilldate"/>
+<!--                                    <field name="licdate"/>-->
+<!--                                    <field name="licnumber"/>-->
+<!--                                    <field name="supportingmanuname"/>-->
+<!--                                    <field name="supportingmanuaddress"/>-->
+<!--                                    <field name="exportitem"/>-->
+<!--                                    <field name="exportitemqty"/>-->
+<!--                                    <field name="importitem"/>-->
+<!--                                    <field name="importitemqty"/>-->
+                                    <field name="cerno"/>
+                                    <field name="cinno"/>
+                                    <field name="panno"/>
+                                    <field name="iecodeno"/>
+                                    <field name="lutno"/>
+<!--                                    <field name="poreferencenumber"/>-->
+<!--                                    <field name="poreferencedate"/>-->
+                                </group>
+                        </group>
+                        <group>
+                            <field name="order_line">
+                                <tree editable="bottom">
+<!--                                    <field name="product_id"/>-->
+<!--                                    <field name="label"/>-->
+<!--                                    <field name="price_unit"/>-->
+<!--                                    <field name="subtotal"/>-->
+                                    <field name="linenumber" force_save="1"/>
+                                    <field name="itemdescription" force_save="1" style="width:200px !important;"/>
+                                    <field name="istheitemagood" force_save="1" style="width:260px !important;"/>
+                                    <field name="hsnorsaccode" force_save="1" style="width:260px !important;"/>
+                                    <field name="quantity" force_save="1" style="width:260px !important;"/>
+<!--                                    <field name="quantity_" force_save="1" style="width:260px !important;"/>-->
+                                    <field name="unitofmeasurement" force_save="1" style="width:260px !important;"/>
+                                    <field name="itemprice" force_save="1" style="width:260px !important;"/>
+                                    <field name="grossamount" force_save="1" style="width:260px !important;"/>
+                                    <field name="itemdiscountamount" force_save="1" style="width:260px !important;"/>
+                                    <field name="itemtaxablevalue" force_save="1" style="width:260px !important;"/>
+                                    <field name="gstrate" force_save="1" style="width:260px !important;"/>
+                                    <field name="igstamount" force_save="1" style="width:260px !important;"/>
+<!--                                    <field name="csgtamount" force_save="1" style="width:260px !important;"/>-->
+<!--                                    <field name="sgst_utgstamount" force_save="1" style="width:260px !important;"/>-->
+<!--                                    <field name="compcessamountadvalorem" force_save="1" style="width:260px !important;"/>-->
+<!--                                    <field name="statecessamountadvalorem" force_save="1" style="width:260px !important;"/>-->
+<!--                                    <field name="otherchargesitemlevel" force_save="1" style="width:260px !important;"/>-->
+                                    <field name="totaltaxablevalue" force_save="1" style="width:260px !important;"/>
+                                    <field name="igstamounttotal" force_save="1" style="width:260px !important;"/>
+                                    <field name="itemtotalamount" force_save="1" style="width:260px !important;"/>
+<!--                                    <field name="cgstamounttotal" force_save="1" style="width:260px !important;"/>-->
+<!--                                    <field name="sgst_utgstamounttotal" force_save="1" style="width:260px !important;"/>-->
+<!--                                    <field name="compcessamounttotal" force_save="1" style="width:260px !important;"/>-->
+<!--                                    <field name="statecessamounttotal" force_save="1" style="width:260px !important;"/>-->
+
+                                    <field name="categorylvl1" force_save="1" style="width:260px !important;"/>
+                                    <field name="categorylvl2" force_save="1" style="width:260px !important;"/>
+                                    <field name="category" force_save="1" style="width:260px !important;"/>
+                                    <field name="categorygrp" force_save="1" style="width:260px !important;"/>
+                                    <field name="subgrp" force_save="1" style="width:260px !important;"/>
+
+
+                                </tree>
+                            </field>
+                        </group>
+                    <group class="oe_subtotal_footer">
+                        <field name="total_assesable_value" string="Total AssAmount"/>
+                        <field name="total_igst_value" string="Total Igst Value"/>
+                        <!-- <field name="total_discount_val" string="Total Discount Value"/> -->
+                        <field name="total_invoice_val" string="Total Invoice Value"/>
+                    </group>
+                    <group>
+                        <field name="invoice_summary_line">
+                            <tree edit="true" >
+                                <field name="summary_name"/>
+                                <field name="amt_in_inr"/>
+                                <field name="igst_amount"/>
+                                
+                            </tree>
+                        </field>
+                    </group>
+                    <group>
+                        <field name="licdate"/>
+                        <field name="licnumber"/>
+                        <field name="supportingmanuname"/>
+                        <field name="supportingmanuaddress"/>
+                        <field name="exportitem"/>
+                        <field name="importitem"/>
+                    </group>
+                    <field name="manufacturer_line">
+                        <tree editable="bottom">
+<!--                            <field name="split_invoice" invisible="1"/>-->
+<!--                            <field name="date"/>-->
+<!--                            <field name="manufacturer_name"/>-->
+<!--                            <field name="manufacturer_address"/>-->
+<!--                            <field name="licence_no"/>-->
+                            <field name="export_item"/>
+                            <field name="export_item_qty"/>
+                            <field name="import_item"/>
+                            <field name="import_item_qty"/>
+                        </tree>
+                    </field>
+<!--                    <span>Please Upload only PDF files.</span>-->
+<!--                    <footer>-->
+<!--                        <button name="upload_template" string="Proceed" type="object" class="oe_highlight"/>-->
+<!--                        <button string="Cancel" class="btn-secondary" special="cancel"/>-->
+<!--                    </footer>-->
+                </form>
+            </field>
+        </record>
+
+         <record id="splited_invoice_view_tree" model="ir.ui.view">
+            <field name="name">Splitted Invoice Tree View</field>
+            <field name="model">split.initial.invoice</field>
+            <field name="arch" type="xml">
+                <tree string="Sign template model">
+                        <field name="name"/>
+                        <field name="documentdate"/>
+                        <field name="documentnumber"/>
+                        <field name="recipientlegalname"/>
+                        <field name="total_assesable_value"/>
+                        <field name="total_igst_value"/>
+                        <!-- <field name="total_discount_val"/> -->
+                        <field name="total_invoice_val"/>
+                        <field name="shippingbillnumber"/>
+                        <field name="shippingbilldate"/>
+                        <field name="irn"/>
+                        <field name="govt_log"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="smart_button_splited_invoice_view" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='state']" position="after">
+                     <group>
+                        <div class="oe_button_box">
+<!--                            <button type="object" name="action_view_split" class="oe_stat_button" attrs="{'invisible':[('splitted_invoice_count', '=', 0)]}" icon="fa-truck">-->
+<!--                                <field name="splitted_invoice_count" widget="statinfo" string="Invoices"/>-->
+<!--                            </button>-->
+                        </div>
+                     </group>
+                     <field name ="splitted_invoices" readonly="1" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_company_signature_view_" model="ir.ui.view">
+            <field name="name">res.company.signature.form.inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='logo']" position="after">
+                     <group>
+                        <div class="oe_button_box">
+                                <field name="signautre" widget="image" class="oe_avatar"  string="Invoices"/>
+                        </div>
+                     </group>
+
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_splited_invoice_view" model="ir.actions.act_window">
+            <field name="name">Action Splitted Invoice View </field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">split.initial.invoice</field>
+             <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="splited_invoice_view_tree"/>
+            <field name="target">current</field>
+        </record>
+
+        <!--add default document model wizard menu -->
+        <menuitem id="invoice_spit_custom_model_menu" name="Splitted Invoices" parent="account.menu_finance"
+                  action="invoice_split_custom.action_splited_invoice_view"
+                  groups="base.group_user"/>
+
+<!--        <record model="ir.actions.server" id="oracle_sync_button">-->
+<!--            <field name="name">Oracle Sync</field>-->
+<!--            <field name="model_id" ref="model_split_initial_invoice"/>-->
+<!--            <field name="type">ir.actions.server</field>-->
+<!--            <field name="state">code</field>-->
+<!--            <field name="code">model.sync_oracle_db()</field>-->
+<!--        </record>-->
+
+<!--        <menuitem id="menu_upd_printed_invoices" name="Oracle Sync" action="oracle_sync_button" parent="account.menu_finance" sequence="500"/>-->
+
+
+
+
+<!--     Changesssss-->
+
+
+
+     <record model="ir.actions.server" id="sftp_sync_button">
+                <field name="name">SFTP Sync</field>
+                <field name="model_id" ref="model_split_initial_invoice"/>
+                <field name="type">ir.actions.server</field>
+                <field name="state">code</field>
+                <field name="code">model.retrieve_data_from_sftp()</field>
+            </record>
+
+            <menuitem id="menu_upd_printed_invoices_new" name="SFTP Sync" action="sftp_sync_button" parent="account.menu_finance" sequence="500"/>
+
+
+    </data>
+</odoo>

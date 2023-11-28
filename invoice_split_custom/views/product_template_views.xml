@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <record id="product_template_views_inherit_move" model="ir.ui.view">
+        <field name="name">ProductTemplate</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"></field>
+        <field name="arch" type="xml">
+        <data>
+
+
+            <xpath expr="//field[@name='company_id']" position="after">
+
+
+                        <field name="itemdescription"/>
+                        <field name="istheitemagood"/>
+                        <field name="hsnorsaccode"/>
+                        <field name="quantity"/>
+                        <field name="unitofmeasurement"/>
+                        <field name="itemprice"/>
+                        <field name="grossamount"/>
+                        <field name="itemdiscountamount"/>
+                        <field name="itemtaxablevalue"/>
+                        <field name="gstrate"/>
+                        <field name="igstamount"/>
+
+                        <field name="csgtamount"/>
+                        <field name="sgst_utgstamount"/>
+                        <field name="compcessamountadvalorem"/>
+                        <field name="statecessamountadvalorem"/>
+                        <field name="otherchargesitemlevel"/>
+                        <field name="itemtotalamount"/>
+                        <field name="totaltaxablevalue"/>
+                        <field name="igstamounttotal"/>
+                        <field name="cgstamounttotal"/>
+                        <field name="sgst_utgstamounttotal"/>
+                        <field name="compcessamounttotal"/>
+                        <field name="statecessamounttotal"/>
+            </xpath>
+            </data>
+        </field>
+    </record>
+    <record id="inherited_view_invoice_tree_inherit_tree" model="ir.ui.view">
+        <field name="name">ProductTemplate</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"></field>
+        <field name="arch" type="xml">
+        <data>
+            <xpath expr = "//field[@name='invoice_origin']" position ="attributes">
+            <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr = "//field[@name='invoice_user_id']" position ="attributes">
+            <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr = "//field[@name='company_id']" position ="attributes">
+            <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr = "//field[@name='invoice_date_due']" position ="replace">
+<!--            <attribute name="invisible">1</attribute>-->
+            </xpath>
+            <xpath expr = "//field[@name='invoice_date']" position ="replace">
+<!--            <attribute name="invisible">1</attribute>-->
+            </xpath>
+            <xpath expr = "//field[@name='amount_total_signed']" position ="replace">
+<!--            <attribute name="invisible">1</attribute>-->
+            </xpath>
+            <xpath expr = "//field[@name='amount_residual_signed']" position ="replace">
+<!--            <attribute name="invisible">1</attribute>-->
+            </xpath>
+<!--            <xpath expr = "//field[@name='state']" position ="replace">-->
+<!--&lt;!&ndash;            <attribute name="invisible">1</attribute>&ndash;&gt;-->
+<!--            </xpath>-->
+            <xpath expr = "//field[@name='amount_untaxed_signed']" position ="replace">
+<!--            <attribute name="invisible">1</attribute>-->
+            </xpath>
+            <xpath expr = "//field[@name='invoice_partner_display_name']" position ="replace">
+<!--            <attribute name="invisible">1</attribute>-->
+            </xpath>
+            <xpath expr = "//field[@name='invoice_date']" position ="after">
+                <field name="recipientlegalname"></field>
+                <field name="documentdate"></field>
+                <field name="total_assesable_value"/>
+                <field name="total_igst_value"/>
+                <field name="total_discount_val"/>
+                <field name="total_invoice_val"/>
+            </xpath>
+            </data>
+        </field>
+    </record>
+<!--    <record id="inherited_view_move_form" model="ir.ui.view">-->
+<!--        <field name="name">ProductTemplate</field>-->
+<!--        <field name="model">account.move</field>-->
+<!--        <field name="inherit_id" ref="account.view_move_form"></field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <data>-->
+<!--                <xpath expr = "//field[@name='amount_total']" position ="attributes">-->
+<!--                    <attribute name="invisible">1</attribute>-->
+<!--                </xpath>-->
+<!--                <xpath expr = "//field[@name='amount_untaxed']" position ="attributes">-->
+<!--                    <attribute name="invisible">1</attribute>-->
+<!--                </xpath>-->
+<!--                <xpath expr = "//field[@name='price_subtotal']" position ="attributes">-->
+<!--                    <attribute name="invisible">1</attribute>-->
+<!--                </xpath>-->
+<!--                <xpath expr = "//field[@name='tax_ids']" position ="attributes">-->
+<!--                    <attribute name="invisible">1</attribute>-->
+<!--                </xpath>-->
+<!--                <xpath expr = "//field[@name='name']" position ="attributes">-->
+<!--                    <attribute name="invisible">1</attribute>-->
+<!--                </xpath>-->
+<!--                <xpath expr = "//field[@name='price_unit']" position ="attributes">-->
+<!--                    <attribute name="invisible">1</attribute>-->
+<!--                </xpath>-->
+<!--                <xpath expr = "//field[@name='quantity']" position ="attributes">-->
+<!--                    <attribute name="invisible">1</attribute>-->
+<!--                </xpath>-->
+<!--                <xpath expr = "//field[@name='hsnorsaccode']" position ="after">-->
+<!--                    <field name="quantity"></field>-->
+<!--                </xpath>-->
+<!--                <xpath expr = "//field[@name='name']" position ="attributes">-->
+<!--                    <attribute name="invisible">1</attribute>-->
+<!--                </xpath>-->
+<!--                <xpath expr = "//field[@name='invoice_line_ids']" position ="after">-->
+<!--                    <group class="oe_subtotal_footer">-->
+<!--                        <field name="total_assesable_value" string="Total AssAmount"/>-->
+<!--                        <field name="total_igst_value" string="Total Igst Value"/>-->
+<!--                        <field name="total_discount_val" string="Total Discount Value"/>-->
+<!--                        <field name="total_invoice_val" string="Total Invoice Value"/>-->
+<!--                    </group>-->
+<!--                </xpath>-->
+<!--            </data>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    </data>
+</odoo>
