@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_property_type_tree">
+            <field name="name">PropertyType</field>
+            <field name="model">property.type</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="Property Type Tree">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_property_type" model="ir.actions.act_window">
+            <field name="name">PropertyType</field>
+            <field name="res_model">property.type</field>
+            <field name="view_mode">tree,form</field>
+            <!--            <field name="domain">[('customer','=',uid)]</field>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first Property Type data!
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_property_type"
+                  name="Property Type"
+                  parent="crm.crm_menu_config"
+                  action="action_property_type"
+                  sequence="8"
+        />
+
+        <record model="ir.ui.view" id="view_customer_type_tree">
+            <field name="name">CustomerType</field>
+            <field name="model">customer.type</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="Customer Type Tree">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_customer_type" model="ir.actions.act_window">
+            <field name="name">CustomerType</field>
+            <field name="res_model">customer.type</field>
+            <field name="view_mode">tree,form</field>
+            <!--            <field name="domain">[('customer','=',uid)]</field>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first Customer Type data!
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_customer_type"
+                  name="Customer Type"
+                  parent="crm.crm_menu_config"
+                  action="action_customer_type"
+                  sequence="7"
+        />
+
+        <record model="ir.ui.view" id="view_budget_type_tree">
+            <field name="name">Budget</field>
+            <field name="model">budget</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="Budget Tree">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_budget" model="ir.actions.act_window">
+            <field name="name">Budget</field>
+            <field name="res_model">budget</field>
+            <field name="view_mode">tree,form</field>
+            <!--            <field name="domain">[('customer','=',uid)]</field>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first Budget data!
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_budget"
+                  name="Budget"
+                  parent="crm.crm_menu_config"
+                  action="action_budget"
+                  sequence="8"
+        />
+
+        <record id="product_category_list_view" model="ir.actions.act_window">
+            <field name="name">ProductCategory</field>
+            <field name="res_model">product.category</field>
+            <field name="view_mode">tree,form</field>
+            <!--            <field name="domain">[('customer','=',uid)]</field>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first Product Category data!
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_product_category"
+                  name="Product Category"
+                  parent="crm.crm_menu_config"
+                  action="product_category_list_view"
+                  sequence="8"
+        />
+
+        <record id="crm_inherited" model="ir.ui.view">
+            <field name="name">crm.lead.inherited</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+            <field name="arch" type="xml">
+                <header>
+                    <xpath expr="//button[@name='Enrich']" position="after">
+                        <button name="action_share_crm" string="SHARE" type="object" class="oe_highlight"/>
+                    </xpath>
+                </header>
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    <field name="property_type"/>
+                    <field name="customers_type"/>
+                    <field name="product_category"/>
+                    <field name="budget"/>
+                    <field name="region"/>
+                    <field name="municipality"/>
+                    <field name="district"/>
+                    <field name="pin_code"/>
+                    <field name="shared_to" attrs="{'invisible': [('shared_to_check', '=', False)]}"
+                           widget="many2many_tags"/>
+                    <field name="shared_to_check" invisible="1"/>
+                    <field name="shared_by" attrs="{'invisible': [('shared_by_check', '=', False)]}"/>
+                    <field name="shared_by_check" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

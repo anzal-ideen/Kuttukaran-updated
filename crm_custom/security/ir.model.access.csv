@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_property_type,access.property.type,model_property_type,,1,1,1,1
+
+access_customer_type,access.customer.type,model_customer_type,,1,1,1,1
+
+access_budget,access.budget,model_budget,,1,1,1,1
+
+access_location,access.location,model_location,,1,1,1,1
+
+access_ideabook,access.ideabook,model_ideabook,,1,1,1,1
+
+access_ideabook_line,access.ideabook.line,model_ideabook_line,,1,1,1,1
+
+access_shared_crm_wizard,access.shared.crm.wizard,model_shared_crm_wizard,,1,1,1,1

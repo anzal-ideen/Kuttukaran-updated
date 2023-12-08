@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_adding_to_share_crm_form" model="ir.ui.view">
+            <field name="name">shared.crm.wizard.from</field>
+            <field name="model">shared.crm.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="shared_to"
+                                       style="width:60%%">Product
+                                </field>
+                            </group>
+                        </group>
+                        <footer>
+                            <button name="share_crm_data" id="btn_add_bidding"
+                                    string="Share" class="btn-primary" type="object"
+                            />
+<!--                            <button name="action_create_bidding" id="btn_create_bidding"-->
+<!--                                    string="Create Bidding" class="btn-primary" type="object"-->
+<!--                            />-->
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_share_crm">
+            <field name="name">Share CRM</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">shared.crm.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_adding_to_share_crm_form"/>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

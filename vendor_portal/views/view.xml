@@ -29,6 +29,33 @@
             <t t-call="portal.portal_layout">
                 <t t-call="portal.portal_table">
 
+
+                    <style>
+
+                        #new_vendor_creation {
+
+                        background-image: url('vendor_portal/static/icons/bg3.jpg');
+                        background-size: cover;
+
+                        }
+
+
+                        .custom-form-style {
+                        background-color: rgba(255, 255, 255, 0.8);
+                        padding: 5vh;
+
+                        }
+
+
+                        .centered-content {
+                        text-align: center;
+                        margin-bottom: 20px;
+
+                        }
+
+
+                    </style>
+
                     <div class="alert alert-success" role="alert" t-if="success_msg">
                         <t t-out="success_msg"/>
                     </div>
@@ -145,7 +172,7 @@
                                            class="form-control" required="1"/>
                                 </div>
                             </div>
-                          
+
                             <div class="form-row row">
                                 <div class="form-group col-md-6">
                                     <label for="msme">MSME Number *</label>
@@ -153,7 +180,7 @@
                                            class="form-control" required="1"/>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="msme">MSME Category </label>
+                                    <label for="msme">MSME Category</label>
                                     <input type="text" name="msme" id="msme" placeholder="MSME Category"
                                            class="form-control"/>
                                 </div>
@@ -164,7 +191,7 @@
                                 <div class="form-group col-md-6">
                                     <label for="msme">Company Type *</label>
                                     <select name="type" id="type" class="form-control" required="1">
-                                       <option value="">Select Company Type</option>
+                                        <option value="">Select Company Type</option>
                                         <option value="type1">Companies Limited by Shares</option>
                                         <option value="type2">Companies Limited by Guarantee</option>
                                         <option value="type3">Unlimited Companies</option>
@@ -201,7 +228,7 @@
 
                             <div class="form-row row">
                                 <div class="form-group col-md-12">
-                                    <label for="msme">Website Link </label>
+                                    <label for="msme">Website Link</label>
                                     <input type="text" name="website" id="website" placeholder="Website Link"
                                            class="form-control"/>
                                 </div>
@@ -234,20 +261,21 @@
                                 </div>
                             </div>
 
-                            
+
                             <div class="form-row row">
 
                                 <div class="form-group col-md-6">
                                     <label for="bank_file">Bank Cheque file</label>
-                                    <input type="file" name="bank_cheque_file" id="bank_cheque_file" class="form-control"
-                                           accept=".pdf, .doc, .docx"  filename="bank_cheque_file"
+                                    <input type="file" name="bank_cheque_file" id="bank_cheque_file"
+                                           class="form-control"
+                                           accept=".pdf, .doc, .docx" filename="bank_cheque_file"
                                            widget="binary"/>
                                 </div>
 
                                 <div class="form-group col-md-6">
                                     <label for="bank_statement">Statement Copy file</label>
                                     <input type="file" name="bank_statement" id="bank_statement" class="form-control"
-                                           accept=".pdf, .doc, .docx"  filename="bank_statement"
+                                           accept=".pdf, .doc, .docx" filename="bank_statement"
                                            widget="binary"/>
                                 </div>
 
@@ -260,14 +288,14 @@
                                 <div class="form-group col-md-6">
                                     <label for="gst_file">GSTIN File</label>
                                     <input type="file" name="gst_file" id="gst_file" class="form-control"
-                                           accept=".pdf, .doc, .docx"  filename="gst_file" widget="binary"/>
+                                           accept=".pdf, .doc, .docx" filename="gst_file" widget="binary"/>
                                 </div>
 
 
                                 <div class="form-group col-md-6">
                                     <label for="pan_file">Pan Card file</label>
                                     <input type="file" name="pan_file" id="pan_file" class="form-control"
-                                           accept=".pdf, .doc, .docx"  filename="pan_file" widget="binary"/>
+                                           accept=".pdf, .doc, .docx" filename="pan_file" widget="binary"/>
                                 </div>
 
                             </div>
@@ -316,7 +344,7 @@
                             <!--                        <div class="col-lg-4 text-center">-->
                             <!--                            <img src="/vendor_portal/static/icons/hand.png" alt="Thank You Image"/>-->
                             <!--                        </div>-->
-<!--                            <h1>Thank You &#9989;</h1>-->
+                            <!--                            <h1>Thank You &#9989;</h1>-->
                             <h1>Thank You</h1>
                             <div class="row">
                                 <div class="col-lg-8">
@@ -333,7 +361,6 @@
                 </div>
             </t>
         </template>
-
 
 
     </data>

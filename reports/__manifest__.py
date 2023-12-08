@@ -15,7 +15,9 @@
   'report/report.xml',
   'report/lease_agreement.xml',
   'report/contract.xml',
+  'report/po.xml',
   'report/pr.xml',
+  'views/view.xml',
 
 
  ],

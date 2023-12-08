@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.ui.view" id="view_budget_type_tree">
+            <field name="name">Location</field>
+            <field name="model">location</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="Budget Tree">
+                    <field name="name"/>
+                    <field name="district"/>
+                    <field name="pin_code"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="location_view" model="ir.actions.act_window">
+            <field name="name">Location</field>
+            <field name="res_model">location</field>
+            <field name="view_mode">tree,form</field>
+            <!--            <field name="domain">[('customer','=',uid)]</field>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first Location Data!
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_location"
+                  name="Location"
+                  parent="crm.crm_menu_config"
+                  action="location_view"
+                  sequence="8"
+        />
+    </data>
+</odoo>

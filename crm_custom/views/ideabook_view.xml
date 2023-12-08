@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_ideabook_form" model="ir.ui.view">
+            <field name="name">ideabook.form</field>
+            <field name="model">ideabook</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="customer"/>
+                            </group>
+                            <group>
+                                <field name="date"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Ideabook Line" name="ideabook_line">
+                                <field name="ideabook_line_ids">
+                                    <tree editable="bottom">
+                                        <field name="number"/>
+                                        <field name="description"/>
+                                        <field name="image" widget="url"/>
+                                    </tree>
+                                    <form>
+                                        <group>
+                                            <field name="number"/>
+                                            <field name="description"/>
+                                            <field name="image" widget="url"/>
+                                        </group>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ideabook_tree_view">
+            <field name="name">Ideabook</field>
+            <field name="model">ideabook</field>
+            <field name="arch" type="xml">
+                <tree string="Example Tree">
+                    <field name="name"/>
+                    <field name="customer"/>
+                    <field name="date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="ideabook_view" model="ir.actions.act_window">
+            <field name="name">IdeaBook</field>
+            <field name="res_model">ideabook</field>
+            <field name="view_mode">tree,form</field>
+            <!--            <field name="domain">[('customer','=',uid)]</field>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first Ideabook Data!
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_ideabook"
+                  name="Ideabook"
+                  parent="crm.crm_menu_config"
+                  action="ideabook_view"
+                  sequence="8"
+        />
+    </data>
+</odoo>
