@@ -18,12 +18,16 @@ class VendorPortal(CustomerPortal):
         bank__chequefile_data = request.httprequest.files.get('bank_cheque_file')
         pan_data = request.httprequest.files.get('pan_file')
         bank_statement = request.httprequest.files.get('bank_statement')
+        payment_terms = request.env['account.payment.term'].sudo().search([])
+        credit_terms = request.env['account.payment.term'].sudo().search([])
 
-        print(gst_file_data)
-        # print(bank_file_data)
-        print(request.httprequest.files.keys())
+        vals = {'vendor_states': states_list, 'pdt_category': pdt_category, 'payment_terms': payment_terms, 'credit_terms': credit_terms}
 
-        vals = {'vendor_states': states_list, 'pdt_category': pdt_category}
+        # print(gst_file_data)
+        # # print(bank_file_data)
+        # print(request.httprequest.files.keys())
+
+        # vals = {'vendor_states': states_list, 'pdt_category': pdt_category}
 
         if request.httprequest.method == "POST":
             print(kw)
@@ -60,6 +64,8 @@ class VendorPortal(CustomerPortal):
                     'branch': kw.get("bank_branch"),
                     'ifsc': kw.get("bank_ifsc"),
                     'msme_number': kw.get("msme_no"),
+                    'payment_terms': int(kw.get("payment_terms")),
+                    'credit_terms': int(kw.get("credit_terms")),
                     'vendor_category': int(kw.get("pdt_category")),
                     'company_type': kw.get("type"),
                     'website': kw.get("website"),

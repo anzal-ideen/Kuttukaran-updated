@@ -185,6 +185,19 @@
                                            class="form-control"/>
                                 </div>
                             </div>
+                            <div class="form-row row">
+
+                                <div class="form-group col-md-6">
+                                    <label for="msme_file">MSME Certificate</label>
+                                    <input type="file" name="msme_file" id="msme_file" class="form-control"
+                                           accept=".pdf, .doc, .docx" filename="msme_file" widget="binary"/>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="dan_number">DAN Number</label>
+                                    <input type="text" name="dan_number" id="dan_number"
+                                           placeholder="Enter DAN Number" class="form-control" required="1"/>
+                                </div>
+                            </div>
 
                             <div class="form-row row">
 
@@ -234,8 +247,30 @@
                                 </div>
 
                             </div>
-
-
+                            <div class="form-row row">
+                                <div class="form-group col-md-6">
+                                    <label for="msme">Payment Terms *</label>
+                                    <select name="payment_terms" id="payment_terms" class="form-control" required="1">
+                                        <option>Payment Terms</option>
+                                        <t t-foreach="payment_terms" t-as="payment_terms">
+                                            <option t-att-value="payment_terms.id">
+                                                <t t-out="payment_terms.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="msme">Credit Terms *</label>
+                                    <select name="credit_terms" id="credit_terms" class="form-control" required="1">
+                                        <option>Credit Terms</option>
+                                        <t t-foreach="credit_terms" t-as="credit_terms">
+                                            <option t-att-value="credit_terms.id">
+                                                <t t-out="credit_terms.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="form-row row">
                                 <div class="form-group col-md-6">
                                     <label for="bank_acc">Bank A/C No *</label>
@@ -260,7 +295,18 @@
                                            placeholder="Enter Bank IFSC Code" class="form-control" required="1"/>
                                 </div>
                             </div>
-
+                            <div class="form-row row">
+                                <div class="form-group col-md-6">
+                                    <label for="bank_beneficiary">Bank Beneficiary Name *</label>
+                                    <input type="text" name="bank_beneficiary" id="bank_beneficiary"
+                                           placeholder="Enter Bank Beneficiary Name" class="form-control" required="1"/>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="bank_upi">Bank UPI ID</label>
+                                    <input type="text" name="bank_upi" id="bank_upi"
+                                           placeholder="Enter UPI ID" class="form-control"/>
+                                </div>
+                            </div>
 
                             <div class="form-row row">
 
@@ -299,6 +345,7 @@
                                 </div>
 
                             </div>
+
 
                             <!-- <div class="form-row row">
 

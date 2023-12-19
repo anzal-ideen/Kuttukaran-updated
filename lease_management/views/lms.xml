@@ -127,11 +127,15 @@
                                 <!--                                <field name="total" widget="monetary" />-->
 
 
+                                <field name="total"/>
                                 <field name="auto_po"/>
                                 <field name="with_gst" attrs="{'invisible': [('auto_po', '=', False)]}"/>
                                 <field name="tax" attrs="{'invisible': [('with_gst', '=', False)]}"
                                        options="{'no_create': True}"/>
-                                <field name="auto_invoice" attrs="{'invisible': [('auto_po', '=', False)]}"/>
+                                <field name="auto_invoice"
+                                       attrs="{'invisible': ['|', ('auto_po', '=', False), ('with_gst', '=', True)]}"/>
+
+                                <field name="is_increment"/>
 
 
                             </group>
@@ -153,10 +157,39 @@
                                     <group>
                                         <field name="location"/>
                                         <field name="security"/>
+                                        <field name="terms"/>
                                     </group>
 
                                 </group>
 
+                            </page>
+
+                            <page string="Increments" name="increment_details"
+                                  attrs="{'invisible': [('is_increment', '=', False)]}" >
+                                <group>
+                                    <group>
+                                        <field name="increment_method" class="o_light_label" widget="radio"
+                                               options="{'horizontal': true}"/>
+
+                                        <field name="inc_date" attrs="{'readonly': [('increment_method', '!=', 'custom')]}" store="True" force_save="1"/>
+
+                                        <field name="increment_amount" class="o_light_label" widget="radio"
+                                               options="{'horizontal': true}"/>
+
+                                        <field name="inc_value" attrs="{'readonly': [('increment_amount', '!=', 'custom')]}" store="True" force_save="1"/>
+
+                                        <field name="increment_by" class="o_light_label" widget="radio"
+                                               options="{'horizontal': true}"/>
+
+                                        <field name="inc_amount" />
+                                        <field name="total_increment_value" invisible="1"/>
+                                        <field name="amount_payable" readonly="1" store="1" force_save="1"/>
+
+
+
+
+                                    </group>
+                                </group>
                             </page>
 
 

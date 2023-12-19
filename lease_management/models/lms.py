@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime , timedelta
 from datetime import date
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, MissingError, UserError
@@ -83,11 +83,32 @@ class ProductLease(models.Model):
     city = fields.Char(string='City', tracking=True)
     state_name = fields.Char(string='State', tracking=True)
     security = fields.Float(string='Security Deposit', tracking=True)
+    terms = fields.Text("Terms & Conditions")
     # total_rent = fields.Float(string='Total Rent', tracking=True , compute="compute_total_rent")
+    total = fields.Float(string="Total Amount", compute="compute_total_amount",tracking=True)
 
+    increment_method = fields.Selection([
+        ('year', 'Yearly'),
+        ('half', 'Semi Annual'),
+        ('quarter', 'Quarterly'),
+        ('custom', 'Custom Date'),
+    ], 'Increment Method')
 
+    increment_amount = fields.Selection([
+        ('total', 'Total'),
+        ('custom', 'Custom Amount'),
+    ], 'Increment Based On')
 
-
+    increment_by = fields.Selection([
+        ('amount', 'Amount'),
+        ('percent', '%'),
+    ], 'Increment By')
+    inc_date = fields.Date("Date", store = True)
+    inc_value = fields.Float("Value" ,store = True)
+    inc_amount = fields.Float("Rate")
+    total_increment_value = fields.Float("Amount Incremented", compute='compute_total_increment')
+    is_increment = fields.Boolean("Increment")
+    amount_payable = fields.Float("Total Amount Payable ")
 
     ############## Not in Use #############
 
@@ -98,7 +119,85 @@ class ProductLease(models.Model):
                                     'lease_id',
                                     string='Product Lease Line',
                                     tracking=True)
-    total = fields.Float(string="Total Amount", compute="compute_total_amount",tracking=True)
+
+    @api.depends('inc_amount', 'inc_value', 'increment_by')
+    def compute_total_increment(self):
+        for record in self:
+            if record.inc_value and record.inc_amount and record.increment_by:
+                if record.increment_by == 'amount':
+                    record.total_increment_value = record.inc_amount + record.inc_value
+                elif record.increment_by == 'percent':
+                    percentage = record.inc_amount / 100
+                    record.total_increment_value = record.inc_value + (record.inc_value * percentage)
+
+                else:
+                    record.total_increment_value = 0
+            else:
+                record.total_increment_value = 0
+
+
+    def auto_lease_check(self):
+        current_date = date.today()
+        leases = self.env['product.lease'].search([('state', '=', 'approve')])
+        for rec in leases:
+            if not rec.amount_payable:
+                rec.amount_payable = rec.total
+            if rec.is_increment:
+                if rec.inc_date and current_date == rec.inc_date:
+                    if rec.increment_method == 'year':
+                        rec.inc_date = rec.inc_date + timedelta(days=365)
+                    elif rec.increment_method == 'half':
+                        rec.inc_date = rec.inc_date + timedelta(days=182)
+                    elif rec.increment_method == 'quarter':
+                        rec.inc_date = rec.inc_date + timedelta(days=90)
+                    elif rec.increment_method == 'custom':
+                        rec.inc_date = rec.inc_date
+                    if rec.increment_by == 'amount':
+                        rec.amount_payable = rec.amount_payable + rec.inc_amount  # Increment by inc_amount
+                        print("vghvvvvvvvvvvv",rec.amount_payable)
+                    else:
+                        percentage = rec.inc_amount / 100
+                        rec.amount_payable = rec.amount_payable + (rec.amount_payable * percentage)
+                        print(rec.amount_payable)
+
+    # @api.onchange('total_increment_value')
+    # def onchange_increment_amount(self):
+    #     print("total onchange")
+    #     if self.total_increment_value:
+    #         self.amount_payable = self.total_increment_value
+    #     else:
+    #         pass
+
+    @api.constrains('inc_value')
+    def _constrains_inc_value(self):
+        for record in self:
+            if record.inc_value and record.inc_value < record.total:
+                raise ValidationError("The increment value must be greater than or equal to the total value.")
+
+    @api.constrains('inc_date', 'end_date')
+    def _constrains_inc_date(self):
+        for record in self:
+            if record.inc_date and record.end_date:
+                if record.inc_date > record.end_date:
+                    raise ValidationError("The increment date must be less than or equal to the end date.")
+
+
+    @api.onchange('start_date','increment_method')
+    def onchange_increment_method(self):
+        if self.start_date and self.increment_method == 'year':
+            self.inc_date = self.start_date + timedelta(days=365)
+        if self.start_date and self.increment_method == 'half':
+            self.inc_date = self.start_date + timedelta(days=182)
+        if self.start_date and self.increment_method == 'quarter':
+            self.inc_date = self.start_date + timedelta(days=90)
+        if self.start_date and self.increment_method == 'custom':
+            self.inc_date = ""
+
+    @api.onchange('increment_amount','total','qty','price')
+    def onchange_increment_amount(self):
+        print("kkk")
+        if self.increment_amount == 'total':
+            self.inc_value = self.total
 
 
 
@@ -116,16 +215,21 @@ class ProductLease(models.Model):
     def action_generate_po(self):
         print("hhhhhh")
         print(self._name)
+        today = date.today()
         products = self.env['product.product'].search([('product_tmpl_id', '=', self.product_id.id)],
                                                       limit=1)
         # print(products)
         for product in products:
-            # print(product)
+            price_unit = 0.0
+            if today > self.inc_date:
+                price_unit = self.amount_payable/self.qty
+            else:
+                price_unit = self.price            # print(product)
             order_line = [(0, 0, {
                 'display_type': False,
                 'name': products.name or '',
                 'product_id': products.id,
-                'price_unit': self.price,
+                'price_unit': price_unit,
                 'product_qty': self.qty,
                 'product_uom': self.product_id.uom_po_id.id,
             })]
@@ -142,6 +246,11 @@ class ProductLease(models.Model):
                 'location': self.product_request_id.bill_to.id or self.company_id.id,
             })
             self.env.cr.commit()
+            if self.auto_invoice == True:
+                purchase_order.button_confirm()
+                for lines in purchase_order.order_line:
+                    lines.qty_received = lines.product_qty
+                purchase_order.action_create_invoice()
 
             po_vals = {
                 'po': purchase_order.id,
@@ -200,13 +309,18 @@ class ProductLease(models.Model):
             products = self.env['product.product'].search([('product_tmpl_id', '=', lease.product_id.id)],
                                                           limit=1)
             # print(products)
+            price_unit = 0.0
+            if current_date > lease.inc_date:
+                price_unit = lease.amount_payable / lease.qty
+            else:
+                price_unit = lease.price  # print(product)
             for product in products:
                 # print(product)
                 order_line = [(0, 0, {
                     'display_type': False,
                     'name': products.name or '',
                     'product_id': products.id,
-                    'price_unit': lease.price,
+                    'price_unit': price_unit,
                     'product_qty': lease.qty,
                     'product_uom': lease.product_id.uom_po_id.id,
                 })]
@@ -223,7 +337,6 @@ class ProductLease(models.Model):
                     'location': lease.product_request_id.bill_to.id or lease.company_id.id,
                 })
                 self.env.cr.commit()
-
 
                 if lease.auto_invoice == True:
                     purchase_order.button_confirm()
@@ -282,7 +395,7 @@ class ProductLease(models.Model):
         # for rec in self:
             rec.is_an_approver = self.env.user.id in rec.next_approve_user.mapped('id')
 
-    @api.depends('total')
+    @api.depends('total','qty','price')
     def compute_total_amount(self):
         total_amount = 0
         for total in self:

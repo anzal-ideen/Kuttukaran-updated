@@ -115,6 +115,13 @@ class VendorIntake(models.Model):
         string='Next Approver', )
     is_an_approver = fields.Boolean("Approver",compute='compute_is_an_approver')
 
+    payment_terms = fields.Many2one('account.payment.term', "Payment Terms", required=True)
+    credit_terms = fields.Many2one('account.payment.term', "Credit Terms", required=True)
+    bank_beneficiary = fields.Char(string='Bank Beneficiary Name')
+    bank_upi = fields.Char(string='Bank UPI ID')
+    dan_number = fields.Char(string='DAN Number')
+    msme_file = fields.Binary(string='MSME Certificate')
+
     @api.depends('next_approve_user')
     def compute_is_an_approver(self):
         for rec in self:

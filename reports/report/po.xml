@@ -94,7 +94,7 @@
                             <span t-field="o.partner_id.email"/>
                         </td>
 
-                        <td style="border: none; padding-left:100px">
+                        <td style="border-top: 1px solid;border-right: 1px solid;  padding-left:100px">
                             <div style="float: right;">
                                 <strong>
                                     <span t-field="res_company.name"/>
@@ -288,17 +288,18 @@ border-bottom: 1px solid;border-left: 1px solid;border-right: 1px solid; ">
                         </td>
                     </tr>
                     <tr>
-                        <td style=" padding:0px 50px 10px 15px; width: 400px; ">
+                        <td style=" padding:0px 50px 10px 15px; width: 1000px; ">
                             <span>
-                                <strong>Total Purchase Order Value In Words</strong>
+                                <strong>Total Purchase Order Value In Words :</strong>
                             </span>
-
-                        </td>
-                        <td>
                             <t t-set="amount_in_words" t-value="o.amount_total_in_words()"/>
                             <t t-if="amount_in_words">
                                 <t t-esc="amount_in_words"/>
                             </t>
+
+                        </td>
+                        <td>
+
 
                         </td>
                     </tr>
@@ -311,28 +312,28 @@ border-bottom: 1px solid;border-left: 1px solid;border-right: 1px solid; ">
                 <br/>
 
 
-                <table style="width:100%; border:1px solid black; " cellspacing="0">
+                <table style="width:100%; border:1px solid; " cellspacing="0">
                     <thead>
-                        <tr style="border:1px solid">
-                            <td style="padding: 5px; width: 5%; border: 1px solid black;">
+                        <tr>
+                            <td style="border-right:1px solid;border-bottom:1px solid; padding: 5px; width: 5%; ">
                                 <b>S.No</b>
                             </td>
-                            <td style="padding: 5px; width: 20%; border: 1px solid black;">
+                            <td style="border-right:1px solid;border-bottom:1px solid;padding: 5px; width: 20%; ">
                                 <b>Item /Item Description</b>
                             </td>
-                            <td style="width: 15%; padding: 5px;border: 1px solid black; ">
+                            <td style="border-right:1px solid;border-bottom:1px solid;width: 15%; padding: 5px;">
                                 <b>Need By/ Activity End Date</b>
                             </td>
-                            <td style="width: 5%;padding: 5px; border: 1px solid black;">
+                            <td style="border-right:1px solid;border-bottom:1px solid;width: 5%;padding: 5px; ">
                                 <b>Quantity</b>
                             </td>
-                            <td style="width: 10%; padding: 5px;border: 1px solid black; ">
+                            <td style="border-right:1px solid;border-bottom:1px solid;width: 10%; padding: 5px; ">
                                 <b>UOM</b>
                             </td>
-                            <td style="width: 10%;padding: 5px; border: 1px solid black;">
+                            <td style="border-right:1px solid;border-bottom:1px solid;width: 10%;padding: 5px; ">
                                 <b>Unit Price</b>
                             </td>
-                            <td style="width: 15%;padding: 5px;border: 1px solid black; ">
+                            <td style="border-bottom:1px solid;width: 15%;padding: 5px; ">
                                 <b>Line Total</b>
                             </td>
                         </tr>
@@ -342,25 +343,25 @@ border-bottom: 1px solid;border-left: 1px solid;border-right: 1px solid; ">
                         <t t-foreach="o.order_line" t-as="line">
                             <tr style="border:1px solid">
                                 <t t-set="slno" t-value="slno + 1"/>
-                                <td style="padding: 5px; border: 1px solid black; width: 5%;">
+                                <td style="padding: 5px;border-right:1px solid;border-bottom:1px solid;  width: 5%;">
                                     <span class="text-nowrap" t-esc="slno"/>
                                 </td>
-                                <td style="width: 20%; padding: 5px; border: 1px solid black;">
+                                <td style="width: 20%;border-right:1px solid;border-bottom:1px solid; padding: 5px; ">
                                     <span class="text-nowrap" t-esc="line.product_id.display_name"/>
                                 </td>
-                                <td style="width: 15%;padding: 5px; border: 1px solid black;">
+                                <td style="width: 15%;border-right:1px solid;border-bottom:1px solid;padding: 5px; ">
                                     <span class="text-nowrap" t-esc="line.date_planned"/>
                                 </td>
-                                <td style="width: 5%; padding: 5px; border: 1px solid black;">
+                                <td style="width: 5%;border-right:1px solid;border-bottom:1px solid; padding: 5px; ">
                                     <span class="text-nowrap" t-esc="line.product_qty"/>
                                 </td>
-                                <td style="width: 10%;padding: 5px; border: 1px solid black;">
+                                <td style="width: 10%; border-right:1px solid;border-bottom:1px solid;padding: 5px; ">
                                     <span class="text-nowrap" t-esc="line.product_uom.name"/>
                                 </td>
-                                <td style="width: 10%; padding: 5px; border: 1px solid black;">
+                                <td style="width: 10%;border-right:1px solid;border-bottom:1px solid; padding: 5px; ">
                                     <span class="text-nowrap" t-esc="line.price_unit"/>
                                 </td>
-                                <td style="width: 15%; padding: 5px; border: 1px solid black;">
+                                <td style="width: 15%;border-bottom:1px solid; padding: 5px; ">
                                     <span class="text-nowrap" t-esc="line.price_subtotal"/>
                                 </td>
                             </tr>
@@ -370,10 +371,10 @@ border-bottom: 1px solid;border-left: 1px solid;border-right: 1px solid; ">
                         <tr style="border:1px solid">
                             <td></td>
                             <td></td>
-                            <td colspan="4" style="border:1px solid; padding: 5px;">
+                            <td colspan="4" style="border-right:1px solid;border-bottom:1px solid;border-left:1px solid; padding: 5px;">
                                 Total Tax Amount
                             </td>
-                            <td style="border:1px solid;padding: 5px;">
+                            <td style="padding: 5px;border-bottom:1px solid;">
                                 <t t-set="formatted_tax_amount" t-value="o.amount_tax"/>
                                 <t t-if="formatted_tax_amount">
                                     <t t-esc="formatted_tax_amount"/>
@@ -390,13 +391,13 @@ border-bottom: 1px solid;border-left: 1px solid;border-right: 1px solid; ">
                         <!--                                1500-->
                         <!--                            </td>-->
                         <!--                        </tr>-->
-                        <tr style="border:1px solid">
+                        <tr>
                             <td></td>
                             <td></td>
-                            <td colspan="4" style="border: 1px solid; padding: 5px; ">
+                            <td colspan="4" style=" padding: 5px;border-right:1px solid;border-bottom:1px solid;border-left:1px solid; ">
                                 Total Taxed Amount
                             </td>
-                            <td style="border: 1px solid; padding: 5px;">
+                            <td style=" padding: 5px; border-bottom:1px solid;">
                                 <t t-set="formatted_amount_total" t-value="o.amount_total"/>
                                 <t t-if="formatted_amount_total">
                                     <t t-esc="formatted_amount_total"/>
@@ -408,14 +409,21 @@ border-bottom: 1px solid;border-left: 1px solid;border-right: 1px solid; ">
                         <!--                        <tr style="border:1px solid">-->
                         <!--                            <td colspan="7" style="border:1px solid"></td>-->
                         <!--                        </tr>-->
-                        <tr style="border:1px solid">
-                            <td colspan="6" style="border:1px solid;padding: 5px; text-align:right;">
+                        <tr>
+
+                            <td></td>
+                            <td style="padding: 5px; text-align:right;border-right:1px solid; "></td>
+
+
+<!--                            <td colspan="2" style="padding: 5px; text-align:right;border-right:1px solid; ">-->
+<!--                            </td>-->
+                            <td colspan="4" style="padding: 5px; text-align:right; ">
                                 <span style="text-align:right;">Total Amount
 
                                 </span>
                             </td>
 
-                            <td style="border:1px solid;padding: 5px;">
+                            <td style="padding: 5px; border-left:1px solid;">
                                 <t t-set="formatted_amount_total" t-value="o.amount_total"/>
                                 <t t-if="formatted_amount_total">
                                     <t t-esc="formatted_amount_total"/>
@@ -423,7 +431,7 @@ border-bottom: 1px solid;border-left: 1px solid;border-right: 1px solid; ">
                             </td>
                         </tr>
                         <tr>
-                            <td colspan="7" style="border:1px solid;padding: 5px;">
+                            <td colspan="7" style="padding: 5px; border-top:1px solid;">
                                 <span style="text-align:Left;">
                                     <b>Total in words:</b>
                                 </span>
