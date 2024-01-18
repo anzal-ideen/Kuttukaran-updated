@@ -103,10 +103,10 @@ class PurchaseVendorUser(models.Model):
                     'date_approve': self.date_approve,
 
                 }
-                asn = self.env['advanced.shipment.notice'].search([('transfer', '=', transfer.id,)], limit=1) or False
-                if asn:
-                    raise UserError(
-                f"Advanced Shipment Notice for {transfer.name} is already created.")
+                # asn = self.env['advanced.shipment.notice'].search([('transfer', '=', transfer.id,)], limit=1) or False
+                # if asn:
+                #     raise UserError(
+                # f"Advanced Shipment Notice for {transfer.name} is already created.")
 
 
                 new_package = self.env['advanced.shipment.notice'].create(vals)

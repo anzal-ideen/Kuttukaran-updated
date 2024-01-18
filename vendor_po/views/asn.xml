@@ -31,7 +31,7 @@
                         <button id="button_submit" name="action_submit" class="btn-primary" string="Submit"
                                 type="object" attrs='{"invisible": [("state", "=", "submit")]}'/>
 
-                         <field name="state" widget="statusbar" clickable="0"/>
+                        <field name="state" widget="statusbar" clickable="0"/>
 
 
                     </header>
@@ -50,7 +50,16 @@
                                 <field name="transfer" force_save="1" store="True" readonly="1"/>
                                 <field name="purchase_representative" force_save="1" store="True" readonly="1"/>
                                 <field name="asn_date" force_save="1" store="True" readonly="0"/>
-                                <field name="invoice_upload"  widget="binary" filename="file_name"/>
+                                <field name="invoice_no" force_save="1" store="True" readonly="0"/>
+                                <field name="lr_date" force_save="1" store="True" readonly="0"/>
+                                <field name="lr" force_save="1" store="True" readonly="0"/>
+                                <field name="carrier" force_save="1" store="True" readonly="0"
+                                       placeholder='Vehicle/Courier No'/>
+                                <field name="eway" force_save="1" store="True" readonly="0"/>
+                                <field name="utr" force_save="1" store="True" readonly="0"/>
+
+                                <field name="invoice_upload" widget="binary" filename="file_name"/>
+                                <field name="workorder_upload" widget="binary" filename="file_name"/>
 
 
                             </group>
@@ -63,12 +72,16 @@
 
                         <notebook colspan="4">
                             <page name="products" string="Products">
-                                <field name="asn_line_ids">
+                                <field name="asn_line_ids" force_save="1" store="True">
                                     <tree editable="bottom">
-                                        <field name="product_id"/>
-                                        <field name="quantity"/>
-                                        <field name="provide_qty"/>
-                                        <field name="remark"/>
+                                        <field name="product_id" force_save="1" store="True"/>
+                                        <field name="quantity" force_save="1" store="True"/>
+                                        <field name="delivered" force_save="1" store="True"/>
+                                        <field name="provide_qty" force_save="1" store="True"/>
+                                        <field name="unit_price" force_save="1" store="True"/>
+                                        <field name="tax" force_save="1" store="True"/>
+                                        <field name="sub_total" force_save="1" store="True"/>
+                                        <field name="remark" force_save="1" store="True"/>
 
                                         <field name="asn_lines" invisible='1'/>
                                     </tree>
@@ -77,6 +90,9 @@
                                             <field name="product_id"/>
                                             <field name="quantity"/>
                                             <field name="provide_qty"/>
+                                            <field name="unit_price"/>
+                                            <field name="tax"/>
+                                            <field name="sub_total"/>
                                             <field name="remark"/>
 
                                             <field name="asn_lines" invisible='1'/>
@@ -86,6 +102,25 @@
                                 </field>
                             </page>
                         </notebook>
+                        <div class="oe_left oe_bottom">
+                            <strong style="font-size: 18px;">Untaxed Total :</strong>
+                            <strong style="font-size: 18px;">
+                                <field name="un_taxed_amount" force_save="1" store="True"/>
+                            </strong>
+                            <br/>
+                            <strong style="font-size: 18px;">Total :</strong>
+                            <strong style="font-size: 18px;">
+                                <field name="total_amount" force_save="1" store="True"/>
+                            </strong>
+                        </div>
+
+
+                        <div class="oe_right oe_bottom">
+                            <strong style="font-size: 18px;">Amount Total :</strong>
+                            <strong style="font-size: 18px;">
+                                <field name="total_amount_supplied" force_save="1" store="True"/>
+                            </strong>
+                        </div>
 
 
                     </sheet>
@@ -106,17 +141,44 @@
         </record>
 
 
-        <menuitem id="root_asn" name="ASN" web_icon="vendor_po,static/icons/icons_new.png" groups="vendor_portal.group_vendor_portal_user,product_purchase.group_purchase_admin"
+        <menuitem id="root_asn" name="ASN" web_icon="vendor_po,static/icons/icons_new.png"
+                  groups="vendor_portal.group_vendor_portal_user,product_purchase.group_purchase_admin"
                   sequence="40"/>
-<!--        <menuitem id="menu_sub_asn" name="ASN"-->
-<!--                    parent="root_asn"-->
-<!--                  action="action_view_asn" sequence="40"/>-->
-<!--        -->
+        <!--        <menuitem id="menu_sub_asn" name="ASN"-->
+        <!--                    parent="root_asn"-->
+        <!--                  action="action_view_asn" sequence="40"/>-->
+        <!--        -->
 
         <menuitem id="menu_sub_asn" name="ASN" parent="lease_management.root_product_lease"
                   action="action_view_asn"
                   groups="product_purchase.group_purchase_admin,lease_management.group_lease_mangement_user,vendor_portal.group_vendor_portal_user"
                   sequence="40"/>
+
+
+<!--        <record id="view_company_form_inherit" model="ir.ui.view">-->
+<!--            <field name="name">res.company.form.inherit</field>-->
+<!--            <field name="model">res.company</field>-->
+<!--            <field name="inherit_id" ref="base.view_company_form"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <xpath expr="//field[@name='partner_id']" position="before">-->
+<!--                    <field name="branch_code"/>-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--        </record>-->
+
+<!--        <record id="view_company_tree_inherit" model="ir.ui.view">-->
+<!--            <field name="name">res.company.tree.inherit</field>-->
+<!--            <field name="model">res.company</field>-->
+<!--            <field name="inherit_id" ref="base.view_company_tree"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <xpath expr="//field[@name='partner_id']" position="before">-->
+<!--                    <field name="branch_code"/>-->
+<!--                    <field name="parent_id"/>-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--        </record>-->
+
+
 
 
     </data>

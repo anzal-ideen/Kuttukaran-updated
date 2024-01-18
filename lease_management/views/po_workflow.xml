@@ -6,6 +6,12 @@
             <field name="model">purchase.order</field>
             <field name="inherit_id" ref="purchase.purchase_order_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//sheet" position="before">
+                    <div class="alert alert-warning" role="alert" attrs="{'invisible': [('in_budget', '=', True)]}">
+                        Budget Exceeded! The available budget is negative.
+                        Please review and adjust the budget accordingly.
+                    </div>
+                </xpath>
 
 
                 <xpath expr="//button[@name='button_confirm']" position="after">
@@ -31,6 +37,7 @@
                     <field name="is_confirmed" invisible="1"/>
                     <field name="is_an_approver" invisible="1"/>
                     <field name="is_auto_po" invisible="1"/>
+                     <field name="in_budget"/>
                 </xpath>
 
 
@@ -50,7 +57,7 @@
                             <tree editable="bottom">
                                 <field name="user_id"/>
                                 <field name="company_id"/>
-                                <field name="location"/>
+                                <!--                                <field name="location"/>-->
                                 <field name="department_id"/>
                                 <field name="designation"/>
                                 <field name="approve_order"/>

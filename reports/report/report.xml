@@ -49,7 +49,7 @@
 
     <report
             id="report_purchase_order"
-            string="Purchase Order"
+            string="Custom PO"
             model="purchase.order"
             report_type="qweb-pdf"
             name="reports.purchase_order_template"

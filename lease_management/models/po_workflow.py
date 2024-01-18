@@ -1,7 +1,11 @@
 from datetime import datetime
 from datetime import date
+
+from werkzeug.urls import url_encode
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, MissingError, UserError
+from odoo.exceptions import Warning
 
 
 class PurchaseApprovals(models.Model):
@@ -40,6 +44,17 @@ class PurchaseApprovals(models.Model):
         'po_users_id',
         string='Next Approver', )
 
+    in_budget = fields.Boolean("In Budget",compute="_compute_inbudget",readonly=False,default=True,store=True,force_save=True)
+
+    @api.depends('pr_budget_id', 'amount_total')
+    def _compute_inbudget(self):
+        for rec in self:
+            if rec.pr_budget_id and rec.amount_total:
+                if rec.pr_budget_id.amount_available < 0:
+                    rec.in_budget = False
+            else:
+                rec.in_budget = True
+
     @api.depends('next_approve_user')
     def compute_is_an_approver(self):
         for rec in self:
@@ -49,9 +64,13 @@ class PurchaseApprovals(models.Model):
         print("helllooo worldddd")
         if self.is_auto_po == False:
             if self.is_confirmed != True:
+
+                if self.pr_budget_id:
+                    self.pr_budget_id.amount_used += self.amount_total
+                    self._compute_inbudget()
+
                 pr_company_data = self.env['pr.company'].sudo().search([
                     ('company_id', '=', self.company_id.id),
-                    ('location', '=', self.location.id),
                     ('department_id', '=',self.department_id.id),
                     ('from_amount', '<=', self.amount_total),
                     ('to_amount', '>=', self.amount_total),
@@ -60,14 +79,63 @@ class PurchaseApprovals(models.Model):
                 print(pr_company_data)
                 if pr_company_data:
                     # self.message_post(body="Wait for PO"+" "+ self.name+" " +"Approval")
-                    self.message_post(body="Wait for Vendor acknowledgement")
+
                     if self.partner_id.user_id:
                         new_line_vals = {
                             'user_id': self.partner_id.user_id.id,
                             'approve_order': int(1),
                         }
                         self.approvers_line_ids |= self.env['po.approve.line'].create(new_line_vals)
+                        self.message_post(body="Wait for Vendor acknowledgement")
 
+                        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                        menu_id = self.env['ir.ui.menu'].sudo().search(
+                            [('name', '=', 'Purchase')], limit=1) or False
+
+                        url_params = {
+                            'id': self.id,
+                            'action': self.env.ref('vendor_po.action_view_vendors_po').id,
+                            'model': 'purchase.order',
+                            'view_type': 'form',
+                            'menu_id': menu_id.id if menu_id else False,
+                            'function': 'action_approval',
+                        }
+
+                        params = '/web?#%s' % url_encode(url_params)
+                        approval_url = base_url + params if base_url else "#"
+
+                        print("appppppppppppppppppppppppppppprovalllllllllllllll", approval_url)
+
+                        body = f"Dear User,A Purchase request {self.name} has been initiated by {self.requested_by.name}."
+                        author = self.env['res.partner'].sudo().search(
+                            [('name', '=', 'Administrator')], limit=1) or False
+
+                        body = (
+                            f"Dear Vendor,A Purchase Order {self.name} has been raised and waiting for your acknowledgement.<br><br>"
+                            f"<a href='{approval_url}' style='display: inline-block; padding: 10px 20px; "
+                            f"background-color: #008CBA; color: white; text-align: center; text-decoration: none; "
+                            f"font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px;'>View Entries</a> <br>"
+
+                            # f"<a href='{approval_url}' style='display: inline-block; padding: 10px 20px; "
+                            # f"background-color: #4CAF50; color: white; text-align: center; text-decoration: none; "
+                            # f"font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px;'>Approve</a> <space>"
+                            # f"<a href='http://your_domain/reject' style='display: inline-block; padding: 10px 20px; "
+                            # f"background-color: #F44336; color: white; text-align: center; text-decoration: none; "
+                            # f"font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px;'>Reject</a><br>"
+
+                        )
+
+                        if self.partner_id.mail:
+                            mail_values = {
+                                'subject': 'PO Waiting for acknowledgment',
+                                'body_html': body,
+                                'email_to': self.partner_id.mail,
+                                'auto_delete': False,
+                                'author_id': author.id
+                            }
+                            mail_record = self.env['mail.mail'].sudo().create(mail_values)
+
+                    self.message_post(body="Wait for PO Approval")
                     for approvers in pr_company_data.pr_approve_users_id:
                         line = []
                         last_approve_order = None
@@ -81,7 +149,7 @@ class PurchaseApprovals(models.Model):
                             vals = {
                                 'user_id': users.user_id.id,
                                 'company_id': users.company_id.id,
-                                'location': users.location.id,
+                                # 'location': users.location.id,
                                 'department_id': pr_company_data.department_id.id,
                                 'designation': users.designation.id,
                                 'approve_order': approve_order,
@@ -120,6 +188,8 @@ class PurchaseApprovals(models.Model):
                 res = super(PurchaseApprovals, self).button_confirm()
                 return res
         else:
+            if self.pr_budget_id:
+                self.pr_budget_id.amount_used += self.amount_total
             res = super(PurchaseApprovals, self).button_confirm()
             return res
 
@@ -173,8 +243,10 @@ class PurchaseApprovals(models.Model):
                     pending_action.status = 'closed'
 
                 self.button_confirm()
+                self.button_confirm()
                 # self.state = 'approve'
                 print("approved")
+                print("Confirmedddddddddddddddddddddddddddddddddddddddddddddddddddd")
                 # Change the state to the desired value when all statuses are 'approve'
                 # self.write({'state': 'approved_state'})
             else:
@@ -184,6 +256,7 @@ class PurchaseApprovals(models.Model):
 
             # self.state = 'approve'
             print("Current user is the last approver or not found.")
+            self.button_confirm()
 
     def action_rejected(self):
         print("rejectttt")
@@ -220,7 +293,7 @@ class PoApproveLines(models.Model):
 
     user_id = fields.Many2one('res.users', string="User")
     company_id = fields.Many2one('res.company', string="Company")
-    location = fields.Many2one('res.company', string="Location")
+    # location = fields.Many2one('res.company', string="Location")
     department_id = fields.Many2one('hr.department', string="Department")
     emp_name = fields.Many2one('hr.employee', string="Employee")
     designation = fields.Many2one('hr.job', string="Designation")

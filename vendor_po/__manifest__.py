@@ -16,7 +16,7 @@
      'views/invoice_view.xml',
      'views/view.xml',
      'views/deliver_date.xml',
-     'views/asn.xml',
+     # 'views/asn.xml',
      # 'views/vendor_intake.xml',
      'data/data.xml',
 

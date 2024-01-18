@@ -32,15 +32,12 @@
                         <!--                                groups="vendor_portal.group_admin_vendor_portal"-->
                         <!--                                attrs="{'invisible': [('states','in',('approved','done') )]}"/>-->
                         <button name="action_review" class="btn-primary" type="object" string="Review"
-                                attrs="{'invisible': [('states','in',('approved','review','cancelled','done') )]}"
+                                attrs="{'invisible': [('states','in',('approved','review','cancelled','done','vendor') )]}"
                         />
-                        <button name="action_done" class="btn-primary" type="object" string="Generate User"
+                        <button name="action_done" class="btn-primary" type="object" string="Generate Vendor"
                                 groups="vendor_portal.group_admin_vendor_portal"
                                 attrs="{'invisible': [('states','in',('draft','done','review','cancelled') )]}"/>
-                        <button name="action_draft" type="object" string="Reset to draft"
-                                confirm="Are you sure to Reset to draft"
-                                groups="vendor_portal.group_admin_vendor_portal"
-                                attrs="{'invisible': [('states','in',('draft') )]}"/>
+
                         <button name="action_approval" id="btn_approved"
                                 string="Approve" class="btn-primary" type="object"
                                 attrs="{'invisible': [('is_an_approver','=',False)]}"
@@ -49,6 +46,15 @@
                                 string="Reject" class="btn-danger" type="object"
                                 attrs="{'invisible': [('is_an_approver','=',False)]}"
                                 confirm="Reject request?"/>
+
+                        <button name="action_generate_vendor" class="btn-primary" type="object" string="Create Vendor Without Contract"
+                                groups="vendor_portal.group_admin_vendor_portal" invisible="1" />
+<!--                                attrs="{'invisible': [('states','in',('draft','done','review','cancelled','vendor') )]}"/>-->
+
+                        <button name="action_draft" type="object" string="Reset to draft"
+                                confirm="Are you sure to Reset to draft"
+                                groups="vendor_portal.group_admin_vendor_portal"
+                                attrs="{'invisible': [('states','in',('draft') )]}"/>
 
                         <field name="states" widget="statusbar" statusbar_visible="draft,approved,done"/>
                     </header>
@@ -156,31 +162,26 @@
                                 </group>
 
                             </page>
-                            <page name="bank_details" string="Notes">
-                                <field name="remarks"/>
 
-                            </page>
-                            <page string="Approve Users" name="vendor_approve_line" readonly="1">
-                                <field name="vendor_approve_line" readonly="1">
-                                    <tree editable="bottom" delete="0">
-                                        <field name="user_id" readonly="1"/>
-                                        <field name="company_id" readonly="1"/>
-                                        <field name="location" readonly="1"/>
-                                        <field name="department_id" readonly="1"/>
-                                        <field name="designation" readonly="1"/>
-                                        <field name="approve_order" readonly="1"/>
-                                        <field name="status" readonly="1"/>
+
+                            <page name="price_list" string="Price List">
+                                <field name="vendor_price_line">
+                                    <tree editable="bottom">
+                                        <field name="company" widget="many2many_tags"/>
+                                        <field name="product"/>
+                                        <field name="qty"/>
+                                        <field name="delay"/>
+                                        <field name="price"/>
+
                                     </tree>
                                     <form>
-                                        <field name="user_id" readonly="1"/>
-                                        <field name="company_id" readonly="1"/>
-                                        <field name="location" readonly="1"/>
-                                        <field name="department_id" readonly="1"/>
-                                        <field name="designation" readonly="1"/>
-                                        <field name="approve_order" readonly="1"/>
-                                        <field name="status" readonly="1"/>
+                                        <field name="product"/>
+                                        <field name="qty"/>
+                                        <field name="price"/>
+                                        <field name="company" widget="many2many_tags"/>
                                     </form>
                                 </field>
+
                             </page>
 
 
@@ -188,7 +189,7 @@
                                 <group>
                                     <group col="2">
                                         <field name="company_id" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="location" options='{"no_open": True, "no_create": True}'/>
+<!--                                        <field name="location" options='{"no_open": True, "no_create": True}'/>-->
                                     </group>
                                     <group col="2">
 
@@ -200,6 +201,33 @@
                                     </group>
 
                                 </group>
+
+                            </page>
+
+                            <page string="Approve Users" name="vendor_approve_line" readonly="1">
+                                <field name="vendor_approve_line" readonly="1">
+                                    <tree editable="bottom" delete="0">
+                                        <field name="user_id" readonly="1"/>
+                                        <field name="company_id" readonly="1"/>
+<!--                                        <field name="location" readonly="1"/>-->
+                                        <field name="department_id" readonly="1"/>
+                                        <field name="designation" readonly="1"/>
+                                        <field name="approve_order" readonly="1"/>
+                                        <field name="status" readonly="1"/>
+                                    </tree>
+                                    <form>
+                                        <field name="user_id" readonly="1"/>
+                                        <field name="company_id" readonly="1"/>
+<!--                                        <field name="location" readonly="1"/>-->
+                                        <field name="department_id" readonly="1"/>
+                                        <field name="designation" readonly="1"/>
+                                        <field name="approve_order" readonly="1"/>
+                                        <field name="status" readonly="1"/>
+                                    </form>
+                                </field>
+                            </page>
+                            <page name="bank_details" string="Notes">
+                                <field name="remarks"/>
 
                             </page>
                         </notebook>

@@ -1,3 +1,5 @@
+from datetime import date
+
 from odoo.http import request
 from odoo import http
 import base64
@@ -69,12 +71,16 @@ class VendorPortal(CustomerPortal):
                     'vendor_category': int(kw.get("pdt_category")),
                     'company_type': kw.get("type"),
                     'website': kw.get("website"),
+                    'bank_beneficiary': kw.get("bank_beneficiary"),
+                    'bank_upi': kw.get("bank_upi"),
+                    'dan_number': kw.get("dan_number"),
                     'gst_file': gst_file_content,
                     'pan_card': pan_data_content,
                     'bank_file': bank_statement_content,
                     'bank_cheque_file': bank_cheque_file_content,
                 }
             )
+
 
             # vendor_approval = request.env['vendor.approval'].sudo().search([], limit=1)
             # if vendor_approval:

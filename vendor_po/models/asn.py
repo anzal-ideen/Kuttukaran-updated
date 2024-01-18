@@ -17,29 +17,73 @@ class AsNotice(models.Model):
     date_approve = fields.Datetime("PO Confirmation Date", store=True, force_save=1)
     asn_date = fields.Datetime("Adavanced Shipment Date")
     state = fields.Selection([("draft", "Draft"), ("submit", "Submitted")], string="Status", default="draft")
+    invoice_no = fields.Char("Invoice Number")
+    lr = fields.Char("LR Number")
+    lr_date = fields.Date("LR Date")
+    carrier = fields.Char("Carrier No")
+    eway = fields.Char("E-way Bill No")
+    utr = fields.Char("Payment UTR No")
     invoice_upload = fields.Binary("Upload Invoice")
+    workorder_upload = fields.Binary("Work Order")
+    total_amount = fields.Float("Total" , readonly=1,store=True)
+    un_taxed_amount = fields.Float("Untaxed Total" , readonly=1,store=True)
+    total_amount_supplied = fields.Float("Total Amount", compute='compute_total_supply_amount',store=True)
+
 
     asn_line_ids = fields.One2many('asn.lines', 'asn_lines', string='ASN line')
+
+    @api.depends('asn_line_ids.provide_qty', 'asn_line_ids.unit_price')
+    def compute_total_supply_amount(self):
+        for total in self:
+            total_amount = 0.0
+            for line_total in total.asn_line_ids:
+                if line_total.provide_qty and line_total.unit_price:
+                    total_amount += line_total.provide_qty * line_total.unit_price
+            total.total_amount_supplied = total_amount
+
 
     @api.onchange('po_no')
     def _onchange_partners(self):
         for datas in self:
-            if self.po_no:
-                self.date_approve = self.po_no.date_approve
-                self.purchase_representative = self.po_no.user_id.id
+            if datas.po_no:
+                print(datas.po_no.order_line)
+                datas.asn_line_ids = [(5, 0, 0)]
+                datas.date_approve = datas.po_no.date_approve
+                datas.purchase_representative = datas.po_no.user_id.id
+                line = []
+                for po_lines in datas.po_no.order_line:
+                    print(datas.po_no.name)
+                    print(po_lines.product_qty)
+                    print(po_lines.price_unit)
+                    print(po_lines.taxes_id)
+                    val = {
+                        'product_id': po_lines.product_id.id,
+                        'quantity': po_lines.product_uom_qty,
+                        'unit_price': po_lines.price_unit,
+                        'delivered': po_lines.qty_received,
+                        'tax': po_lines.taxes_id.id,
+                        'sub_total': po_lines.price_subtotal,
+                    }
+                    line.append((0, 0, val))
+                datas.total_amount = datas.po_no.amount_total
+                datas.un_taxed_amount = datas.po_no.amount_untaxed
+
+                    # print(line)
+                datas.asn_line_ids = line
+
                 transfers = self.env['stock.picking'].sudo().search(
                     [('origin', '=', self.po_no.name), ('state', '=', 'assigned')])
                 for transfer in transfers:
                     self.transfer = transfer.id
                     line = []
-                    for stck_lines in transfer.move_ids_without_package:
-                        val = {
-                            'product_id': stck_lines.product_id.id,
-                            'quantity': stck_lines.product_uom_qty,
-                        }
-                        line.append((0, 0, val))
-                        print(line)
-                    datas.asn_line_ids = line
+                    # for stck_lines in transfer.move_ids_without_package:
+                    #     val = {
+                    #         'product_id': stck_lines.product_id.id,
+                    #         'quantity': stck_lines.product_uom_qty,
+                    #     }
+                    #     line.append((0, 0, val))
+                    #     print(line)
+                    # datas.asn_line_ids = line
 
     def action_submit(self):
         print("helloooo")
@@ -65,9 +109,13 @@ class AsNotice(models.Model):
 class AsnLiness(models.Model):
     _name = "asn.lines"
 
-    product_id = fields.Many2one('product.product', string='products')
-    quantity = fields.Float(string='Demand Quantity')
+    product_id = fields.Many2one('product.product', string='products',readonly=1,store=True)
+    quantity = fields.Float(string='Demand Quantity',readonly=1,store=True)
     provide_qty = fields.Float(string='Quantity Suppliable')
+    delivered = fields.Float(string='Delivered',readonly=1,store=True)
+    unit_price = fields.Float(string='Unit Price',readonly=1,store=True)
+    tax = fields.Many2one('account.tax',"Taxes",readonly=1,store=True)
+    sub_total = fields.Char("Sub Total",readonly=1,store=True)
     remark = fields.Char(string="Remark")
 
 
@@ -107,3 +155,10 @@ class InvoicePaymentInherit(models.Model):
                 return result
         else:
             return result
+
+
+
+# class ResCompanyInherit(models.Model):
+#     _inherit = 'res.company'
+#
+#     branch_code = fields.Char('Branch Code')

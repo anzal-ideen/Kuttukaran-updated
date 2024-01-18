@@ -9,9 +9,12 @@ class PoInhrerited(models.Model):
     _description = 'Purchase Order'
 
     terms_conditions = fields.Text("Terms and Conditions")
-    is_terms = fields.Boolean("Is Terms and Conditions")
+    is_terms = fields.Boolean("With Annexure")
 
     def amount_total_in_words(self):
         # Replace 'self.amount_total' with your actual field
         amount = self.amount_total or 0.0
         return num2words(amount, lang='en_IN')
+
+
+

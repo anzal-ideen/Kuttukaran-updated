@@ -2,6 +2,7 @@ from datetime import datetime , timedelta
 from datetime import date
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, MissingError, UserError
+from odoo.tools.safe_eval import json
 
 
 class ProductLease(models.Model):
@@ -120,6 +121,30 @@ class ProductLease(models.Model):
                                     string='Product Lease Line',
                                     tracking=True)
 
+    exp_category = fields.Many2one('expense.category','Expense Category', required=True)
+
+    exp_category_domain = fields.Char(
+        compute="_compute_exp_category_domain",
+        readonly=True,
+        store=False,
+    )
+
+
+    @api.depends('expense_type')
+    def _compute_exp_category_domain(self):
+        for rec in self:
+            category_domain = []
+            if rec.expense_type:
+                categories = self.env['expense.category'].sudo().search([
+                    ('exp_type', '=', rec.expense_type)
+                ])
+                if categories:
+                    expense_types = categories.mapped('exp_type')
+                    if expense_types:
+                        category_domain = [('exp_type', '=', expense_types)]
+
+            rec.exp_category_domain = json.dumps(category_domain)
+
     @api.depends('inc_amount', 'inc_value', 'increment_by')
     def compute_total_increment(self):
         for record in self:
@@ -221,7 +246,7 @@ class ProductLease(models.Model):
         # print(products)
         for product in products:
             price_unit = 0.0
-            if today > self.inc_date:
+            if today >= self.inc_date:
                 price_unit = self.amount_payable/self.qty
             else:
                 price_unit = self.price            # print(product)
@@ -240,6 +265,7 @@ class ProductLease(models.Model):
                 'company_id': self.company_id.id,
                 'is_auto_po': True,
                 'expense_type': self.expense_type or '',
+                'exp_category': self.exp_category.id,
                 'department_id': self.department_id.id or '',
                 'bill_to': self.product_request_id.bill_to.id or self.company_id.id,
                 'ship_to': self.product_request_id.ship_to.id or self.company_id.id,
@@ -310,7 +336,7 @@ class ProductLease(models.Model):
                                                           limit=1)
             # print(products)
             price_unit = 0.0
-            if current_date > lease.inc_date:
+            if current_date >= lease.inc_date:
                 price_unit = lease.amount_payable / lease.qty
             else:
                 price_unit = lease.price  # print(product)
@@ -331,6 +357,7 @@ class ProductLease(models.Model):
                     'company_id': lease.company_id.id,
                     'is_auto_po': True,
                     'expense_type': lease.expense_type or '',
+                    'exp_category': lease.exp_category.id,
                     'department_id': lease.department_id.id or '',
                     'bill_to': lease.product_request_id.bill_to.id or lease.company_id.id,
                     'ship_to': lease.product_request_id.ship_to.id or lease.company_id.id,
@@ -410,12 +437,11 @@ class ProductLease(models.Model):
 
     def action_request(self):
         print("reuested")
-        employee_data = self.env['hr.employee'].sudo().search([('user_id', '=', self.user_id.id)], limit=1)
-        if not employee_data.department_id:
-            raise ValidationError("Employee data is empty")
-        pr_company_data = self.env['pr.company'].sudo().search([('company_id', '=', employee_data.company_id.id),
-                                                                ('location', '=', employee_data.company_id.id),
-                                                                ('department_id', '=', employee_data.department_id.id),
+        # employee_data = self.env['hr.employee'].sudo().search([('user_id', '=', self.user_id.id)], limit=1)
+        # if not employee_data.department_id:
+        #     raise ValidationError("Employee data is empty")
+        pr_company_data = self.env['pr.company'].sudo().search([('company_id', '=', self.company_id.id),
+                                                                ('department_id', '=', self.department_id.id),
                                                                 ('expense_type', '=', self.expense_type),
                                                                 ('type', '=', 'lease')],
                                                                limit=1)
@@ -438,7 +464,7 @@ class ProductLease(models.Model):
                 vals = {
                     'user_id': users.user_id.id,
                     'company_id': users.company_id.id,
-                    'location': users.location.id,
+                    # 'location': users.location.id,
                     'department_id': pr_company_data.department_id.id,
                     'designation': users.designation.id,
                     'approve_order': approve_order,
@@ -549,6 +575,7 @@ class ProductLease(models.Model):
                             'location': self.company_id.id,
                             'user_id': self.user_id.id,
                             'expense_type': self.product_request_id.expense_type or '',
+                            'exp_category': self.exp_category.id,
                             'department_id': self.product_request_id.department_id.id or '',
                             'bill_to': self.product_request_id.bill_to.id or self.company_id.id,
                             'ship_to': self.product_request_id.ship_to.id or self.company_id.id,

@@ -1,3 +1,7 @@
+from datetime import date
+
+from werkzeug.urls import url_encode
+
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from odoo import modules
@@ -8,6 +12,7 @@ import requests
 class VendorIntake(models.Model):
     _name = 'vendor.intake'
     _inherit = ['mail.thread', 'mail.activity.mixin']
+    _description = 'Vendor Onboarding'
 
     # name = fields.Char(string='Number', required=True, copy=False, readonly=True,
     #                        default=lambda self: _('New'))
@@ -32,7 +37,8 @@ class VendorIntake(models.Model):
     msme = fields.Char("MSME Category")
     remarks = fields.Text("Remarks")
     states = fields.Selection(
-        [("draft", "Draft"), ("review","Review"),("approved", "Approved"), ("done", "User Generated"), ("cancelled", "Cancel")],
+        [("draft", "Draft"), ("review", "Review"), ("approved", "Approved"), ("vendor", "Vendor Registered"),
+         ("done", "User Generated"), ("cancelled", "Cancel")],
         string="Status", default="draft", tracking=True)
 
     bank = fields.Char(string='Bank Name')
@@ -88,10 +94,18 @@ class VendorIntake(models.Model):
                                           'vendor_intake_id',
                                           string='Vendor Approve Line',
                                           tracking=True)
-    company_id = fields.Many2one("res.company","Company")
-    location = fields.Many2one("res.company","Location")
-    department = fields.Many2one("hr.department", "Department", domain="[('company_id', '=', company_id)]")
-    vendor_representative = fields.Many2one("res.users","Representative")
+
+    # company_id = fields.Many2one("res.company", "Company")
+    # location = fields.Many2one("res.company", "Location")
+    # department = fields.Many2one("hr.department", "Department", domain="[('company_id', '=', company_id)]")
+    # vendor_representative = fields.Many2one("res.users", "Representative")
+
+    company_id = fields.Many2one("res.company", "Company", default=lambda self: self.env.company.id)
+    location = fields.Many2one("res.company", "Location", default=lambda self: self.env.company.id)
+    department = fields.Many2one('hr.department', string="Department",
+                                    default=lambda self: self._get_default_department())
+    vendor_representative = fields.Many2one("res.users", "Representative")
+
     approve_users = fields.Many2many(
         'res.users',
         'rel_vd_apprvers',
@@ -113,7 +127,7 @@ class VendorIntake(models.Model):
         'next_vd',
         'users_id_vd',
         string='Next Approver', )
-    is_an_approver = fields.Boolean("Approver",compute='compute_is_an_approver')
+    is_an_approver = fields.Boolean("Approver", compute='compute_is_an_approver')
 
     payment_terms = fields.Many2one('account.payment.term', "Payment Terms", required=True)
     credit_terms = fields.Many2one('account.payment.term', "Credit Terms", required=True)
@@ -122,17 +136,134 @@ class VendorIntake(models.Model):
     dan_number = fields.Char(string='DAN Number')
     msme_file = fields.Binary(string='MSME Certificate')
 
+    ############### Price List #########
+
+    vendor_price_line = fields.One2many('vendor.pricelist.line',
+                                        'vendor_intake_ids',
+                                        string='Vendor Price List',
+                                        tracking=True)
+
+    def _get_default_department(self):
+        default_department = self.env['hr.department'].search([('name','=','Procurement')], limit=1)
+        return default_department.id if default_department else False
+
+    @api.model
+    def create(self, vals):
+        res = super(VendorIntake, self).create(vals)
+
+        user = self.env['res.users'].sudo().search(
+            [('groups_id', 'in', self.env.ref('vendor_portal.group_admin_vendor_portal').id)], limit=1)
+
+        if res and user:
+            model = self.env['ir.model'].sudo().search([('model', '=', 'vendor.intake')], limit=1)
+            pending_vals = {
+                'model': model.id,
+                'name': res.name,
+                'record': res.id,
+                'date': date.today(),
+                'approve_users': [(6, 0, [user.id])]
+            }
+
+            # Create pending actions record
+            self.env['pending.actions'].sudo().create(pending_vals)
+
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            menu_id = self.env['ir.ui.menu'].sudo().search(
+                [('name', '=', 'Vendors Portal')], limit=1) or False
+
+            url_params = {
+                'id': res.id,
+                'action': self.env.ref('vendor_portal.action_view_vendor_intake').id,
+                'model': 'vendor.intake',
+                'view_type': 'form',
+                'menu_id': menu_id.id if menu_id else False,
+            }
+
+            params = '/web?#%s' % url_encode(url_params)
+            view = base_url + params if base_url else "#"
+
+            author = self.env['res.partner'].sudo().search(
+                [('name', '=', 'Administrator')], limit=1) or False
+
+            body = (
+                f"Dear User,A new Vendor Onboarding request {res.name} has been registered .<br><br>"
+                f"<a href='{view}' style='display: inline-block; padding: 10px 20px; "
+                f"background-color: #008CBA; color: white; text-align: center; text-decoration: none; "
+                f"font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px;'>View Entries</a> <br>"
+
+                # f"<a href='{approval_url}' style='display: inline-block; padding: 10px 20px; "
+                # f"background-color: #4CAF50; color: white; text-align: center; text-decoration: none; "
+                # f"font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px;'>Approve</a> <space>"
+                # f"<a href='http://your_domain/reject' style='display: inline-block; padding: 10px 20px; "
+                # f"background-color: #F44336; color: white; text-align: center; text-decoration: none; "
+                # f"font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px;'>Reject</a><br>"
+
+            )
+
+            if user.login:
+                mail_values = {
+                    'subject': 'Vendor Onboarding Request',
+                    'body_html': body,
+                    'email_to': user.login,
+                    'auto_delete': False,
+                    'author_id': author.id
+                }
+                mail_record = self.env['mail.mail'].sudo().create(mail_values)
+
+        return res
+    def action_generate_vendor(self):
+        print("kkkkkk")
+        if self.gst and self.mail_id:
+            vendor_exist = self.env['res.partner'].sudo().search([
+                ('vat', '=', self.gst)])
+            if not vendor_exist:
+                vendor_generated = self.env['res.partner'].sudo().create({
+                    "name": self.name,
+                    "street": self.address1,
+                    "street2": self.street,
+                    "city": self.city,
+                    "state_id": self.state_ids.id,
+                    "zip": self.zip,
+                    "email": self.mail_id,
+                    "vat": self.gst,
+                    "property_supplier_payment_term_id": self.payment_terms.id,
+                    "mobile": self.mob,
+                    "phone": self.tel,
+                })
+
+                if vendor_generated and self.vendor_price_line:
+                    for lines in self.vendor_price_line:
+                        vals = {
+                            'company_id':  False,
+                            'name': vendor_generated.id,
+                            'product_tmpl_id': lines.product.id,
+                            'min_qty': lines.qty,
+                            'price': lines.price,
+                            'delay': lines.delay,
+                            # 'currency_id':"INR",
+                        }
+                        company_ids_to_add = [(6, 0, lines.company.ids)]
+                        vals['company_ids'] = company_ids_to_add
+                        price_list = self.env['product.supplierinfo'].sudo().create(vals)
+            else:
+                raise UserError("GST No already exist")
+
+            self.states = 'vendor'
+
     @api.depends('next_approve_user')
     def compute_is_an_approver(self):
         for rec in self:
             rec.is_an_approver = self.env.user.id in rec.next_approve_user.mapped('id')
 
-
     def action_review(self):
         if not self.company_id or not self.department or not self.location:
             raise UserError("Please fill in all Company Details: Company, Department, and Location")
+        if not self.vendor_price_line:
+            raise UserError("Please Create Products & Price lists")
+
         vendor_approval = request.env['vendor.approval'].sudo().search([('company_id', '=', self.company_id.id),
-                                     ('department_id', '=', self.department.id),('location', '=', self.location.id)], limit=1)
+                                                                        ('department_id', '=', self.department.id),
+                                                                        ], limit=1)
         if vendor_approval:
             line = []
             for approvers in vendor_approval.vendor_approve_users_id:
@@ -153,6 +284,29 @@ class VendorIntake(models.Model):
             if all(item is not False for item in next_approver_user_ids):
                 self.write({'next_approve_user': [(6, 0, next_approver_user_ids)]})
                 self.states = 'review'
+
+                model = self.env['ir.model'].sudo().search([('model', '=', 'vendor.intake')], limit=1)
+                print(model.id)
+                pending_action = self.env['pending.actions'].sudo().search(
+                    [('model', '=', model.id), ('record', '=', self.id)], limit=1)
+
+                print(pending_action)
+                if pending_action:
+                    pending_action.status = 'closed'
+
+                model = self.env['ir.model'].sudo().search([('model', '=', 'vendor.intake')], limit=1)
+                if model:
+                    pending_vals = {
+                        'model': model.id,
+                        'name': self.name,
+                        'record': self.id,
+                        'date': date.today(),
+                        'approve_users': [(6, 0, next_approver_user_ids)] if next_approver_user_ids else False
+                    }
+                    self.env['pending.actions'].sudo().create(pending_vals)
+                else:
+                    pass
+
         else:
             raise UserError("No vendor workflow found for this company")
 
@@ -167,7 +321,8 @@ class VendorIntake(models.Model):
 
     def _approve_check(self):
         self.approve_check = False
-        if self.vendor_approved_users and (self.env.user.id in [user_ids.id for user_ids in self.vendor_approved_users]):
+        if self.vendor_approved_users and (
+                self.env.user.id in [user_ids.id for user_ids in self.vendor_approved_users]):
             self.approve_check = True
             print("True")
         else:
@@ -180,42 +335,17 @@ class VendorIntake(models.Model):
         self.states = 'approved'
 
     def action_done(self):
-        if self.gst and self.mail_id:
-            vendor_exist = self.env['res.partner'].sudo().search([
-                ('vat', '=', self.gst)])
-            if vendor_exist:
-                raise UserError("Vendor GST is already exist")
-            else:
-                vendor_generated = self.env['res.partner'].sudo().create({
-                    "name": self.name,
-                    "street": self.address1,
-                    "street2": self.street,
-                    "city": self.city,
-                    # "state_id":self.state_id.id,
-                    "zip": self.zip,
-                    # "country_id":self.country_id.id,
-                    "email": self.mail_id,
-                    "vat": self.gst,
-                    # "mobile": self.mob,
-                })
-
-            if vendor_generated:
-
-                user_exist = self.env['res.users'].sudo().search([('name', '=', self.name),
-                                                                  ('login', '=', self.mail_id)])
-                if user_exist:
-                    raise UserError("Login already exist")
-                else:
-                    password = self.ref
-                    user_generated = self.env['res.users'].sudo().create({
-                        'name': self.name,
-                        'login': self.mail_id,
-                        'password': password,
-                        'partner_id': vendor_generated.id,
-                        # 'sel_groups_1_9_10': "1",  # Assign group 1
-                        # 'sel_groups_58_59': "58",  # Assign group 58
-                        # 'in_group_76': True,
-                    })
+        if self.states == 'vendor':
+            print("hhhhh")
+            password = self.ref
+            vendor = self.env['res.partner'].sudo().search([
+                    ('vat', '=', self.gst),('name','=',self.name)])
+            user_generated = self.env['res.users'].sudo().create({
+                'name': self.name,
+                'login': self.mail_id,
+                'password': password,
+                'partner_id': vendor.id,
+            })
             body = (
                     "Dear Vendor,Your vendor registration has been successfully approved and your Login id is" + " " + self.mail_id + " "
                                                                                                                                       "Password is" + " " + password)
@@ -230,8 +360,76 @@ class VendorIntake(models.Model):
             mail_id = self.env['mail.mail'].sudo().create(vals)
             mail_id.sudo().send()
             self.states = 'done'
+
         else:
-            raise UserError("Please ensure GST and Mail Id are entered correctly")
+            if self.gst and self.mail_id:
+                vendor_exist = self.env['res.partner'].sudo().search([
+                    ('vat', '=', self.gst)])
+                if vendor_exist:
+                    raise UserError("Vendor GST is already exist")
+                else:
+                    vendor_generated = self.env['res.partner'].sudo().create({
+                        "name": self.name,
+                        "street": self.address1,
+                        "street2": self.street,
+                        "city": self.city,
+                        "state_id": self.state_ids.id,
+                        "zip": self.zip,
+                        "email": self.mail_id,
+                        "vat": self.gst,
+                        "property_supplier_payment_term_id": self.payment_terms.id,
+                        "mobile": self.mob,
+                        "phone": self.tel,
+                    })
+
+                if vendor_generated and self.vendor_price_line:
+                    for lines in self.vendor_price_line:
+                        print(lines)
+
+                        vals = {
+                            'company_id':  False,
+                            'name': vendor_generated.id,
+                            'product_tmpl_id': lines.product.id,
+                            'min_qty': lines.qty,
+                            'price': lines.price,
+                            'delay': lines.delay,
+                            # 'currency_id':"INR",
+                        }
+                        company_ids_to_add = [(6, 0, lines.company.ids)]
+                        vals['company_ids'] = company_ids_to_add
+
+                        print(vals)
+                        price_list = self.env['product.supplierinfo'].sudo().create(vals)
+
+                    user_exist = self.env['res.users'].sudo().search([('name', '=', self.name),
+                                                                      ('login', '=', self.mail_id)])
+                    if user_exist:
+                        raise UserError("Login already exist")
+                    else:
+                        password = self.ref
+                        user_generated = self.env['res.users'].sudo().create({
+                            'name': self.name,
+                            'login': self.mail_id,
+                            'password': password,
+                            'partner_id': vendor_generated.id,
+                        })
+                body = (
+                        "Dear Vendor,Your vendor registration has been successfully approved and your Login id is" + " " + self.mail_id + " "
+                                                                                                                                          "Password is" + " " + password)
+                vals = {
+                    'subject': 'Vendor Login Credentials',
+                    'body_html': body,
+                    'email_to': self.mail_id,
+                    'auto_delete': False,
+                    # 'email_from': ,
+                }
+                # print(vals)
+                mail_id = self.env['mail.mail'].sudo().create(vals)
+                mail_id.sudo().send()
+                self.states = 'done'
+            else:
+                raise UserError("Please ensure GST and Mail Id are entered correctly")
+
 
     def action_draft(self):
         if self.states == "done":
@@ -248,6 +446,7 @@ class VendorIntake(models.Model):
             self.next_approve_user = [(5, 0, 0)]
             self.approved_users = [(5, 0, 0)]
             self.vendor_approve_line.unlink()
+
 
     def action_approval(self):
         print("Hellooo users")
@@ -291,6 +490,16 @@ class VendorIntake(models.Model):
                 self.states = 'approved'
                 self.ref = self.env['ir.sequence'].next_by_code('vendor.intake')
 
+                model = self.env['ir.model'].sudo().search([('model', '=', 'vendor.intake')], limit=1)
+                print(model.id)
+                pending_action = self.env['pending.actions'].sudo().search(
+                    [('model', '=', model.id), ('record', '=', self.id),('status','=','open')], limit=1)
+
+                print(pending_action)
+                if pending_action:
+                    pending_action.status = 'closed'
+
+
 
                 # Change the state to the desired value when all statuses are 'approve'
                 # self.write({'state': 'approved_state'})
@@ -301,12 +510,6 @@ class VendorIntake(models.Model):
 
             # self.state = 'approve'
             print("Current user is the last approver or not found.")
-
-
-
-
-
-
 
         # self.write({'vendor_approved_users': [(4, self.env.user.id)]})
         # # print(self.approve_users)
@@ -372,27 +575,52 @@ class VendorIntake(models.Model):
         #                             if flag:
         #                                 break
 
+
     def action_decline(self):
         self.states = 'cancelled'
 
 
-class VendorApproveLine(models.Model):
-    _name = "vendor.approve.line"
-    _description = "Vendor Approve Line"
+    class VendorApproveLine(models.Model):
+        _name = "vendor.approve.line"
+        _description = "Vendor Approve Line"
 
-    vendor_intake_id = fields.Many2one('vendor.intake', string='Product Request Id',
-                                       invisible=True)
+        vendor_intake_id = fields.Many2one('vendor.intake', string='Product Request Id',
+                                           invisible=True)
 
-    user_id = fields.Many2one('res.users', string="User")
-    company_id = fields.Many2one('res.company', string="Company Id")
-    location = fields.Many2one('res.company', string="Location")
-    department_id = fields.Many2one('hr.department', string="Department")
-    emp_name = fields.Many2one('hr.employee', string="Employee")
-    designation = fields.Many2one('hr.job', string="Designation")
-    approve_order = fields.Integer(string="Order")
-    status = fields.Selection(
-        selection=[('draft', 'Draft'), ('accept', 'Accept'), ('cancel', 'Cancel'), ('delegate', 'Delegated')],
-        string='Status',
-        default='draft',
-        required=True, tracking=True
-    )
+        user_id = fields.Many2one('res.users', string="User")
+        company_id = fields.Many2one('res.company', string="Company Id")
+        location = fields.Many2one('res.company', string="Location")
+        department_id = fields.Many2one('hr.department', string="Department")
+        emp_name = fields.Many2one('hr.employee', string="Employee")
+        designation = fields.Many2one('hr.job', string="Designation")
+        approve_order = fields.Integer(string="Order")
+        status = fields.Selection(
+            selection=[('draft', 'Draft'), ('accept', 'Accept'), ('cancel', 'Cancel'), ('delegate', 'Delegated')],
+            string='Status',
+            default='draft',
+            required=True, tracking=True
+        )
+
+
+
+    class VendorPricelistLine(models.Model):
+        _name = "vendor.pricelist.line"
+        _description = "Vendor Price List Line"
+
+        vendor_intake_ids = fields.Many2one('vendor.intake', string='Product Request Id',
+                                            invisible=True)
+
+        product = fields.Many2one('product.template', 'Product', Tracking=True)
+        qty = fields.Float("Minimum Quantity")
+        price = fields.Float("Unit Price")
+        delay = fields.Integer("Lead Time")
+        company = fields.Many2many('res.company', 'price_list_loc_rel', 'vd_pr', 'loc',
+                                   "Locations", check_company=False)
+
+
+
+
+# class ResUsersInherited(models.Model):
+#     _inherit = "res.users"
+#
+#     company_id = fields.Many2many("default ")

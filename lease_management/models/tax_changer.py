@@ -47,3 +47,18 @@ class AutoGSTIGSTCustom(models.Model):
             # _logger.info(purchase_tax.id)
             tax = purchase_tax and [(6, 0, [purchase_tax.id])] or [] or False
             self.taxes_id = tax
+
+
+
+
+class MailMailInherited(models.Model):
+    _inherit = 'mail.mail'
+
+    @api.model
+    def send_mail(self):
+        outgoing_mails = self.env['mail.mail'].sudo().search([('state', '=', 'outgoing')])
+        if outgoing_mails:
+            for mail in outgoing_mails:
+                mail.send()
+
+
