@@ -115,7 +115,7 @@
         <menuitem id="menu_product_lease" name="Pending Actions" parent="root_pending_actions"
                   action="action_pending_actions" groups="pending_actions.group_pending_action_user"
                   sequence="10"/>
-        <menuitem id="menu_product_lease_all" name="Pending Actions" parent="lease_management.sub_root_workflow"
+        <menuitem id="menu_product_lease_all" name="Pending Actions" parent="lease_management.sub_root_requests"
                   action="action_all_pending_actions"
                   sequence="16"/>
 

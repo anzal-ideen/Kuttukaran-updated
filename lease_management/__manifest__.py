@@ -8,7 +8,7 @@
  'company': 'Ideenkreise Tech Pvt Ltd',
  'website': 'https://www.ideenkreisetech.com',
  'category': 'Tools',
-  'depends': ['account','sale','purchase','stock','product_purchase','base'],
+  'depends': ['account','purchase','stock','product_purchase','base','dynamic_accounts_report'],
  'license': 'AGPL-3',
  'data': [
 

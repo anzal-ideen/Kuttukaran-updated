@@ -13,10 +13,11 @@
  'data': [
      # 'security/groups.xml',
      'security/ir.model.access.csv',
-     'views/invoice_view.xml',
+
      'views/view.xml',
      'views/deliver_date.xml',
-     # 'views/asn.xml',
+     'views/invoice_view.xml',
+     'views/asn.xml',
      # 'views/vendor_intake.xml',
      'data/data.xml',
 

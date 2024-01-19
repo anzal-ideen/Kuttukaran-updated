@@ -64,7 +64,7 @@
         </record>
 
         <menuitem id="root_menu_allowed_companies" name="Company Allocations"
-         web_icon="company_filter,static/icons/icon.png"/>
+         web_icon="company_filter,static/icons/icon.png" sequence="400"/>
 
         <menuitem id="menu_allow_companies" name="Company Allocations" parent="root_menu_allowed_companies"
                   action="action_view_allowed_companies" sequence="10"/>

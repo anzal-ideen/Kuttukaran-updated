@@ -8,7 +8,7 @@
  'company': 'Ideenkreise Tech Pvt Ltd',
  'website': 'https://www.ideenkreisetech.com',
  'category': 'Tools',
-  'depends': ['base','account'],
+  'depends': ['base','account','sale','purchase','stock'],
  'license': 'AGPL-3',
  'data': [
 #  'reports/pan_inherit.xml',

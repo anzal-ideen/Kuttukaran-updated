@@ -82,8 +82,8 @@
         </record>
 
 
-        <menuitem id="menu_compare_wizard" name="Compare Contract" parent="product_purchase.menu_tenders"
-                  action="contract_comparison_action" sequence="10"/>
+        <menuitem id="menu_compare_wizard" name="Compare Contract" parent="product_purchase.sub_root_contract_requests"
+                  action="contract_comparison_action" sequence="12" groups="product_purchase.group_buyers"/>
 
 
     </data>

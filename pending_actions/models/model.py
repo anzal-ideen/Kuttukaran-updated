@@ -64,6 +64,6 @@ class PendingActions(models.Model):
     #                 req.requested_date AS date,
     #                 req.status AS status
     #             FROM
-    #                 product_request AS req
+    #                 purchase_management_system AS req
     #         )
     #     """)

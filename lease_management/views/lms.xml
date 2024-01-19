@@ -279,35 +279,31 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('vendor_id.user_id.id','=',uid)]</field>
             <field name="context">{
-                'search_default_status_draft': 1
+                'search_default_status_draft': 1,
+                'create': False,
                 }
             </field>
+
+
 
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create"></p>
             </field>
         </record>
 
-        <menuitem id="root_product_lease" name="Contracts"
-                  web_icon="lease_management,static/icons/agreement.png"/>
+<!--        <menuitem id="root_product_lease" name="Contracts"-->
+<!--                  web_icon="lease_management,static/icons/agreement.png"/>-->
 
 
-        <menuitem id="menu_product_lease" name="Lease/Rent Agreements" parent="root_product_lease"
-                  action="action_product_lease" groups="lease_management.group_lease_mangement_user"
-                  sequence="10"/>
-
-        <!--        <menuitem id="menu_product_lease" name="Lease\Rent Agreementss" parent="product_purchase.menu_tenders"-->
-        <!--          action="action_product_lease" groups="lease_management.group_lease_mangement_user"-->
-        <!--          sequence="10" />-->
-
-        <!--          <menuitem id="menu_vendors_product_lease" name="My Lease\Rent Agreements" parent="product_purchase.menu_tenders"-->
-        <!--                  action="action_my_product_lease" groups="vendor_portal.group_vendor_portal_user"-->
-        <!--                  sequence="10"/>-->
+        <menuitem id="menu_product_lease" name="Lease/Rent Agreements" parent="product_purchase.root_contracts_agreements"
+                  action="action_product_lease" groups="product_purchase.group_buyers,product_purchase.group_approvers"
+                  sequence="13"/>
 
 
-        <menuitem id="menu_vendors_product_lease" name="My Lease/Rent Agreements" parent="root_product_lease"
+
+        <menuitem id="menu_vendors_product_lease" name="My Lease/Rent Agreements" parent="product_purchase.root_contracts_agreements"
                   action="action_my_product_lease" groups="vendor_portal.group_vendor_portal_user"
-                  sequence="10"/>
+                  sequence="14"/>
 
 
         <record id="purchase.purchase_rfq" model="ir.actions.act_window">
@@ -317,16 +313,16 @@
         </record>
 
 
-        <record id="request_button_inherit" model="ir.ui.view">
-            <field name="name">product.request.inherited_new</field>
-            <field name="model">product.request</field>
-            <field name="inherit_id" ref="product_purchase.view_product_purchase_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//button[@name='action_log_message']" position="attributes">
-                    <attribute name="string">RFI</attribute>
-                </xpath>
-            </field>
-        </record>
+<!--        <record id="request_button_inherit" model="ir.ui.view">-->
+<!--            <field name="name">product.request.inherited_new</field>-->
+<!--            <field name="model">product.request</field>-->
+<!--            <field name="inherit_id" ref="product_purchase.view_product_purchase_form"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <xpath expr="//button[@name='action_log_message']" position="attributes">-->
+<!--                    <attribute name="string">RFI</attribute>-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--        </record>-->
 
         <!--   ################# Master Module Action ##################    -->
 

@@ -15,26 +15,43 @@
         <menuitem id="sub_root_workflow" name="Workflow Masters" parent="root_masters"
                   sequence="12"/>
 
+        <menuitem id="sub_root_requests" name="Requests" parent="root_masters"
+                  sequence="13"/>
+
+
+
+
+        <menuitem id="sub_menu_pr" name="Purchase Requests" parent="sub_root_requests"
+                  action="product_purchase.action_product_requests_master" sequence="10"/>
 
         <menuitem id="sub_menu_products" name="Products Master" parent="sub_root_products"
                   action="stock.product_template_action_product" sequence="10"/>
 
-        <menuitem id="sub_menu_contracts" name="Contracts Master" parent="sub_root_products"
+        <menuitem id="sub_menu_contracts" name="Rate Of Contracts" parent="sub_root_products"
                   action="product_purchase.action_view_product_contracts" sequence="11"/>
 
         <menuitem id="sub_menu_budget" name="Budget" parent="sub_root_workflow"
                   action="product_purchase.action_pr_budget" sequence="14"/>
 
-        <menuitem id="sub_menu_lease" name="Lease Agreements Master" parent="sub_root_products"
+        <menuitem id="sub_menu_lease" name="Lease Agreements" parent="sub_root_products"
                   action="lease_management.action_master_product_lease" sequence="12"/>
 
         <menuitem id="sub_menu_workflow" name="Workflows" parent="sub_root_workflow"
                   action="product_purchase.action_pr_company_approve_users" sequence="13"/>
 
         <menuitem id="menu_vendor_workflows"
-                  name="Vendor Approve Workflow"
+                  name="Vendor Onboarding Workflow"
                   parent="sub_root_workflow"
-                  action="product_purchase.action_vendor_workflow" sequence="14"/>
+                  action="product_purchase.action_vendor_workflow" sequence="16"/>
+
+        <menuitem id="sub_menu_expense_category" name="Expense Category" parent="sub_root_workflow"
+                  action="product_purchase.action_expense_category_action" sequence="15"/>
+
+<!--        <menuitem id="sub_menu_groups" name="Expense Groups" parent="sub_root_workflow"-->
+<!--                  action="product_purchase.action_groups" sequence="14"/>-->
+
+
+
 
 
         <menuitem id="sub_menu_vendors" name="Vendor Master" parent="sub_root_admin"
@@ -54,34 +71,10 @@
                   action="hr.open_view_employee_list_my" sequence="13"/>
 
 
-        <record id="base.action_res_company_form" model="ir.actions.act_window">
-            <field name="context">{
-                'group_by': ['parent_id','region','division']
-
-                }
-            </field>
-
-        </record>
 
 
-        <record id="view_company_form_inherit" model="ir.ui.view">
-            <field name="name">res.company.search.inherit</field>
-            <field name="model">res.company</field>
-<!--            <field name="inherit_id" ref="base.view_company_filter"/>-->
 
-            <field name="arch" type="xml">
-                <search>
-                    <field name="name"/>
-                    <group expand="0" string="Group By">
-                        <filter string="Division" name="group_by_division" context="{'group_by':'division'}"/>
-                        <filter string="Sub Division" name="group_by_sub_division"
-                                context="{'group_by':'sub_division'}"/>
-                        <filter string="Region" name="group_by_region"
-                                context="{'group_by':'region'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
+
 
 
     </data>

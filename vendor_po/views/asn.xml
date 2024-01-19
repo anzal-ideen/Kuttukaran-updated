@@ -140,19 +140,35 @@
             </field>
         </record>
 
+        <record model="ir.actions.act_window" id="action_view_all_asn">
+            <field name="name">ASN</field>
+            <field name="res_model">advanced.shipment.notice</field>
+            <!--            <field name="view_type">form</field>-->
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create"></p>
+            </field>
+        </record>
 
-        <menuitem id="root_asn" name="ASN" web_icon="vendor_po,static/icons/icons_new.png"
-                  groups="vendor_portal.group_vendor_portal_user,product_purchase.group_purchase_admin"
-                  sequence="40"/>
+
+<!--        <menuitem id="root_asn" name="ASN" web_icon="vendor_po,static/icons/icons_new.png"-->
+<!--                  groups="vendor_portal.group_vendor_portal_user,product_purchase.group_purchase_admin"-->
+<!--                  sequence="40"/>-->
         <!--        <menuitem id="menu_sub_asn" name="ASN"-->
         <!--                    parent="root_asn"-->
         <!--                  action="action_view_asn" sequence="40"/>-->
         <!--        -->
 
-        <menuitem id="menu_sub_asn" name="ASN" parent="lease_management.root_product_lease"
+        <menuitem id="menu_asn" name="ASN" parent="root_vendor_po"
                   action="action_view_asn"
-                  groups="product_purchase.group_purchase_admin,lease_management.group_lease_mangement_user,vendor_portal.group_vendor_portal_user"
                   sequence="40"/>
+
+        <menuitem id="menu_asn_contracts" name="ASN" parent="product_purchase.root_contracts_agreements"
+                  action="action_view_all_asn" groups="product_purchase.group_buyers"
+                  sequence="40"/>
+
+
 
 
 <!--        <record id="view_company_form_inherit" model="ir.ui.view">-->

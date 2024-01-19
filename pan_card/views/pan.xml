@@ -1,79 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <data>
 
 
-    <record id="inherit_pan_field" model="ir.ui.view">
-        <field name="name">res.partner.inherit</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='vat']" position="after">
-                <field name="pan"/>
-            </xpath>
+        <record id="inherit_pan_field" model="ir.ui.view">
+            <field name="name">res.partner.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="after">
+                    <field name="pan"/>
+                </xpath>
 
-        </field>
-    </record>
-
-
-    <record id="view_company_form_inherit" model="ir.ui.view">
-        <field name="name">res.company.form.inherit</field>
-        <field name="model">res.company</field>
-        <field name="inherit_id" ref="base.view_company_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_id']" position="before">
-                <field name="branch_code"/>
-
-            </xpath>
-
-            <xpath expr="//field[@name='company_registry']" position="after">
-                <field name="pan"/>
-                <field name="division"/>
-                <field name="sub_division"/>
-                <field name="region"/>
-                <field name="main"/>
+            </field>
+        </record>
 
 
-            </xpath>
-        </field>
-    </record>
+        <record id="view_company_form_inherit" model="ir.ui.view">
+            <field name="name">res.company.form.inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <field name="branch_code"/>
 
-    <record id="view_company_tree_inherit" model="ir.ui.view">
-        <field name="name">res.company.tree.inherit</field>
-        <field name="model">res.company</field>
-        <field name="inherit_id" ref="base.view_company_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_id']" position="before">
-                <field name="branch_code"/>
-                <field name="parent_id"/>
-            </xpath>
-        </field>
-    </record>
+                </xpath>
 
-
-    <record id="bank_ifsc_inherit" model="ir.ui.view">
-        <field name="name">res.partner.bank.tree.inherit</field>
-        <field name="model">res.partner.bank</field>
-        <field name="inherit_id" ref="base.view_partner_bank_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='bank_id']" position="before">
-                <field name="ifsc"/>
-
-            </xpath>
-        </field>
-    </record>
+                <xpath expr="//field[@name='company_registry']" position="after">
+                    <field name="pan"/>
+                    <field name="division"/>
+                    <field name="sub_division"/>
+                    <field name="region"/>
+                    <field name="main"/>
 
 
-    <record id="view_partner_vendor_account_form" model="ir.ui.view">
-        <field name="name">res.partner.account.form</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="account.view_partner_property_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='bank_ids']/tree/field[@name='acc_number']" position="after">
-                <field name="ifsc"/>
-            </xpath>
+                </xpath>
+            </field>
+        </record>
 
-        </field>
-    </record>
+        <record id="view_company_tree_inherit" model="ir.ui.view">
+            <field name="name">res.company.tree.inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <field name="branch_code"/>
+                    <field name="parent_id"/>
+                </xpath>
+            </field>
+        </record>
 
 
+        <record id="bank_ifsc_inherit" model="ir.ui.view">
+            <field name="name">res.partner.bank.tree.inherit</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='bank_id']" position="before">
+                    <field name="ifsc"/>
+
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="view_partner_vendor_account_form" model="ir.ui.view">
+            <field name="name">res.partner.account.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='bank_ids']/tree/field[@name='acc_number']" position="after">
+                    <field name="ifsc"/>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <record id="base.action_res_company_form" model="ir.actions.act_window">
+            <field name="context">{
+                'group_by': ['parent_id','region','division']
+
+                }
+            </field>
+
+        </record>
+
+
+        <record id="view_company_form_inherited" model="ir.ui.view">
+            <field name="name">res.company.search.view</field>
+            <field name="model">res.company</field>
+            <!--            <field name="inherit_id" ref="base.view_company_filter"/>-->
+
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Division" name="group_by_division" context="{'group_by':'division'}"/>
+                        <filter string="Sub Division" name="group_by_sub_division"
+                                context="{'group_by':'sub_division'}"/>
+                        <filter string="Region" name="group_by_region"
+                                context="{'group_by':'region'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+    </data>
 </odoo>

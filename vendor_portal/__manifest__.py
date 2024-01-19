@@ -8,7 +8,7 @@
  'company': 'Ideenkreise Tech Pvt Ltd',
  'website': 'https://www.ideenkreisetech.com',
  'category': 'Portal',
- 'depends': ['sale', 'base_accounting_kit', 'portal', 'base'],
+ 'depends': ['sale', 'base_accounting_kit', 'portal', 'base','website'],
  'license': 'AGPL-3',
  'data': [
      'security/groups.xml',
