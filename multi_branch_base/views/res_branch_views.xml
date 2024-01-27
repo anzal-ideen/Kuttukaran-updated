@@ -29,6 +29,9 @@
                                     </div>
                             </group>
                             <group>
+                                <field name="code"/>
+                                <field name="division"/>
+                                <field name="sub_division"/>
                                 <field name="company_id" options='{"no_create": True}'/>
                                 <field name="phone" class="o_force_ltr"/>
                                 <field name="email"/>
@@ -48,6 +51,9 @@
             <field name="arch" type="xml">
                 <tree string="Branches" sample="1">
                     <field name="name"/>
+                    <field name="code"/>
+                    <field name="division"/>
+                    <field name="sub_division"/>
                     <field name="company_id"/>
                     <field name="phone"/>
                 </tree>
@@ -60,9 +66,16 @@
             <field name="arch" type="xml">
                 <search string="Branches">
                     <field name="name" string="Branch"/>
+                    <field name="code" string="Branch Code"/>
+                    <field name="division" string="Division"/>
+                    <field name="sub_division" string="Sub Division"/>
                     <group expand="1" string="Group By">
                         <filter string="Company" name="groupby_company"
                                 context="{'group_by': 'company_id'}"/>
+                        <filter string="Division" name="groupby_division"
+                                context="{'group_by': 'division'}"/>
+                        <filter string="Sub Division" name="groupby_sub_division"
+                                context="{'group_by': 'sub_division'}"/>
                     </group>
                 </search>
             </field>

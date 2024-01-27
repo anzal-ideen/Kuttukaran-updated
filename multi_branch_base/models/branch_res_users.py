@@ -68,9 +68,7 @@ class ResUsers(models.Model):
             return self.env['stock.warehouse'].search([
                 ('company_id', '=', self.env.company.id)], limit=1)
 
-
     @api.onchange('branch_ids')
     def onchange_branch_ids(self):
-        print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
         self.env['ir.rule'].clear_caches()
         self.clear_caches()

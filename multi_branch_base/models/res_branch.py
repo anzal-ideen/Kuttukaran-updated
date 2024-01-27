@@ -34,6 +34,9 @@ class Branch(models.Model):
     _order = 'name'
 
     name = fields.Char(string='Branch', required=True, store=True)
+    code = fields.Char(string='Branch Code', required=True, store=True)
+    division = fields.Char(string='Division', store=True)
+    sub_division = fields.Char(string='Sub Division', store=True)
     company_id = fields.Many2one('res.company', required=True, string='Company')
     street = fields.Char()
     street2 = fields.Char()
