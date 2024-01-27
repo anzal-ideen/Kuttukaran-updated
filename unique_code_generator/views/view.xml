@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+        <record id="view_partner_is_customer_vendor_form" model="ir.ui.view">
+            <field name="name">res.partner.is.customer.vendor.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+<!--                <xpath expr="//field[@name='function']" position="before">-->
+<!--                    <field name="customer"/>-->
+<!--                </xpath>-->
+<!--                <xpath expr="//field[@name='function']" position="before">-->
+<!--                    <field name="supplier"/>-->
+<!--                </xpath>-->
+
+                <xpath expr="//field[@name='function']" position="before">
+
+                     <field name="vendor_code"/>
+                    <field name="partner_type" class="o_light_label" widget="radio"
+                           options="{'horizontal': true}"/>
+
+                </xpath>
+
+
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

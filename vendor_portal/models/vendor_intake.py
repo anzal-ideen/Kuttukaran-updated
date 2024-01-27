@@ -231,20 +231,20 @@ class VendorIntake(models.Model):
                     "phone": self.tel,
                 })
 
-                if vendor_generated and self.vendor_price_line:
-                    for lines in self.vendor_price_line:
-                        vals = {
-                            'company_id':  False,
-                            'name': vendor_generated.id,
-                            'product_tmpl_id': lines.product.id,
-                            'min_qty': lines.qty,
-                            'price': lines.price,
-                            'delay': lines.delay,
-                            # 'currency_id':"INR",
-                        }
-                        company_ids_to_add = [(6, 0, lines.company.ids)]
-                        vals['company_ids'] = company_ids_to_add
-                        price_list = self.env['product.supplierinfo'].sudo().create(vals)
+                # if vendor_generated and self.vendor_price_line:
+                #     for lines in self.vendor_price_line:
+                #         vals = {
+                #             'company_id':  False,
+                #             'name': vendor_generated.id,
+                #             'product_tmpl_id': lines.product.id,
+                #             'min_qty': lines.qty,
+                #             'price': lines.price,
+                #             'delay': lines.delay,
+                #             # 'currency_id':"INR",
+                #         }
+                #         company_ids_to_add = [(6, 0, lines.company.ids)]
+                #         vals['company_ids'] = company_ids_to_add
+                #         price_list = self.env['product.supplierinfo'].sudo().create(vals)
             else:
                 raise UserError("GST No already exist")
 
@@ -382,24 +382,24 @@ class VendorIntake(models.Model):
                         "phone": self.tel,
                     })
 
-                if vendor_generated and self.vendor_price_line:
-                    for lines in self.vendor_price_line:
-                        print(lines)
-
-                        vals = {
-                            'company_id':  False,
-                            'name': vendor_generated.id,
-                            'product_tmpl_id': lines.product.id,
-                            'min_qty': lines.qty,
-                            'price': lines.price,
-                            'delay': lines.delay,
-                            # 'currency_id':"INR",
-                        }
-                        company_ids_to_add = [(6, 0, lines.company.ids)]
-                        vals['company_ids'] = company_ids_to_add
-
-                        print(vals)
-                        price_list = self.env['product.supplierinfo'].sudo().create(vals)
+                # if vendor_generated and self.vendor_price_line:
+                #     for lines in self.vendor_price_line:
+                #         print(lines)
+                #
+                #         vals = {
+                #             'company_id':  False,
+                #             'name': vendor_generated.id,
+                #             'product_tmpl_id': lines.product.id,
+                #             'min_qty': lines.qty,
+                #             'price': lines.price,
+                #             'delay': lines.delay,
+                #             # 'currency_id':"INR",
+                #         }
+                #         company_ids_to_add = [(6, 0, lines.company.ids)]
+                #         vals['company_ids'] = company_ids_to_add
+                #
+                #         print(vals)
+                #         price_list = self.env['product.supplierinfo'].sudo().create(vals)
 
                     user_exist = self.env['res.users'].sudo().search([('name', '=', self.name),
                                                                       ('login', '=', self.mail_id)])

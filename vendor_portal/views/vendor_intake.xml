@@ -164,8 +164,8 @@
                             </page>
 
 
-                            <page name="price_list" string="Price List">
-                                <field name="vendor_price_line">
+                            <page name="price_list" string="Price List" invisible="1">
+                                <field name="vendor_price_line" invisible="1">
                                     <tree editable="bottom">
                                         <field name="company" widget="many2many_tags"/>
                                         <field name="product"/>

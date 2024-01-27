@@ -27,14 +27,17 @@
         <menuitem id="sub_menu_products" name="Products Master" parent="sub_root_products"
                   action="stock.product_template_action_product" sequence="10"/>
 
+        <menuitem id="sub_menu_product_groups" name="Product Groups" parent="sub_root_products"
+                  action="product_purchase.action_product_groups" sequence="11"/>
+
         <menuitem id="sub_menu_contracts" name="Rate Of Contracts" parent="sub_root_products"
-                  action="product_purchase.action_view_product_contracts" sequence="11"/>
+                  action="product_purchase.action_view_product_contracts" sequence="12"/>
 
         <menuitem id="sub_menu_budget" name="Budget" parent="sub_root_workflow"
                   action="product_purchase.action_pr_budget" sequence="14"/>
 
         <menuitem id="sub_menu_lease" name="Lease Agreements" parent="sub_root_products"
-                  action="lease_management.action_master_product_lease" sequence="12"/>
+                  action="lease_management.action_master_product_lease" sequence="13"/>
 
         <menuitem id="sub_menu_workflow" name="Workflows" parent="sub_root_workflow"
                   action="product_purchase.action_pr_company_approve_users" sequence="13"/>

@@ -32,7 +32,7 @@ class PurchaseVendorUser(models.Model):
     _inherit = 'purchase.order'
 
     vendor_user_id = fields.Many2one('res.users', string='Vendor User', compute='_compute_vendor_user_id',
-        store=True)
+        store=True,readonnly=False)
     delivery_commitment = fields.Boolean("Delivery Commited")
     asm_date = fields.Boolean("ASN Date")
     menu_1 = fields.Boolean("Second menu")
@@ -136,15 +136,22 @@ class PurchaseVendorUser(models.Model):
 
     @api.depends('partner_id')
     def _compute_vendor_user_id(self):
+        # print("ddddddd")
+        # print("partner", self.partner_id.id)
+        # print("partner name", self.partner_id.name)
         # for user in self:
-        if self.partner_id:
-            vendor_user_id = self.env['res.users'].sudo().search([
-            ('partner_id', '=', self.partner_id.id)])
-            print(vendor_user_id.name)
-            print(vendor_user_id.id)
-            if vendor_user_id:
-                self.vendor_user_id = vendor_user_id.id
+        for rec in self:
+            if rec.partner_id:
+                vendor_partner_id = self.env['res.partner'].sudo().search([
+                    ('id', '=', rec.partner_id.id)])
+                print("partner vendor",vendor_partner_id)
+                vendor_user_id = self.env['res.users'].sudo().search([
+                ('partner_id', '=', rec.partner_id.id)])
+                print(vendor_user_id.login)
+                print(vendor_user_id.id)
+                if vendor_user_id:
+                    self.vendor_user_id = vendor_user_id.id
+                else:
+                    self.vendor_user_id = False
             else:
                 self.vendor_user_id = False
-        else:
-            self.vendor_user_id = False

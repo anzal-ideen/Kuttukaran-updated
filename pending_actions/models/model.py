@@ -29,6 +29,11 @@ class PendingActions(models.Model):
     )
 
 
+    # def action_force_close(self):
+    #     for rec in self:
+    #         rec.status ='closed'
+
+
 
     def open_record(self):
         # model = self.model.model

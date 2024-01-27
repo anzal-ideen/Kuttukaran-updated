@@ -9,6 +9,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="after">
                 <field name="category"/>
+<!--                <field name="login"/>-->
             </xpath>
 
         </field>

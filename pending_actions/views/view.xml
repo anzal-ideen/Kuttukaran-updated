@@ -25,6 +25,13 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <tree editable="bottom" create="0" edit="0">
+<!--                    <header>-->
+<!--                         <button name="action_force_close"-->
+
+<!--                                string="Approve" class="btn-primary" type="object"-->
+<!--                                attrs="{'invisible': ['|', ('status', '!=', 'open')]}"-->
+<!--                                confirm="Are you sure,you want to force close this Action?"/>-->
+<!--                    </header>-->
 
 
                     <field name="date" />

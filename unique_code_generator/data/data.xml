@@ -1,0 +1,38 @@
+<odoo>
+    <data>
+        <record id="sequence_vendor_code" model="ir.sequence">
+            <field name="name">Vendor Code</field>
+            <field name="code">vendor.code</field>
+            <field name="prefix">VDR</field>
+            <field name="padding" eval="5"/>
+        </record>
+
+        <record id="sequence_customer_code" model="ir.sequence">
+            <field name="name">Customer Code</field>
+            <field name="code">customer.code</field>
+            <field name="prefix">CUS</field>
+            <field name="padding" eval="5"/>
+        </record>
+
+        <record id="sequence_import_export_vendor_code" model="ir.sequence">
+            <field name="name">Import/Export Vendor Code</field>
+            <field name="code">export.import.vendor.code</field>
+            <field name="prefix">EIV</field>
+            <field name="padding" eval="5"/>
+        </record>
+
+        <record id="sequence_import_export_customer_code" model="ir.sequence">
+            <field name="name">Import/Export Customer Code</field>
+            <field name="code">export.import.customer.code</field>
+            <field name="prefix">EIC</field>
+            <field name="padding" eval="5"/>
+        </record>
+
+        <record id="sequence_vendor_customer_code" model="ir.sequence">
+            <field name="name">Vendor/ Customer Code</field>
+            <field name="code">vendor.customer.code</field>
+            <field name="prefix">VC</field>
+            <field name="padding" eval="5"/>
+        </record>
+    </data>
+</odoo>
