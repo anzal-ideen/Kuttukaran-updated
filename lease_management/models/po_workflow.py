@@ -46,6 +46,11 @@ class PurchaseApprovals(models.Model):
 
     in_budget = fields.Boolean("In Budget",compute="_compute_inbudget",readonly=False,default=True,store=True,force_save=True)
 
+
+
+
+
+
     @api.depends('pr_budget_id', 'amount_total')
     def _compute_inbudget(self):
         for rec in self:
@@ -71,18 +76,22 @@ class PurchaseApprovals(models.Model):
 
                 pr_company_data = self.env['pr.company'].sudo().search([
                     ('company_id', '=', self.company_id.id),
-                    ('department_id', '=',self.department_id.id),
+                    # ('company_id', '=', self.env.company.id),
+                    # ('branch_id','=',self.branch_id.id),
+                    # ('department_id', '=',self.department_id.id),
+                    ('expense_type', '=',self.expense_type),
+                    # ('exp_category', '=',self.exp_category.id),
                     ('from_amount', '<=', self.amount_total),
                     ('to_amount', '>=', self.amount_total),
                     ('type','=','purchase')],
                    limit=1)
-                print(pr_company_data)
+                print(pr_company_data.name)
                 if pr_company_data:
                     # self.message_post(body="Wait for PO"+" "+ self.name+" " +"Approval")
 
-                    if self.partner_id.user_id:
+                    if self.partner_id.login:
                         new_line_vals = {
-                            'user_id': self.partner_id.user_id.id,
+                            'user_id': self.partner_id.login.id,
                             'approve_order': int(1),
                         }
                         self.approvers_line_ids |= self.env['po.approve.line'].create(new_line_vals)
@@ -106,7 +115,7 @@ class PurchaseApprovals(models.Model):
 
                         print("appppppppppppppppppppppppppppprovalllllllllllllll", approval_url)
 
-                        body = f"Dear User,A Purchase request {self.name} has been initiated by {self.requested_by.name}."
+                        # body = f"Dear User,A Purchase Order {self.name} has been initiated."
                         author = self.env['res.partner'].sudo().search(
                             [('name', '=', 'Administrator')], limit=1) or False
 
@@ -125,32 +134,43 @@ class PurchaseApprovals(models.Model):
 
                         )
 
-                        if self.partner_id.mail:
+                        if self.partner_id.email:
                             mail_values = {
                                 'subject': 'PO Waiting for acknowledgment',
                                 'body_html': body,
-                                'email_to': self.partner_id.mail,
+                                'email_to': self.partner_id.email,
                                 'auto_delete': False,
                                 'author_id': author.id
                             }
                             mail_record = self.env['mail.mail'].sudo().create(mail_values)
+
 
                     self.message_post(body="Wait for PO Approval")
                     for approvers in pr_company_data.pr_approve_users_id:
                         line = []
                         last_approve_order = None
                         print(approvers)
+                        # for users in approvers:
+
+                            # print(users_line)
+
                         for users in approvers:
-                            self.write({'approve_users': [(4, users.user_id.id)]})
-                            if self.partner_id.user_id:
+                            users_line = self.env['res.users.line'].sudo().search(
+                                [('company_id', '=', users.company_id.id),
+                                 ('branch_id', '=', users.branch_id.id),
+                                 ('department_id', '=', users.department_id.id),
+                                 ('designation', '=', users.designation.id)])
+
+                            self.write({'approve_users': [(4, users_line.res_user_id.id)]})
+                            if self.partner_id.login:
                                 approve_order = int(users.approve_order) + 1
                             else:
                                 approve_order = users.approve_order
                             vals = {
-                                'user_id': users.user_id.id,
+                                'user_id': users_line.res_user_id.id,
                                 'company_id': users.company_id.id,
-                                # 'location': users.location.id,
-                                'department_id': pr_company_data.department_id.id,
+                                'branch_id': users.branch_id.id,
+                                'department_id': users.department_id.id,
                                 'designation': users.designation.id,
                                 'approve_order': approve_order,
                             }
@@ -158,6 +178,7 @@ class PurchaseApprovals(models.Model):
                             if last_approve_order is None or users.approve_order > last_approve_order:
                                 last_approve_order = users.approve_order
                             print(last_approve_order)
+                            print(line)
                         self.approvers_line_ids = line
                     next_approver_user_ids = [next_approver.user_id.id for next_approver in self.approvers_line_ids if
                                               next_approver.approve_order == 1]
@@ -165,7 +186,7 @@ class PurchaseApprovals(models.Model):
                     if all(item is not False for item in next_approver_user_ids):
                         self.write({'next_approve_user': [(6, 0, next_approver_user_ids)]})
                         self.is_confirmed = True
-
+                    #
                         model = self.env['ir.model'].sudo().search([('model', '=', self._name)], limit=1)
                         pending_vals = {
                             'model': model.id,
@@ -174,8 +195,58 @@ class PurchaseApprovals(models.Model):
                             'date': date.today(),
                             'approve_users': [(6, 0, self.approvers_line_ids.mapped('user_id').ids)]
                         }
-
                         pendings = self.env['pending.actions'].create(pending_vals)
+
+                        activity_type = self.env['mail.activity.type'].sudo().search([('name', '=', 'Pending Purchase Order')],
+                                                                                     limit=1)
+                        activity_type_id = activity_type.id if activity_type else False
+                        res_model_id = self.env['ir.model'].sudo().search([('model', '=', 'purchase.order')]).id
+                        for approver_line in self.next_approve_user:
+                            activity_values = {
+                                'user_id': approver_line.id,
+                                'res_id': self.id,
+                                'note': "Pending Action",
+                                'activity_type_id': activity_type_id,
+                                'res_model_id': res_model_id,
+                            }
+                            created_activity = self.env['mail.activity'].create(activity_values)
+
+                        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                        menu_id = self.env['ir.ui.menu'].sudo().search(
+                            [('name', '=', 'Purchase')], limit=1) or False
+
+                        url_params = {
+                            'id': self.id,
+                            'action': self.env.ref('vendor_po.action_view_vendors_po').id,
+                            'model': 'purchase.order',
+                            'view_type': 'form',
+                            'menu_id': menu_id.id if menu_id else False,
+                            # 'function': 'action_approval',
+                        }
+
+                        params = '/web?#%s' % url_encode(url_params)
+                        approval_url = base_url + params if base_url else "#"
+
+                        print("appppppppppppppppppppppppppppprovalllllllllllllll", approval_url)
+                        author = self.env['res.partner'].sudo().search(
+                            [('name', '=', 'Administrator')], limit=1) or False
+
+                        body = (
+                            f"Dear User,A Purchase Order {self.name} has been raised and waiting for your approval.<br><br>"
+                            f"<a href='{approval_url}' style='display: inline-block; padding: 10px 20px; "
+                            f"background-color: #008CBA; color: white; text-align: center; text-decoration: none; "
+                            f"font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px;'>View Entries</a> <br>"
+
+                        )
+                        if author:
+                            mail_values = {
+                                'subject': 'PO Waiting for Approval',
+                                'body_html': body,
+                                'email_to': self.next_approve_user.login,
+                                'auto_delete': False,
+                                'author_id': author.id
+                            }
+                            mail_record = self.env['mail.mail'].sudo().create(mail_values)
 
 
                     else:
@@ -206,6 +277,24 @@ class PurchaseApprovals(models.Model):
         for record in approver:
             record.write({'status': 'approve'})
 
+            model = self.env['ir.model'].sudo().search([('model', '=', self._name)], limit=1)
+            pending_action = self.env['pending.actions'].sudo().search(
+                [('model', '=', model.id), ('record', '=', self.id)], limit=1)
+
+            if pending_action:
+                pending_action.status = 'closed'
+
+            activity_type = self.env['mail.activity.type'].search([('name', '=', 'Pending Purchase Order')], limit=1)
+            print("type is", self.env.user.id)
+            activity = self.env['mail.activity'].search([
+                ('res_model_id', '=', self.env['ir.model'].sudo().search([('model', '=', 'purchase.order')]).id),
+                ('user_id', '=', self.env.user.id), ('res_name', '=', self.name),
+                ('activity_type_id', '=', activity_type.id),
+            ], limit=1)
+            if activity:
+                print(activity.id)
+                activity.action_feedback(feedback="Activity completed")
+
         approve_users = self.env['po.approve.line'].sudo().search(
             [('po_approve_id', '=', self.id)], order='approve_order asc')
 
@@ -228,6 +317,70 @@ class PurchaseApprovals(models.Model):
             next_order = next_user['order']
             self.write({'next_approve_user': [(4, next_user_id)]})
 
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            menu_id = self.env['ir.ui.menu'].sudo().search(
+                [('name', '=', 'Purchase')], limit=1) or False
+
+            url_params = {
+                'id': self.id,
+                'action': self.env.ref('purchase.purchase_rfq').id,
+                'model': 'purchase.order',
+                'view_type': 'form',
+                # 'menu_id': self.env.ref('product_purchase.product_purchase').id,
+                'menu_id': menu_id.id,
+            }
+            params = '/web?#%s' % url_encode(url_params)
+            view_url = base_url + params if base_url else "#"
+
+            author = self.env['res.partner'].sudo().search(
+                [('name', '=', 'Administrator')], limit=1) or False
+
+            body = (
+                f"Dear User,A Purchase Order {self.name} is waiting for Approval.<br><br>"
+                f"<a href='{view_url}' style='display: inline-block; padding: 10px 20px; "
+                f"background-color: #008CBA; color: white; text-align: center; text-decoration: none; "
+                f"font-size: 16px; margin: 4px 2px; cursor: pointer; border-radius: 5px;'>View Entries</a> <br>"
+
+            )
+            for user in self.next_approve_user:
+                model = self.env['ir.model'].sudo().search([('model', '=', self._name)],
+                                                           limit=1)
+                pending_vals = {
+                    'model': model.id,
+                    'name': self.name + " " + "Waiting For Approval",
+                    'record': self.id,
+                    'date': date.today(),
+                }
+                if user:
+                    user_ids_to_pass = user.ids
+                    pending_vals['approve_users'] = [(6, 0, user_ids_to_pass)]
+                    pendings = self.env['pending.actions'].create(pending_vals)
+
+                    activity_type = self.env['mail.activity.type'].sudo().search([('name', '=', 'Pending Purchase Order')],
+                                                                                 limit=1)
+                    activity_type_id = activity_type.id if activity_type else False
+                    res_model_id = self.env['ir.model'].sudo().search([('model', '=', 'purchase.order')]).id
+                    # for approver_line in self.next_approve_user:
+                    activity_values = {
+                        'user_id': user.id,
+                        'res_id': self.id,
+                        'note': "Pending Action",
+                        'activity_type_id': activity_type_id,
+                        'res_model_id': res_model_id,
+                    }
+                    created_activity = self.env['mail.activity'].create(activity_values)
+
+                if user.login:
+                    subject = "Purchase Order Waiting For APPROVAL: %s" % self.name
+                    mail_values = {
+                        'subject': subject,
+                        'body_html': body,
+                        'email_to': user.login,
+                        'auto_delete': False,
+                        'author_id': author.id
+                    }
+                    mail_record = self.env['mail.mail'].sudo().create(mail_values)
+
             print("Next User ID:", next_user_id)
             print("Next Order:", next_order)
         else:
@@ -242,12 +395,34 @@ class PurchaseApprovals(models.Model):
                 if pending_action:
                     pending_action.status = 'closed'
 
+                activity_type = self.env['mail.activity.type'].search([('name', '=', 'Pending Purchase Order')],
+                                                                      limit=1)
+                print("type is", self.env.user.id)
+                activity = self.env['mail.activity'].search([
+                    ('res_model_id', '=', self.env['ir.model'].sudo().search([('model', '=', 'purchase.order')]).id),
+                    ('user_id', '=', self.env.user.id), ('res_name', '=', self.name),
+                    ('activity_type_id', '=', activity_type.id),
+                ], limit=1)
+                if activity:
+                    print(activity.id)
+                    activity.action_feedback(feedback="Activity completed")
+
+                author = self.env['res.partner'].sudo().search(
+                    [('name', '=', 'Administrator')], limit=1) or False
+                mail_values = {
+                    'subject': "PO Confirmed",
+                    'body_html': "Dear Vendor,The Purchase Order has been confirmed ",
+                    'email_to': self.partner_id.email,
+                    'auto_delete': False,
+                    'author_id': author.id
+                }
+                mail_record = self.env['mail.mail'].sudo().create(mail_values)
+
                 self.button_confirm()
                 self.button_confirm()
                 # self.state = 'approve'
                 print("approved")
                 print("Confirmedddddddddddddddddddddddddddddddddddddddddddddddddddd")
-                # Change the state to the desired value when all statuses are 'approve'
                 # self.write({'state': 'approved_state'})
             else:
                 # Handle the case when not all statuses are 'approve'
@@ -260,6 +435,26 @@ class PurchaseApprovals(models.Model):
 
     def action_rejected(self):
         print("rejectttt")
+        model = self.env['ir.model'].sudo().search([('model', '=', self._name)], limit=1)
+        pending_action = self.env['pending.actions'].sudo().search(
+            [('model', '=', model.id), ('record', '=', self.id)])
+
+        if pending_action:
+            for i in pending_action:
+                i.status = 'closed'
+
+        activity_type = self.env['mail.activity.type'].search([('name', '=', 'Pending Purchase Order')],
+                                                              limit=1)
+        print("type is", self.env.user.id)
+        activity = self.env['mail.activity'].search([
+            ('res_model_id', '=', self.env['ir.model'].sudo().search([('model', '=', 'purchase.order')]).id),
+             ('res_name', '=', self.name),
+            ('activity_type_id', '=', activity_type.id),
+        ])
+        if activity:
+            for i in activity:
+                i.action_feedback(feedback="Activity Cancelled")
+
         self.message_post(body=self.env.user.name + " " + "Rejected")
         self.write({
             'state': 'cancel',
@@ -272,6 +467,25 @@ class PurchaseApprovals(models.Model):
 
     def button_cancel(self):
         res = super(PurchaseApprovals, self).button_cancel()
+        model = self.env['ir.model'].sudo().search([('model', '=', self._name)], limit=1)
+        pending_action = self.env['pending.actions'].sudo().search(
+            [('model', '=', model.id), ('record', '=', self.id)], limit=1)
+
+        if pending_action:
+            for i in pending_action:
+                i.status = 'closed'
+        activity_type = self.env['mail.activity.type'].search([('name', '=', 'Pending Purchase Order')],
+                                                              limit=1)
+        print("type is", self.env.user.id)
+        activity = self.env['mail.activity'].search([
+            ('res_model_id', '=', self.env['ir.model'].sudo().search([('model', '=', 'purchase.order')]).id),
+            ('res_name', '=', self.name),
+            ('activity_type_id', '=', activity_type.id),
+        ])
+        if activity:
+            for i in activity:
+                i.action_feedback(feedback="Activity Cancelled")
+
         self.write({
             'state': 'cancel',
             'is_confirmed': False,
@@ -293,7 +507,7 @@ class PoApproveLines(models.Model):
 
     user_id = fields.Many2one('res.users', string="User")
     company_id = fields.Many2one('res.company', string="Company")
-    # location = fields.Many2one('res.company', string="Location")
+    branch_id = fields.Many2one('res.branch', string="Branch")
     department_id = fields.Many2one('hr.department', string="Department")
     emp_name = fields.Many2one('hr.employee', string="Employee")
     designation = fields.Many2one('hr.job', string="Designation")

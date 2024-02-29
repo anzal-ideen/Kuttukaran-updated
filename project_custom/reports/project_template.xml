@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="proposal_report_temp" model="ir.actions.report">
+        <field name="name">Proposal </field>
+        <field name="model">project.proposals</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name" eval="'project_custom.project_proposal_pdf_template'" />
+        <field name="report_file" eval="'project_custom.project_proposal_pdf_template'" />
+        <field name="binding_model_id" ref="project_custom.model_project_proposals"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="proposal_qms_report_temp" model="ir.actions.report">
+        <field name="name">Proposal QMS </field>
+        <field name="model">project.proposals</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name" eval="'project_custom.project_proposal_qms_template'" />
+        <field name="report_file" eval="'project_custom.project_proposal_qms_template'" />
+        <field name="binding_model_id" ref="project_custom.model_project_proposals"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

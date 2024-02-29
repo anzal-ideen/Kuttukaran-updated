@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_project_form_inherit" model="ir.ui.view">
+            <field name="name">project.project.inherit</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_button_box']/button[5]" position="after">
+                    <button name="action_open_proposals" type="object" class="oe_stat_button"
+                            icon="fa-pencil-square-o">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="total_proposals" nolabel="1"/>
+                            </span>
+                            <span class="o_stat_text">
+                                Proposals
+                            </span>
+                        </div>
+                    </button>
+                </xpath>
+                <xpath expr="//div[@class='oe_button_box']/button[6]" position="after">
+                    <button name="action_open_amc" type="object" class="oe_stat_button"
+                            icon="fa-pencil-square-o">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="total_amc" nolabel="1"/>
+                            </span>
+                            <span class="o_stat_text">
+                                AMC
+                            </span>
+                        </div>
+                    </button>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

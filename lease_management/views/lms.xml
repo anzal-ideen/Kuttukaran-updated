@@ -125,9 +125,9 @@
                             <group col="2">
                                 <field name="user_id" readonly="1"/>
                                 <field name="company_id" readonly="1"/>
-                                <field name="approve_users" readonly="0" widget="many2many_tags" invisible="1"/>
-                                <field name="approved_users" readonly="0" widget="many2many_tags" invisible="1"/>
-                                <field name="next_approve_user" readonly="0" widget="many2many_tags" invisible="1"/>
+                                <field name="approve_users" readonly="0" widget="many2many_tags" invisible="0"/>
+                                <field name="approved_users" readonly="0" widget="many2many_tags" invisible="0"/>
+                                <field name="next_approve_user" readonly="0" widget="many2many_tags" invisible="0"/>
                                 <!--                                <field name="total" widget="monetary" />-->
 
 
@@ -208,7 +208,7 @@
                                     <tree editable="bottom" delete="0">
                                         <field name="user_id"/>
                                         <field name="company_id"/>
-                                        <field name="location"/>
+                                        <field name="branch_id"/>
                                         <field name="department_id"/>
                                         <field name="designation"/>
                                         <field name="approve_order"/>
@@ -217,7 +217,7 @@
                                     <form>
                                         <field name="user_id"/>
                                         <field name="company_id"/>
-                                        <field name="location"/>
+<!--                                        <field name="location"/>-->
                                         <field name="department_id"/>
                                         <field name="designation"/>
                                         <field name="approve_order"/>
@@ -277,7 +277,7 @@
             <field name="name">Lease Agreements</field>
             <field name="res_model">product.lease</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('vendor_id.user_id.id','=',uid)]</field>
+            <field name="domain">[('vendor_id.login.id','=',uid)]</field>
             <field name="context">{
                 'search_default_status_draft': 1,
                 'create': False,
@@ -291,19 +291,39 @@
             </field>
         </record>
 
+
+<!--        <record model="ir.actions.act_window" id="action_all_vendors_product_lease">-->
+<!--            <field name="name">Vendors Lease Agreements</field>-->
+<!--            <field name="res_model">product.lease</field>-->
+<!--            <field name="view_mode">tree,form</field>-->
+<!--            <field name="domain">[]</field>-->
+<!--            <field name="help" type="html">-->
+<!--                <p class="oe_view_nocontent_create"></p>-->
+<!--            </field>-->
+<!--        </record>-->
+
 <!--        <menuitem id="root_product_lease" name="Contracts"-->
 <!--                  web_icon="lease_management,static/icons/agreement.png"/>-->
-
-
-        <menuitem id="menu_product_lease" name="Lease/Rent Agreements" parent="product_purchase.root_contracts_agreements"
-                  action="action_product_lease" groups="product_purchase.group_buyers,product_purchase.group_approvers"
+         <menuitem id="menu_product_lease" name="Lease/Rent Agreements" parent="product_purchase.root_contracts_agreements"
+                  groups="product_purchase.group_buyers,product_purchase.group_approvers"
                   sequence="13"/>
+
+        <menuitem id="sub_menu_product_lease" name="Lease/Rent Agreements" parent="menu_product_lease"
+                  action="action_product_lease" groups="product_purchase.group_buyers,product_purchase.group_approvers"
+                  sequence="14"/>
 
 
 
         <menuitem id="menu_vendors_product_lease" name="My Lease/Rent Agreements" parent="product_purchase.root_contracts_agreements"
                   action="action_my_product_lease" groups="vendor_portal.group_vendor_portal_user"
-                  sequence="14"/>
+                  sequence="15"/>
+
+<!--        <menuitem id="menu_all_vendors_product_lease" name="Vendors Lease/Rent Agreements" parent="menu_product_lease"-->
+<!--                  action="action_all_vendors_product_lease" groups="product_purchase.group_buyers"-->
+<!--                  sequence="16"/>-->
+
+
+
 
 
         <record id="purchase.purchase_rfq" model="ir.actions.act_window">

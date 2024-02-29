@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="tenders_inherit" model="ir.ui.view">
+            <field name="name">tenders.inherit</field>
+            <field name="model">tenders</field>
+            <field name="inherit_id" ref="product_purchase.view_tenders_status_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header/button[@name='action_approval']" position="after">
+                    <button name="action_add_to_bidding" id="btn_bidding"
+                            string="ADD TO BIDDING" type="object" class="btn-primary"
+
+                    />
+<!--                    attrs="{'invisible': ['|',('vendor_request_status', '!=', 'accept'), ('bid_request_check', '=', True)]}"-->
+                    <field name="bid_request_check" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='payment_terms']" position="after">
+                    <field name="bidding_id" readonly="1" attrs="{'invisible': [('bid_request_check', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

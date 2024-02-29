@@ -1,0 +1,27 @@
+{''
+ 'name': 'Project-Proposals & AMC',
+ 'summary': """Custom Proposals and AMC""",
+ 'version': '0.1',
+ 'sequence': '-580',
+ 'description': """Adding AMC and Proposals""",
+ 'author': 'Ideenkreise Tech Pvt Ltd',
+ 'company': 'Ideenkreise Tech Pvt Ltd',
+ 'website': 'https://www.ideenkreisetech.com',
+ 'category': 'Tools',
+ 'depends': ['base', 'mail', 'project'],
+ 'license': 'AGPL-3',
+ 'data': [
+     'security/ir.model.access.csv',
+     'data/amc_cron.xml',
+     'views/project_amc.xml',
+     'views/project.xml',
+     'views/project_proposal.xml',
+     'reports/project_proposal_template.xml',
+     'reports/project_proposal_qms_template.xml',
+     'reports/project_template.xml',
+ ],
+ 'demo': [],
+ 'installable': True,
+ 'auto_install': False,
+ 'application': True
+ }

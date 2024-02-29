@@ -120,7 +120,7 @@
 
 
         <menuitem id="menu_product_lease" name="Pending Actions" parent="root_pending_actions"
-                  action="action_pending_actions" groups="pending_actions.group_pending_action_user"
+                  action="action_pending_actions" groups="product_purchase.group_buyers,product_purchase.group_approvers,product_purchase.group_pr_initiator,product_purchase.group_purchase_head"
                   sequence="10"/>
         <menuitem id="menu_product_lease_all" name="Pending Actions" parent="lease_management.sub_root_requests"
                   action="action_all_pending_actions"

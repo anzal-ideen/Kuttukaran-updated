@@ -24,8 +24,7 @@
 
                 <div class="footer">
 
-                    <table class="footer" width="100%" cellpadding="5" cellspacing="5"
-                           style="margin-top: 0%; border-collapse: collapse; border: 0px solid black; ">
+                    <table class="footer" width="100%" cellpadding="5" cellspacing="5">
                         <tr style="border:none;">
                             <td style="text-align:center">
                                 <span t-field="res_company.name"/>
@@ -279,12 +278,14 @@ border-bottom: 1px solid;border-left: 1px solid;border-right: 1px solid; ">
 
                         <td style=" padding:15px 50px 15px 15px; width: 400px; ">
                             <span>
-                                <strong>Total Purchase Order Value :</strong>
+                                Total Purchase Order Value :
                             </span>
-                            <t t-set="formatted_amount_total" t-value="o.amount_total"/>
-                            <t t-if="formatted_amount_total">
-                                <t t-esc="formatted_amount_total"/>
-                            </t>
+                            <strong>
+                                <t t-set="formatted_amount_total" t-value="o.amount_total"/>
+                                <t t-if="formatted_amount_total">
+                                    <t t-esc="formatted_amount_total"/>
+                                </t>
+                            </strong>
                         </td>
 
                         <td>
@@ -294,12 +295,15 @@ border-bottom: 1px solid;border-left: 1px solid;border-right: 1px solid; ">
                     <tr>
                         <td style=" padding:0px 50px 10px 15px; width: 1000px; ">
                             <span>
-                                <strong>Total Purchase Order Value In Words :</strong>
+                                Total Purchase Order Value In Words :
                             </span>
-                            <t t-set="amount_in_words" t-value="o.amount_total_in_words()"/>
-                            <t t-if="amount_in_words">
-                                <t t-esc="amount_in_words"/>
-                            </t>
+                            <strong>
+                                <span t-field="o.text_amount_ar"/>
+                                <!--                                <t t-set="amount_in_words" t-value="o.amount_total_in_words()"/>-->
+                                <!--                                <t t-if="amount_in_words">-->
+                                <!--                                    <t t-esc="amount_in_words"/>-->
+                                <!--                                </t>-->
+                            </strong>
 
                         </td>
                         <td>
@@ -359,8 +363,11 @@ border-bottom: 1px solid;border-left: 1px solid;border-right: 1px solid; ">
                                     <span class="text-nowrap" t-esc="line.product_id.display_name"/>
                                 </td>
                                 <td style="width: 15%;border-right:1px solid;border-bottom:1px solid;padding: 5px; ">
-                                    <span class="text-nowrap" t-esc="line.date_planned"/>
+                                    <span class="text-nowrap" t-esc="line.date_planned.date()"/>
+
                                 </td>
+
+
                                 <td style="width: 5%;border-right:1px solid;border-bottom:1px solid; padding: 5px; ">
                                     <span class="text-nowrap" t-esc="line.product_qty"/>
                                 </td>
@@ -455,10 +462,11 @@ border-bottom: 1px solid;border-left: 1px solid;border-right: 1px solid; ">
                                 <span style="text-align:Left;">
                                     <b>Total in words:</b>
                                 </span>
-                                <t t-set="amount_in_words" t-value="o.amount_total_in_words()"/>
-                                <t t-if="amount_in_words">
-                                    <t t-esc="amount_in_words"/>
-                                </t>
+                                <span t-field="o.text_amount_ar"/>
+                                <!--                                <t t-set="amount_in_words" t-value="o.amount_total_in_words()"/>-->
+                                <!--                                <t t-if="amount_in_words">-->
+                                <!--                                    <t t-esc="amount_in_words"/>-->
+                                <!--                                </t>-->
                             </td>
                         </tr>
                         <!--                        <tr style="border:1px solid">-->
@@ -590,54 +598,81 @@ border-bottom: 1px solid;border-left: 1px solid;border-right: 1px solid; ">
                     </tr>
                     <tr>
                         <td colspan="2" style="padding: 5px;">
-                            <b>Price Basis : AS PER AGREEMENT</b>
+                            <b>Price Basis :</b>
+                            <span t-field="o.price_basis"/>
+
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="padding: 5px;">
                             <b>Warranty Terms:</b>
+                            <span t-field="o.warranty_terms"/>
+
+
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="padding: 5px;">
-                            <b>Payment terms:
-                                <span t-field="o.payment_term_id.name"/>
-                            </b>
+                            <b>Payment terms:</b>
+                            <span t-field="o.payment_term_id.name"/>
+
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="padding: 5px;">
                             <b>Installation &amp; Com:</b>
+                            <span t-field="o.installation"/>
+
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="padding: 5px;">
                             <b>Dispatch Mode:</b>
+                            <span t-field="o.dispatch"/>
+
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="padding: 5px;">
                             <b>Freight Insurance &amp; P&amp;F:</b>
+                            <span t-field="o.freight"/>
+
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="padding: 5px;">
                             <b>Liquidated Damage:</b>
+                            <span t-field="o.damage"/>
+
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="padding: 5px;">
                             <b>AMC:</b>
+                            <span t-field="o.amc"/>
+
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="padding: 5px;">
                             <b>Note to Vendor:</b>
+                            <span t-field="o.note"/>
+
                         </td>
                     </tr>
                     <tr>
                         <td colspan="2" style="border-top: 1px solid black; width: 50%;">
-                            <b>Buyer Name:</b>
+                            <b>Buyer Name:
+                                <span t-field="o.buyers.name"/>
+                            </b>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td colspan="2" style=" width: 50%;">
+                            <b>Contact :
+                                <span t-field="o.contact.name"/>
+                            </b>
                         </td>
 
                     </tr>
@@ -664,11 +699,18 @@ border-bottom: 1px solid;border-left: 1px solid;border-right: 1px solid; ">
                     <tr>
                         <td style="padding: 5px;">
                             Date:
+                            <span t-field="o.date"/>
                         </td>
                         <td style="text-align: right; padding: 5px;">
-                            Status:
-                            <span t-field="o.state"/>
+                            Status :
+                            <t t-if="o.state == 'purchase'">
+                                Approved Purchase Order
+                            </t>
+                            <t t-else="">
+                                Not Approved Purchase Order
+                            </t>
                         </td>
+
                     </tr>
                 </table>
 

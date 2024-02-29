@@ -27,6 +27,10 @@
         <menuitem id="sub_menu_products" name="Products Master" parent="sub_root_products"
                   action="stock.product_template_action_product" sequence="10"/>
 
+        <menuitem id="sub_menu_products_category" name="Products Category" parent="sub_root_products"
+                  action="product.product_category_action_form" sequence="11"/>
+
+
         <menuitem id="sub_menu_product_groups" name="Product Groups" parent="sub_root_products"
                   action="product_purchase.action_product_groups" sequence="11"/>
 

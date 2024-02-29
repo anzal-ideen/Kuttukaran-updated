@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="project_proposal_qms_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+
+
+                <div class="page" style="border: none;">
+                  <div class="header" style="background-image: url('/project_custom/static/report/header.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 210px; /* Adjust the height as needed */
+    width: 999px; /* Adjusted width based on the aspect ratio */
+    padding-top: 0px;
+">
+</div>
+
+
+                    <style>
+                        .content {
+                        transform: scale(2); /* This will scale the content by a factor of 2 */
+                        padding-top: 50px;;font-size: 20px; padding-left: 35px; padding-right: 30px;text-align: justify; line-height: 1.5;
+                        }
+                    </style>
+                    <div class="content">
+                        <div class="section">
+                            <h1 style="text-align: center;">Section 1-A</h1>
+                            <h1 style="text-align: center;">Scope of work</h1>
+                            <p>This scope includes the following:</p>
+                            <div class="details">
+                                <ul>
+                                    <!-- Feasibility Study -->
+                                    <li>Feasibility Study of existing Systems to be integrated (API integration)
+                                        with the QMS
+                                    </li>
+                                    <!-- Development of QMS -->
+                                    <li>Development of QMS integrated (API integration) with the existing System
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h2>Feasibility Study of existing Systems to be integrated (API integration) with the
+                                QMS
+                            </h2>
+                            <div class="tasks">
+                                <ul>
+                                    <!-- Find objectives -->
+                                    <li>Find the objectives of integrating the existing systems with the QMS.
+                                        Identify the specific needs, such as data accuracy, or streamlining
+                                        processes.
+                                    </li>
+                                    <!-- Gather requirements -->
+                                    <li>Gather requirements from stakeholders, including IT teams, and management.
+                                        Ensure that their needs align with the integration goals.
+                                    </li>
+                                    <!-- Perform detailed analysis -->
+                                    <li>If needed, perform a detailed analysis of the existing systems to be
+                                        integrated. Understand their architecture, data structures, and
+                                        functionalities. Identify potential challenges and dependencies.
+                                    </li>
+                                    <!-- Evaluate APIs -->
+                                    <li>Evaluate the APIs of the existing systems. Check for documentation,
+                                        versioning, authentication methods, and data transfer formats. Assess the
+                                        complexity and robustness of the APIs.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h2>Development of QMS integrated (API integration) with the existing System</h2>
+                            <div class="details">
+                                <h3>Backend and Admin panel</h3>
+                                <div class="tasks">
+                                    <ul>
+                                        <li>
+                                            Core
+                                            <ul>
+                                                <li>
+                                                    Exam Types
+                                                    <ul>
+                                                        <li>Diagnostic Assessment</li>
+                                                        <li>Practice/Revision Test
+                                                            <ul>
+                                                                <li>With Timer</li>
+                                                                <li>Without Timer</li>
+                                                            </ul>
+                                                        </li>
+                                                        <li>Mock Exam
+                                                            <ul>
+                                                                <li>Time Bound</li>
+                                                                <li>Similar to exam question paper</li>
+                                                            </ul>
+                                                        </li>
+                                                        <li>Teacher Graded
+                                                            <ul>
+                                                                <li>Time Bound</li>
+                                                                <li>Manually Evaluated</li>
+                                                                <li>Similar to exam question paper</li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    Question Paper
+                                                    <ul>
+                                                        <li>Create and Manage Question papers</li>
+                                                        <li>Option to manually choose question types and questions
+                                                            and
+                                                            create a question paper.
+                                                        </li>
+                                                        <li>Question papers are assigned to exam type and other
+                                                            parameters.
+                                                        </li>
+                                                        <li>Students will be presented with manually created
+                                                            question papers
+                                                            based on their parameters.
+                                                        </li>
+                                                        <li>Question papers can be created for the following exam
+                                                            types:
+                                                            <ul>
+                                                                <li>Diagnostic Assessment</li>
+                                                                <ul>
+                                                                    <li>
+                                                                        Question papers can be predeﬁned based on the student’s Class and Curriculum.
+                                                                    </li>
+                                                                </ul>
+                                                                <li>Practice/Revision Tests
+                                                                    <ul>
+                                                                        <li>Questions to understand the concept
+                                                                            properly.
+                                                                        </li>
+                                                                        <li>Chapter wise, Lesson wise, Topic wise,
+                                                                            Module
+                                                                            wise
+                                                                        </li>
+                                                                        <li>When creating questions option to set if
+                                                                            the
+                                                                            test should be time bound or not.
+                                                                        </li>
+                                                                    </ul>
+                                                                </li>
+                                                                <li>Mock exam
+                                                                    <ul>
+                                                                        <li>Similar to real-life question paper.
+                                                                        </li>
+                                                                        <li>Combination of different question
+                                                                            types
+                                                                        </li>
+                                                                    </ul>
+                                                                </li>
+                                                                <li>Teacher Graded
+                                                                    <ul>
+                                                                        <li>Manually chosen questions</li>
+                                                                    </ul>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                        <li>
+                                                    Basic Workflow
+                                                    <ul>
+                                                        <li>All Question papers have been created manually by the
+                                                            academic
+                                                            team.
+                                                        </li>
+                                                        <li>Questions are fetched from external APIs based on the
+                                                            parameters
+                                                            chosen.
+                                                        </li>
+                                                        <li>Question Papers can be mapped to Assessment types, and
+                                                            other
+                                                            parameters like:
+                                                            <ul>
+                                                                <li>Difficulty</li>
+                                                                <li>Curriculum</li>
+                                                                <li>Chapter</li>
+                                                                <li>Lesson</li>
+                                                                <li>Topic</li>
+                                                                <li>Module</li>
+                                                            </ul>
+                                                        </li>
+                                                        <li>
+                                                            Teacher graded assessment
+                                                            <ul>
+                                                                <li>Once a student opts for teacher graded
+                                                                    assessment,
+                                                                    admin/authorized person can assign the student
+                                                                    to a
+                                                                    teacher.
+                                                                </li>
+                                                                <li>Question paper is created by the assigned
+                                                                    teacher.
+                                                                </li>
+                                                                <li>Questions can be customized for that student.
+                                                                </li>
+                                                                <li>Answer sheet will be evaluated manually, except
+                                                                    for
+                                                                    auto-graded questions.
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+
+                                                        <li>Auto Grading
+                                                            <ul>
+                                                                <li>Calculate marks based on answer pointers for
+                                                                    questions
+                                                                    that can be auto-graded.
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                        <li>
+                                                            Student exam history
+                                                            <ul>
+                                                                <li>Persisting Student’s all exam performance data
+                                                                </li>
+                                                                <li>Exams attended, marks scored, time taken.</li>
+                                                                <li>Subject-wise revision progression</li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    Teacher Web App
+                                                    <ul>
+                                                        <li>
+                                                            Teacher Graded Assessment
+                                                            <ul>
+                                                                <li>View Assigned Students and Opted Exams</li>
+                                                                <li>Create Question Paper for student.</li>
+                                                                <li>Option to comment/Partially correct answers
+                                                                    against each
+                                                                    student’s response for each question.
+                                                                </li>
+                                                                <li>Option to enter mark against each question.</li>
+                                                                <li>Option to view images attached by students.</li>
+                                                                <li>Option to attach images against answer sheet for
+                                                                    student’s reference.
+                                                                </li>
+                                                                <li>Option to add remarks on what and where to
+                                                                    improve.
+                                                                </li>
+                                                                <li>Option to send completed answer sheet to student
+                                                                    and
+                                                                    parents via email.
+                                                                </li>
+                                                                <li>Answer sheet in form of an HTML page with
+                                                                    student’s
+                                                                    answer and teacher corrections.
+                                                                </li>
+                                                                <li>Option to schedule a video call with
+                                                                    student/parent.
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                        <li>
+                                                            Teacher Report
+                                                            <ul>
+                                                                <li>Student exam history.</li>
+                                                                <li>Student marks history.</li>
+                                                                <li>Student Overall performance</li>
+                                                                <li>Subject-wise performance</li>
+                                                                <li>Topic-wise performance</li>
+                                                                <li>Class-wise performance</li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    Parents Web App
+                                                    <ul>
+                                                        <li>All information about student</li>
+                                                        <li>Where his/her student stands in international score.
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    Management Web App
+                                                    <ul>
+                                                        <li>Student’s learning status</li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h2>Student Web App</h2>
+                            <div class="details">
+                                <h3>Student Web App</h3>
+                                <div class="tasks">
+                                    <ul>
+                                        <li>
+                                            Student Registration/Login
+                                            <ul>
+                                                <li>Email ID</li>
+                                                <li>Email Verification via OTP</li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            Diagnostic Assessment
+                                            <ul>
+                                                <li>Student will be presented with predefined question paper.</li>
+                                                <li>Example if the student is in 8th standard in a certain
+                                                    curriculum, then
+                                                    he/she will be presented with question paper created for 8th
+                                                    standard in
+                                                    the curriculum.
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            Practice/Revision
+                                            <ul>
+                                                <li>Optional Timer feature</li>
+                                                <li>Student will be presented with Predefined question papers to
+                                                    understand
+                                                    the concept properly.
+                                                </li>
+                                                <li>Marks on each question</li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            Mock Exam
+                                            <ul>
+                                                <li>Student will be presented with a predefined question paper based
+                                                    on the
+                                                    type of exam selected.
+                                                </li>
+                                                <li>Time bounded.</li>
+                                                <li>Looking similar to exam paper.</li>
+                                                <li>Marks on each question</li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            Teacher Graded Assessment
+                                            <ul>
+                                                <li>Student will be presented with custom created question paper for
+                                                    that
+                                                    particular assessment.
+                                                </li>
+                                                <li>Time bounded.</li>
+                                                <li>Option to attach images against answer sheet (Image work they
+                                                    done in a
+                                                    paper)
+                                                </li>
+                                                <li>Marks on each question.</li>
+                                                <li>Option to use special characters for math in the answer
+                                                    sections.
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            Student Report
+                                            <ul>
+                                                <li>Overall Performance</li>
+                                                <li>Strength and Weaknesses</li>
+                                                <li>Subject wise</li>
+                                                <li>Topic wise</li>
+                                                <li>Class wise progress</li>
+                                                <li>Exams attended, marks scored, time taken.</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <h2>Dependencies</h2>
+                            <div class="details">
+                                <ul>
+                                    <li>External API Documentation</li>
+                                    <li>External API Sample Data</li>
+                                    <li>Algorithms already using for analytics</li>
+                                </ul>
+                            </div>
+                        </div>
+                        >
+                    </div>
+                    <div class="footer" style="background-image: url('/project_custom/static/report/footer.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 200px; /* Adjust the height as needed */
+    width: 828px; /* Adjusted width based on the aspect ratio */
+    padding-bottom: 20px; /* Add padding to prevent content overlap */
+">
+                    </div>
+
+                </div>
+
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="project_proposal_pdf_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+
+                <div class="page" style="border: none;">
+                    <div class="header" style="background-image: url('/project_custom/static/report/header.png');
+                    background-size: contain; /* Adjust to contain */
+                    background-repeat: no-repeat;
+                    height: 200px;
+                    width: 100%;
+                    padding-top: 0px;">
+                    </div>
+                    <style>
+                        .content {
+                        transform: scale(2); /* This will scale the content by a factor of 2 */
+                        }
+                    </style>
+                    <div class="content"
+                         style="padding-top: 32px;font-size: 20px; padding-left: 35px; padding-right: 30px;text-align: justify; line-height: 1.5;">
+                        <h1 style="text-align: center; font-size: ">Section 2</h1>
+                        <h2 style="text-align: center;">Price and Commercial terms</h2>
+                        <h2>Project Agreement</h2>
+                        <p>This Application Development Agreement (&quot;Agreemen&quot;) is made and effective from <t t-esc="doc.effective_month_and_year"/> and states the terms and
+                            conditions that govern the contractual agreement between <b>Ideenkreise Tech Pvt Limited</b>, Ernakulam, India, (the &quot;Developer&quot;) and<b> <t t-esc="doc.company_name.name"/> </b>(the &quot;Client&quot;), who agrees to be bound by this Agreement.
+                        </p>
+                        <p>WHEREAS, the Client has conceptualized <b><t t-esc="doc.project_name.name"/></b> which is described in further detail in
+                            Section 1-A (the &quot;Scope of Work Specifications&quot;),
+                            and the Developer is a contractor with whom the Client has come to an agreement to design,
+                            develop, create, test,
+                            and deliver the projects to the client.
+                        </p>
+                        <p>NOW, THEREFORE, in consideration of the mutual covenants and promises made by the parties to
+                            these projects Development Agreement,
+                            the Developer and the Client (individually, each a &quot;Party&quot; and collectively, the
+                            &quot;Parties&quot;)
+                            covenant and agree as follows:
+                        </p>
+                        <t t-raw="doc.html_content"/>
+                        <div class="point">
+                            <p>
+                                <strong>1. DEVELOPER&apos;S DUTIES:</strong>
+                                The Client hereby engages the Developer and the Developer hereby agrees to be engaged
+                                by the Client to develop the Software in accordance with the specifications attached
+                                hereto as Section-1A (the &quot;Scope of Work &amp; Specifications&quot;).
+                                <ul>
+                                    <li>a. The Developer shall complete the development of the Project according to the
+                                        mutually agreed phases by deputing competent
+                                        manpower resources to the Client, whose work on the Project shall be jointly
+                                        guided and coordinated by the Developer and the Client.
+                                    </li>
+                                    <li>b. Except as expressly provided in this software Development Agreement, the
+                                        client shall not be obligated under this agreement to
+                                        provide any other support or assistance to the developer.
+                                    </li>
+                                    <li>c. The Client may terminate this Software Development Agreement at any time upon
+                                        a material breach of the terms herein and fail
+                                        to cure such a breach within 10 days of notification of such a breach.
+                                    </li>
+                                    <li>d. All work shall be performed in a professional manner. The developer shall
+                                        arrange for such employees and/or contractors as resource.
+                                    </li>
+                                </ul>
+                            </p>
+                        </div>
+                        <div class="point">
+                            <p>
+                                <strong>2. DELIVERY:</strong>
+                                The Application shall function in accordance with Section-1 A (The &quot;Scope of Work
+                                &amp;
+                                Specifications”).
+                                <ul>
+                                    <li>a. If the application as delivered does not conform with the Specifications, the
+                                        Client shall within 10 days of the Delivery
+                                        Date notify the Developer in writing of the ways in which it does not conform
+                                        with the Specifications. The Developer agrees
+                                        that upon receiving such notice, it shall make reasonable efforts to correct any
+                                        non-conformity.
+                                    </li>
+                                    <li>b. The Client shall provide to the Developer written notice of its finding that
+                                        the Software confirms to the Specifications
+                                        within 10 days of the Delivery Date unless it finds that the Software does not
+                                        conform to the Specifications as described in Section-1 A herein.
+                                    </li>
+                                    <li>c. After successful completion of the project, there shall be a sign-off to this
+                                        effect between the Client and the Developer.
+                                    </li>
+                                </ul>
+                            </p>
+                        </div>
+                        <div class="point">
+                            <p>
+                                <strong>3. INTELLECTUAL PROPERTY RIGHTS / OWNERSHIP OF THE APPLICATION:</strong>
+                                The application shall be the sole property of the Client.
+                                The Parties acknowledge and agree that the Client will hold all intellectual property
+                                rights in the Application including, but not limited to,
+                                copyright and trademark rights. The Developer agrees not to claim any such ownership in
+                                the Application&apos;s intellectual property at any time prior
+                                to or after the completion and delivery of the Application to the Client. Developer will
+                                keep and maintain adequate and current written records/documentation
+                                with respect to the Application (in the form of source codes, notes, sketches, drawings,
+                                and as may otherwise be specified by the Client).
+                            </p>
+                        </div>
+                        <div class="point">
+                            <p>
+                                <strong>4. CHANGE IN SPECIFICATIONS:</strong>
+                                The client may request that reasonable changes be made to the Specifications and
+                                tasks associated with the implementation of the Specifications. If the Client requests
+                                such changes, Developer will use its best
+                                efforts to implement the requested change at no additional expense to Buyer and without
+                                delaying the delivery of the Application
+                                . In the event that the proposed change will, in the reasonable opinion of Developer,
+                                require a delay in delivery of the Application or
+                                would result in additional expense to Client, then Client and Developer shall confer and
+                                Client shall in its discretion, elect either to withdraw
+                                its proposed change or require Developer to deliver the Software with the proposed
+                                change and subject to the delay and/or additional expense.
+                            </p>
+                        </div>
+                        <div class="point">
+                            <p>
+                                <strong>5. CONFIDENTIALITY:</strong>
+                                The Developer shall not disclose to any third party the business of the Client,
+                                details regarding the Software, without limitation any information regarding the
+                                application&apos;s code, the Specifications,
+                                or the Client&apos;s business (the &quot;Confidential Information”), (ii) make copies of
+                                any
+                                Confidential Information or any content
+                                based on the concepts contained within the Confidential Information for personal use or
+                                for distribution unless requested
+                                to do so by the Client, or (iii) use Confidential Information other than solely for the
+                                benefit of the Client.
+                            </p>
+                        </div>
+                        <div class="point" style="font-size: 20px;">
+                            <p>
+                                <strong>6. DEVELOPER WARRANTIES:</strong>
+                                The Developer represents and warrants to the Client the following:
+                                <ul>
+                                    <li>a. Development and delivery of the Application under this Agreement are not in
+                                        violation of any other agreement
+                                        that the Developer has with any another party.
+                                    </li>
+                                    <li>b. The Application will not violate the intellectual property rights of any
+                                        other party.
+                                    </li>
+                                    <li>c. After the Delivery Date, the Application shall operate according to the
+                                        Specifications. If the Application
+                                        malfunctions or in any way does not operate according to the Specifications,
+                                        then the Developer shall take all
+                                        reasonably necessary steps to fix the issue and ensure that the Application
+                                        operates according to the Specifications.<b> After the development of the project,
+                                        the client will be provided
+                                        with <t t-esc="doc.free_service_month"/> months or <t t-esc="doc.free_service_hour"/> hours of free services.
+                                        During this period the client can check and report any issues regarding the
+                                        functionality of the application.
+                                        If such an issue is raised, then the team will take the necessary steps to
+                                        resolve the issue.</b>
+                                    </li>
+                                    <li>d. After the <t t-esc="doc.free_service_month"/> months or <t t-esc="doc.free_service_hour"/> hours period for extended support, the Client
+                                        shall have the option to shift
+                                        to an AMC (Annual Maintenance Contract). During the AMC Period, any modification
+                                        which doesn't conflict with
+                                        the existing functionality of the project shall be done for free. If there is no
+                                        AMC in place, changes to the
+                                        existing project are chargeable depending upon the nature of the work.
+                                    </li>
+                                </ul>
+                            </p>
+                        </div>
+
+                        <!-- Note and Development Procedure sections -->
+                        <p>
+                            <strong>NOTE</strong>
+                        </p>
+                        <ul>
+                            <li>As per the understanding between both parties, the phase&apos;s delivery time can be
+                                determined by the developers.
+                                And all the phases have to be delivered within the end date.
+                            </li>
+                            <li><b>To facilitate the timely delivery of the application, in the event of uncertainty
+                                regarding any feature of
+                                the application the developer shall notify the client in advance and will schedule a
+                                meeting to rectify the doubt.
+                                The client should make necessary efforts to assist the developer without delaying the
+                                natural flow of application development.
+                                If the client fails to facilitate the assistance, needed to further the development it
+                                would also reflect on the timely delivery.</b>
+                            </li>
+                        </ul>
+
+                        <div class="point">
+                            <p>
+                                <strong>7. DEVELOPMENT PROCEDURE:</strong>
+                                The Parties shall, conform to the following procedure in the sequence indicated:
+                            </p>
+                            <ul>
+                                <li>a.<u> Scope</u>: agrees to construct an application such that its features shall conform to
+                                    the specifications set out in the Detailed SOW &amp;
+                                    proposal shared.
+                                </li>
+                                <li>b. <u>Price</u>: agrees to deliver all functionality/ features specified in the Detailed
+                                    SOW &amp; Proposal for the projects
+                                    development and the cost of development is specified below. The development
+                                    dependencies like API, module purchases,
+                                    Domain, Server cost, and any external cost or third-party cost are extra and are
+                                    bound by the client. The proposed
+                                    quote includes the design, development, etc. related to the application. Company
+                                    details such as Logo, Designs, Contents,
+                                    etc. will be provided by the client as and when requested.
+                                </li>
+                                <li>c. <u>Timeline</u> : agrees to make all reasonable efforts to deliver the functionality
+                                    specified in Section-1 A
+                                    by <t t-esc="doc.timeline"/> (based on Indian working days) for <t t-esc="doc.project_name.name"/> WebApp modules after
+                                    SRS. Also, payment as per
+                                    agreed payment terms should be made for the timely progress of the activity. On
+                                    receipt of the first instalment,
+                                    a separate team with the Project Manager and Project Delivery Manager, who will be
+                                    coordinating with the whole project thereon,
+                                    will be allotted. Further updates will be provided by them going forward. In the
+                                    unlikely event of the client terminating
+                                    the project before completion, the client shall settle the entire outstanding amount
+                                    based on the percentage of the project completed.
+                                </li>
+                                <li>d.<u> Payment Schedule</u>: agrees to commence work on the Development immediately after
+                                    receipt of 1st Instalment.
+                                </li>
+
+
+                                <!-- Proposal table -->
+                                <div>
+                                    <p>
+                                        <strong>PROPOSAL 1: WEB APP</strong>
+                                    </p>
+                                    <p>
+                                        <strong>Estimated Development time</strong>
+                                    </p>
+                                    <table border="1" cellpadding="5" style="border-collapse: collapse;">
+                                        <thead>
+                                            <tr>
+                                                <th>Task</th>
+                                                <th>Days</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Requirement Collection</td>
+                                                <td>---</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Development and Training</td>
+                                                <td>---</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total days</td>
+                                                <td>---</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <br/>
+                                <br/>
+
+                                <div>
+                                    <p>
+                                        <strong>Commercials</strong>
+                                    </p>
+                                    <table border="1" cellpadding="5" style="border-collapse: collapse;">
+                                        <thead>
+                                            <tr>
+                                                <th>Resource</th>
+                                                <th>Count</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Project Management</td>
+                                                <td>1</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Team Lead</td>
+                                                <td>1</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Developer</td>
+                                                <td>3</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Designer</td>
+                                                <td>1</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Devops</td>
+                                                <td>1</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Testing &amp; QA</td>
+                                                <td>1</td>
+                                            </tr>
+                                            <!-- Add more rows as needed -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <br/>
+                                <li>e.The tabular itemization of the Payment Schedule for the project is as follows:
+                                </li>
+                                <br/>
+                                <br/>
+                                <div>
+                                    <p>
+                                        <strong>Feasibility Study</strong>
+                                    </p>
+                                    <table border="1" cellpadding="5" style="border-collapse: collapse;">
+                                        <thead>
+                                            <tr>
+                                                <th>Task</th>
+                                                <th>Percentage</th>
+                                                <th>Cost</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Feasibility Study</td>
+                                                <td>100 %</td>
+                                                <td>Rs + GST</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <br/>
+                                <br/>
+                                <div>
+                                    <p>
+                                        <strong>Project</strong>
+                                    </p>
+                                    <table border="1" cellpadding="5" style="border-collapse: collapse;">
+                                        <thead>
+                                            <tr>
+                                                <th>Project Payment Milestone</th>
+                                                <th>Percentage</th>
+                                                <th>Cost</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Before Development</td>
+                                                <td>50%</td>
+                                                <td>Rs +GST</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Mid milestone (Completion &amp; presentation)</td>
+                                                <td>40%</td>
+                                                <td>+GST</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Before Deployment</td>
+                                                <td>10%</td>
+                                                <td>+GST</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Total Project Cost</b></td>
+                                                <td></td>
+                                                <td>Rs + GST</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <br/>
+                                <li>
+                                    f. <u>Terms</u>: Server Hosting charges will be separate as per the requirement Integration
+                                    with existing software is not considered in the given proposal. Any extra purchases
+                                    regarding the development of modules will be billed extra.
+                                    <br/>
+                                    The amount should be paid to the below Company Account
+                                    <b><br/>
+                                    Ideenkreise Tech Private Limited
+                                    <br/>
+                                    HDFC Bank
+                                    <br/>
+                                    Muvattupuzha Branch
+                                    <br/>
+                                    A/c: 502 000 3578 0841
+                                    <br/>
+                                    IFSC: HDFC 000 1486
+                                    </b>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p>
+                                <strong>8. INDEMNIFICATION:</strong>
+                                The Developer will not indemnify, defend, and protect the Client from and
+                                against all lawsuits and costs of every kind pertaining to the software
+                                including reasonable legal fees due to the Client&apos;s infringement of the
+                                intellectual rights of any third party. Similarly, the Client also will not
+                                indemnify, defend or protect the Developer from and against all lawsuits and
+                                costs of every kind pertaining to the software platforms, tools etc. used,
+                                including legal fees to be incurred if any due to the Developer&apos;s infringement
+                                of the intellectual property rights of any third party.
+                            </p>
+                        </div>
+
+                        <!-- Point 9: No Modification Unless in Writing -->
+                        <div>
+                            <p>
+                                <strong>9. NO MODIFICATION UNLESS IN WRITING:</strong>
+                                No modification of this Agreement shall be valid unless in writing and agreed
+                                upon by both parties.
+                            </p>
+                        </div>
+
+                        <!-- Point 10: Term and Termination -->
+                        <div>
+                            <p>
+                                <strong>10. TERM AND TERMINATION:</strong>
+                            </p>
+                            <ul>
+                                <li>a. This Agreement shall commence upon the effective date December 2023 and
+                                    continue until all of the obligations of the parties have been performed or
+                                    until earlier termination as provided herein.
+                                </li>
+                                <li>b. Developer's appointment as Contractor pursuant to this Agreement and this
+                                    Agreement shall terminate upon the occurrence of any of the following
+                                    events:
+                                    <ul>
+                                        <li>(i) In the event either party defaults in any material obligation
+                                            owed to the other party pursuant to this Agreement, then this
+                                            Agreement may be terminated if the default is not cured following at
+                                            least thirty days written notice to the defaulting party.
+                                        </li>
+                                        <li>(ii) Principal Developer or Developers becomes become
+                                            incapacitated.
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>c. Section 3 (Ownership of Application) and Section 5 (Confidentiality)
+                                    shall survive the expiration or termination of this Agreement. In the event
+                                    of early termination due to the Developer's default or disability, the
+                                    Developer agrees to deliver the Software completed till then.
+                                </li>
+                                <li>d. If the Agreement is terminated due to the disability of the Developer,
+                                    then Developer (or Developer's executor, administrator or other
+                                    representative) shall deliver that part of the Software then completed,
+                                    provided payment is made by Client for such completed part.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Point 11: Jurisdiction -->
+                        <div>
+                            <p>
+                                <strong>11. JURISDICTION:</strong>
+                            </p>
+                            <p>This agreement is made under the laws of India. The formation, validity, construction,
+                                and performance of this agreement shall be governed by the law of India, which shall be
+                                commenced within the competent courts in Kochi. Any dispute arising out of this
+                                agreement shall be filed only in a court having jurisdiction in the city of Kochi.
+                            </p>
+                            <p>Date: <t t-esc="doc.get_formatted_date()"/></p>
+
+                            <div>
+                                <div style="float: left; text-align: left;">
+                                    <p><br/>
+                                        <br/>
+                                        <br/>
+                                        <strong>Developer</strong>
+                                        <br/>
+                                        <span>Signing Authority</span>
+                                    </p>
+                                    <p>
+                                        <strong>IDEENKREISE TECH PVT LTD</strong>
+                                        <br/>
+                                        <span>Company name</span>
+                                    </p>
+                                </div>
+                                <div style="float: right; text-align: right;">
+                                    <p><br/>
+                                        <br/>
+                                        <br/>
+                                        <strong>Client</strong>
+                                        <br/>
+                                        <span>Signing Authority</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="footer" style="background-image: url('/project_custom/static/report/footer.png');
+                    background-size: contain; /* Adjust to contain */
+                    background-repeat: no-repeat;
+                     height: 250px;
+                    width: 100%;">
+                </div>
+
+
+            </t>
+        </t>
+    </template>
+</odoo>
+

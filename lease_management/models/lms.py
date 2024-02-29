@@ -441,61 +441,92 @@ class ProductLease(models.Model):
         # if not employee_data.department_id:
         #     raise ValidationError("Employee data is empty")
         pr_company_data = self.env['pr.company'].sudo().search([('company_id', '=', self.company_id.id),
-                                                                ('department_id', '=', self.department_id.id),
+
                                                                 ('expense_type', '=', self.expense_type),
                                                                 ('type', '=', 'lease')],
                                                                limit=1)
-        if self.vendor_id.user_id:
+        if self.vendor_id.login:
             new_line_vals = {
-                'user_id': self.vendor_id.user_id.id,
+                'user_id': self.vendor_id.login.id,
                 'approve_order': int(1),
             }
             self.approve_line |= self.env['lease.approve.line'].create(new_line_vals)
 
-        for approvers in pr_company_data.pr_approve_users_id:
-            line = []
-            last_approve_order = None
-            for users in approvers:
-                self.write({'approve_users': [(4, users.user_id.id)]})
-                if self.vendor_id.user_id:
-                    approve_order = int(users.approve_order) + 1
-                else:
-                    approve_order = users.approve_order
-                vals = {
-                    'user_id': users.user_id.id,
-                    'company_id': users.company_id.id,
-                    # 'location': users.location.id,
-                    'department_id': pr_company_data.department_id.id,
-                    'designation': users.designation.id,
-                    'approve_order': approve_order,
-                }
-                line.append((0, 0, vals))
-                if last_approve_order is None or users.approve_order > last_approve_order:
-                    last_approve_order = users.approve_order
-                print(last_approve_order)
-            self.approve_line = line
+        if pr_company_data:
 
-        next_approver_user_ids = [
-            next_approver.user_id.id
-            for next_approver in self.approve_line
-            if (
-                    (self.vendor_id.user_id and next_approver.approve_order == 1)
-                    or (not self.vendor_id.user_id and next_approver.approve_order == 1)
-            )
-        ]
+            workflow_line_data = self.env['pr.approve.users'].sudo().search(
+                [('pr_company_id', '=', pr_company_data.id)])  # searching in workflow line
+            for approvers in workflow_line_data:
+                line = []
+                last_approve_order = None
+                users_line = self.env['res.users.line'].sudo().search(
+                    [('company_id', '=', approvers.company_id.id), ('branch_id', '=', approvers.branch_id.id),
+                     ('department_id', '=', approvers.department_id.id),
+                     ('designation', '=', approvers.designation.id)])  # searching user in users line
+                print(users_line, "PR USERSSSSSSSSSSSSS")
+                if users_line:
+                    self.write({'approve_users': [(4, users_line.res_user_id.id)]})
+                    vals = {
+                        'user_id': users_line.res_user_id.id,
+                        'company_id': approvers.company_id.id,
+                        'branch_id': approvers.branch_id.id,
+                        'department_id': approvers.department_id.id,
+                        'designation': approvers.designation.id,
+                        'approve_order': approvers.approve_order,
 
-        print(next_approver_user_ids,"This print")
-        if all(item is not False for item in next_approver_user_ids):
-            self.write({'next_approve_user': [(6, 0, next_approver_user_ids)]})
+                    }
+                    line.append((0, 0, vals))
+                    if last_approve_order is None or approvers.approve_order > last_approve_order:
+                        last_approve_order = approvers.approve_order
+                    print(last_approve_order)
+                self.approve_line = line
 
-            self.state ='request'
+            # for approvers in pr_company_data.pr_approve_users_id:
+            #     line = []
+            #     last_approve_order = None
+            #     for users in approvers:
+            #         self.write({'approve_users': [(4, users.user_id.id)]})
+            #         if self.vendor_id.user_id:
+            #             approve_order = int(users.approve_order) + 1
+            #         else:
+            #             approve_order = users.approve_order
+            #         vals = {
+            #             'user_id': users.user_id.id,
+            #             'company_id': users.company_id.id,
+            #             # 'location': users.location.id,
+            #             'department_id': pr_company_data.department_id.id,
+            #             'designation': users.designation.id,
+            #             'approve_order': approve_order,
+            #         }
+            #         line.append((0, 0, vals))
+            #         if last_approve_order is None or users.approve_order > last_approve_order:
+            #             last_approve_order = users.approve_order
+            #         print(last_approve_order)
+            #     self.approve_line = line
 
-        model = self.env['ir.model'].search([('model', '=', self._name)], limit=1)
-        pending_action = self.env['pending.actions'].sudo().search(
-            [('model', '=', model.id), ('record', '=', self.id)], limit=1)
-        if pending_action:
-            user_ids_to_pass = self.approve_users.ids if self.approve_users else False
-            pending_action.write({'approve_users': [(6, 0, user_ids_to_pass)]})
+            next_approver_user_ids = [
+                next_approver.user_id.id
+                for next_approver in self.approve_line
+                if (
+                        (self.vendor_id.user_id and next_approver.approve_order == 1)
+                        or (not self.vendor_id.user_id and next_approver.approve_order == 1)
+                )
+            ]
+
+            print(next_approver_user_ids,"This print")
+            if all(item is not False for item in next_approver_user_ids):
+                self.write({'next_approve_user': [(6, 0, next_approver_user_ids)]})
+
+                self.state ='request'
+
+            model = self.env['ir.model'].search([('model', '=', self._name)], limit=1)
+            pending_action = self.env['pending.actions'].sudo().search(
+                [('model', '=', model.id), ('record', '=', self.id)], limit=1)
+            if pending_action:
+                user_ids_to_pass = self.approve_users.ids if self.approve_users else False
+                pending_action.write({'approve_users': [(6, 0, user_ids_to_pass)]})
+        else:
+            print("WRK Flow not FOUND")
 
 
 
@@ -707,7 +738,8 @@ class ProductLease(models.Model):
 
         user_id = fields.Many2one('res.users', string="User")
         company_id = fields.Many2one('res.company', string="Company")
-        location = fields.Many2one('res.company', string="Location")
+        # location = fields.Many2one('res.company', string="Location")
+        branch_id = fields.Many2one('res.branch', string="Branch")
         department_id = fields.Many2one('hr.department', string="Department")
         emp_name = fields.Many2one('hr.employee', string="Employee")
         designation = fields.Many2one('hr.job', string="Designation")

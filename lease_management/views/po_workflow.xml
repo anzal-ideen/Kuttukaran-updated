@@ -31,13 +31,13 @@
                 <xpath expr="//field[@name='currency_id']" position="after">
 
 
-                    <field name="approve_users" readonly="1" widget="many2many_tags" invisible="1"/>
-                    <field name="approved_users" readonly="1" widget="many2many_tags" invisible="1"/>
-                    <field name="next_approve_user" readonly="1" widget="many2many_tags" invisible="1"/>
+                    <field name="approve_users" readonly="1" widget="many2many_tags" invisible="0"/>
+                    <field name="approved_users" readonly="1" widget="many2many_tags" invisible="0"/>
+                    <field name="next_approve_user" readonly="1" widget="many2many_tags" invisible="0"/>
                     <field name="is_confirmed" invisible="1"/>
                     <field name="is_an_approver" invisible="1"/>
                     <field name="is_auto_po" invisible="1"/>
-                     <field name="in_budget"/>
+                     <field name="in_budget" invisible="1"/>
                 </xpath>
 
 
@@ -57,7 +57,7 @@
                             <tree editable="bottom">
                                 <field name="user_id"/>
                                 <field name="company_id"/>
-                                <!--                                <field name="location"/>-->
+                                <field name="branch_id"/>
                                 <field name="department_id"/>
                                 <field name="designation"/>
                                 <field name="approve_order"/>
